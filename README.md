@@ -9,10 +9,10 @@
 </p>
 
 <p align="center">
-&#x20; <img src="[https://img.shields.io/badge/Laravel-Framework-172B4D?style=flat-square&logo=laravel&logoColor=white](https://img.shields.io/badge/Laravel-Framework-172B4D?style=flat-square\&logo=laravel\&logoColor=white)" alt="Laravel">
-&#x20; <img src="[https://img.shields.io/badge/Blade-Templating-315E8A?style=flat-square](https://img.shields.io/badge/Blade-Templating-315E8A?style=flat-square)" alt="Blade">
-&#x20; <img src="[https://img.shields.io/badge/Tailwind_CSS-Styling-0F766E?style=flat-square&logo=tailwindcss&logoColor=white](https://img.shields.io/badge/Tailwind_CSS-Styling-0F766E?style=flat-square\&logo=tailwindcss\&logoColor=white)" alt="Tailwind CSS">
-&#x20; <img src="[https://img.shields.io/badge/Status-In_Development-946200?style=flat-square](https://img.shields.io/badge/Status-In_Development-946200?style=flat-square)" alt="In Development">
+  <img src="https://img.shields.io/badge/Laravel-Framework-172B4D?style=flat-square&logo=laravel&logoColor=white" alt="Laravel">
+  <img src="https://img.shields.io/badge/Blade-Templating-315E8A?style=flat-square" alt="Blade">
+  <img src="https://img.shields.io/badge/Tailwind_CSS-Styling-0F766E?style=flat-square&logo=tailwindcss&logoColor=white" alt="Tailwind CSS">
+  <img src="https://img.shields.io/badge/Status-In_Development-946200?style=flat-square" alt="In Development">
 </p>
 
 <p align="center">
