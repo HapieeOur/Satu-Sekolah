@@ -1,27 +1,27 @@
 # Satu-Sekolah
 
-\<p align="center">
-&#x20; \<strong>One Platform. A Better School Experience.\</strong>
-\</p>
+<p align="center">
+&#x20; <strong>One Platform. A Better School Experience.\</strong>
+</p>
 
-\<p align="center">
+<p align="center">
 &#x20; Sistem manajemen sekolah terpadu untuk menghubungkan kegiatan akademik, Praktik Kerja Lapangan (PKL), perpustakaan, dan administrasi dalam satu platform.
-\</p>
+</p>
 
-\<p align="center">
-&#x20; \<img src="[https://img.shields.io/badge/Laravel-Framework-172B4D?style=flat-square&logo=laravel&logoColor=white](https://img.shields.io/badge/Laravel-Framework-172B4D?style=flat-square\&logo=laravel\&logoColor=white)" alt="Laravel">
-&#x20; \<img src="[https://img.shields.io/badge/Blade-Templating-315E8A?style=flat-square](https://img.shields.io/badge/Blade-Templating-315E8A?style=flat-square)" alt="Blade">
-&#x20; \<img src="[https://img.shields.io/badge/Tailwind_CSS-Styling-0F766E?style=flat-square&logo=tailwindcss&logoColor=white](https://img.shields.io/badge/Tailwind_CSS-Styling-0F766E?style=flat-square\&logo=tailwindcss\&logoColor=white)" alt="Tailwind CSS">
-&#x20; \<img src="[https://img.shields.io/badge/Status-In_Development-946200?style=flat-square](https://img.shields.io/badge/Status-In_Development-946200?style=flat-square)" alt="In Development">
-\</p>
+<p align="center">
+&#x20; <img src="[https://img.shields.io/badge/Laravel-Framework-172B4D?style=flat-square&logo=laravel&logoColor=white](https://img.shields.io/badge/Laravel-Framework-172B4D?style=flat-square\&logo=laravel\&logoColor=white)" alt="Laravel">
+&#x20; <img src="[https://img.shields.io/badge/Blade-Templating-315E8A?style=flat-square](https://img.shields.io/badge/Blade-Templating-315E8A?style=flat-square)" alt="Blade">
+&#x20; <img src="[https://img.shields.io/badge/Tailwind_CSS-Styling-0F766E?style=flat-square&logo=tailwindcss&logoColor=white](https://img.shields.io/badge/Tailwind_CSS-Styling-0F766E?style=flat-square\&logo=tailwindcss\&logoColor=white)" alt="Tailwind CSS">
+&#x20; <img src="[https://img.shields.io/badge/Status-In_Development-946200?style=flat-square](https://img.shields.io/badge/Status-In_Development-946200?style=flat-square)" alt="In Development">
+</p>
 
-\<p align="center">
-&#x20; \<a href="#-fitur-utama">Fitur\</a> ·
-&#x20; \<a href="#-arsitektur-sistem">Arsitektur\</a> ·
-&#x20; \<a href="#-teknologi">Teknologi\</a> ·
-&#x20; \<a href="#-instalasi">Instalasi\</a> ·
-&#x20; \<a href="#-kontribusi">Kontribusi\</a>
-\</p>
+<p align="center">
+&#x20; <a href="#-fitur-utama">Fitur\</a> ·
+&#x20; <a href="#-arsitektur-sistem">Arsitektur\</a> ·
+&#x20; <a href="#-teknologi">Teknologi\</a> ·
+&#x20; <a href="#-instalasi">Instalasi\</a> ·
+&#x20; <a href="#-kontribusi">Kontribusi\</a>
+</p>
 
 ---
 
