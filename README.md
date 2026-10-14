@@ -205,19 +205,6 @@ php artisan key:generate
 
 Edit file `.env`, kemudian sesuaikan koneksi database:
 
-```dotenv
-APP_NAME="Satu-Sekolah"
-APP_ENV=local
-APP_DEBUG=true
-APP_URL=http://127.0.0.1:8000
-
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=satu_sekolah
-DB_USERNAME=root
-DB_PASSWORD=
-```
 
 Buat database `satu_sekolah` terlebih dahulu melalui database server yang digunakan. Sesuaikan nama database, username, dan password dengan lingkungan lokal.
 
