@@ -16,11 +16,11 @@
 </p>
 
 <p align="center">
-&#x20; <a href="#-fitur-utama">Fitur\</a> ·
-&#x20; <a href="#-arsitektur-sistem">Arsitektur\</a> ·
-&#x20; <a href="#-teknologi">Teknologi\</a> ·
-&#x20; <a href="#-instalasi">Instalasi\</a> ·
-&#x20; <a href="#-kontribusi">Kontribusi\</a>
+&#x20; <a href="#-fitur-utama">Fitur</a> ·
+&#x20; <a href="#-arsitektur-sistem">Arsitektur</a> ·
+&#x20; <a href="#-teknologi">Teknologi</a> ·
+&#x20; <a href="#-instalasi">Instalasi</a> ·
+&#x20; <a href="#-kontribusi">Kontribusi</a>
 </p>
 
 ---
