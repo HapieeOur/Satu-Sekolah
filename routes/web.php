@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Homeroom\HomeroomDashboardController;
 use App\Http\Controllers\Internship\InternshipMentorDashboardController;
+use App\Http\Controllers\Public\PublicPageController;
 use App\Http\Controllers\Teacher\TeacherDashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,21 +16,37 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// Guest Routes
+// Public Routes (Accessible by Anyone Without Login)
+Route::get('/', [PublicPageController::class, 'home'])->name('home');
+Route::get('/profil', [PublicPageController::class, 'profile'])->name('public.profile');
+
+Route::prefix('berita')->name('public.news.')->group(function () {
+    Route::get('/', [PublicPageController::class, 'news'])->name('index');
+    Route::get('/{slug}', [PublicPageController::class, 'newsShow'])->name('show');
+});
+
+Route::prefix('pengumuman')->name('public.announcements.')->group(function () {
+    Route::get('/', [PublicPageController::class, 'announcements'])->name('index');
+    Route::get('/{slug}', [PublicPageController::class, 'announcementShow'])->name('show');
+});
+
+Route::prefix('acara')->name('public.events.')->group(function () {
+    Route::get('/', [PublicPageController::class, 'events'])->name('index');
+    Route::get('/{slug}', [PublicPageController::class, 'eventShow'])->name('show');
+});
+
+// Guest Authentication Routes
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 });
 
-// Authenticated Routes
+// Authenticated Internal Management Routes (Admin & Guru)
 Route::middleware(['auth', 'active'])->group(function () {
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // Smart Dashboard Router
-    Route::get('/', function () {
-        return redirect()->route('dashboard');
-    });
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Admin Area
