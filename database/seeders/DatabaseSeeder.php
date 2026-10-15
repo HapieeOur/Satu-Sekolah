@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             PostSeeder::class,
             DataMasterSeeder::class,
             ScheduleSeeder::class,
+            AttendanceSeeder::class,
         ]);
     }
 }

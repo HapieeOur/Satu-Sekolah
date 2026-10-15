@@ -12,9 +12,11 @@ use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Homeroom\HomeroomAttendanceController;
 use App\Http\Controllers\Homeroom\HomeroomDashboardController;
 use App\Http\Controllers\Internship\InternshipMentorDashboardController;
 use App\Http\Controllers\Public\PublicPageController;
+use App\Http\Controllers\Teacher\TeacherAttendanceController;
 use App\Http\Controllers\Teacher\TeacherDashboardController;
 use App\Http\Controllers\Teacher\TeacherScheduleController;
 use Illuminate\Support\Facades\Route;
@@ -77,11 +79,13 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::prefix('teacher')->name('teacher.')->middleware('role:guru')->group(function () {
         Route::get('/dashboard', [TeacherDashboardController::class, 'index'])->name('dashboard');
         Route::get('/schedules', [TeacherScheduleController::class, 'index'])->name('schedules.index');
+        Route::get('/attendances', [TeacherAttendanceController::class, 'index'])->name('attendances.index');
     });
 
     // Wali Kelas Area
     Route::prefix('homeroom')->name('homeroom.')->middleware('role:wali_kelas')->group(function () {
         Route::get('/dashboard', [HomeroomDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/attendances', [HomeroomAttendanceController::class, 'index'])->name('attendances.index');
     });
 
     // Guru Pembimbing PKL Area
