@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Contracts\Repositories\AcademicYearRepositoryInterface;
 use App\Contracts\Services\AcademicYearServiceInterface;
 use App\Models\AcademicYear;
 use Illuminate\Database\Eloquent\Collection;
@@ -9,29 +10,28 @@ use Illuminate\Support\Facades\DB;
 
 class AcademicYearService implements AcademicYearServiceInterface
 {
+    public function __construct(
+        protected AcademicYearRepositoryInterface $academicYearRepository
+    ) {}
+
     public function getAll(): Collection
     {
-        return AcademicYear::withCount('classrooms')
-            ->orderBy('is_active', 'desc')
-            ->latest('start_date')
-            ->get();
+        return $this->academicYearRepository->getAll();
     }
 
     public function create(array $data): AcademicYear
     {
         return DB::transaction(function () use ($data) {
-            $isActive = ! empty($data['is_active']);
-
-            if ($isActive) {
-                AcademicYear::query()->update(['is_active' => false]);
+            if (! empty($data['is_active'])) {
+                $this->academicYearRepository->deactivateAll();
             }
 
-            return AcademicYear::create([
+            return $this->academicYearRepository->create([
                 'name' => $data['name'],
+                'start_date' => $data['start_date'],
+                'end_date' => $data['end_date'],
                 'semester' => $data['semester'],
-                'is_active' => $isActive,
-                'start_date' => $data['start_date'] ?? null,
-                'end_date' => $data['end_date'] ?? null,
+                'is_active' => ! empty($data['is_active']),
             ]);
         });
     }
@@ -39,36 +39,33 @@ class AcademicYearService implements AcademicYearServiceInterface
     public function update(AcademicYear $academicYear, array $data): AcademicYear
     {
         return DB::transaction(function () use ($academicYear, $data) {
-            $isActive = ! empty($data['is_active']);
-
-            if ($isActive && ! $academicYear->is_active) {
-                AcademicYear::where('id', '!=', $academicYear->id)->update(['is_active' => false]);
+            if (! empty($data['is_active'])) {
+                $this->academicYearRepository->deactivateAll();
             }
 
-            $academicYear->update([
+            return $this->academicYearRepository->update($academicYear, [
                 'name' => $data['name'],
+                'start_date' => $data['start_date'],
+                'end_date' => $data['end_date'],
                 'semester' => $data['semester'],
-                'is_active' => $isActive,
-                'start_date' => $data['start_date'] ?? null,
-                'end_date' => $data['end_date'] ?? null,
+                'is_active' => ! empty($data['is_active']),
             ]);
-
-            return $academicYear;
         });
     }
 
     public function setActive(AcademicYear $academicYear): AcademicYear
     {
         return DB::transaction(function () use ($academicYear) {
-            AcademicYear::where('id', '!=', $academicYear->id)->update(['is_active' => false]);
-            $academicYear->update(['is_active' => true]);
+            $this->academicYearRepository->deactivateAll();
 
-            return $academicYear;
+            return $this->academicYearRepository->update($academicYear, [
+                'is_active' => true,
+            ]);
         });
     }
 
     public function delete(AcademicYear $academicYear): bool
     {
-        return (bool) $academicYear->delete();
+        return $this->academicYearRepository->delete($academicYear);
     }
 }

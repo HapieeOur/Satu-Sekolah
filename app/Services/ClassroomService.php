@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Contracts\Repositories\ClassroomRepositoryInterface;
 use App\Contracts\Services\ClassroomServiceInterface;
 use App\Models\Classroom;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -9,31 +10,23 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ClassroomService implements ClassroomServiceInterface
 {
+    public function __construct(
+        protected ClassroomRepositoryInterface $classroomRepository
+    ) {}
+
     public function getPaginated(int $perPage = 15, ?int $academicYearId = null, ?int $gradeLevel = null): LengthAwarePaginator
     {
-        $query = Classroom::with(['academicYear', 'homeroomTeacher.user', 'students'])->latest();
-
-        if ($academicYearId) {
-            $query->where('academic_year_id', $academicYearId);
-        }
-
-        if ($gradeLevel) {
-            $query->where('grade_level', $gradeLevel);
-        }
-
-        return $query->paginate($perPage);
+        return $this->classroomRepository->getPaginated($perPage, $academicYearId, $gradeLevel);
     }
 
     public function getAllForActiveYear(): Collection
     {
-        return Classroom::whereHas('academicYear', function ($q) {
-            $q->where('is_active', true);
-        })->orderBy('grade_level')->orderBy('name')->get();
+        return $this->classroomRepository->getAllForActiveYear();
     }
 
     public function create(array $data): Classroom
     {
-        return Classroom::create([
+        return $this->classroomRepository->create([
             'name' => $data['name'],
             'grade_level' => $data['grade_level'],
             'major' => $data['major'],
@@ -44,19 +37,17 @@ class ClassroomService implements ClassroomServiceInterface
 
     public function update(Classroom $classroom, array $data): Classroom
     {
-        $classroom->update([
+        return $this->classroomRepository->update($classroom, [
             'name' => $data['name'],
             'grade_level' => $data['grade_level'],
             'major' => $data['major'],
             'academic_year_id' => $data['academic_year_id'],
             'teacher_id' => $data['teacher_id'] ?? null,
         ]);
-
-        return $classroom;
     }
 
     public function delete(Classroom $classroom): bool
     {
-        return (bool) $classroom->delete();
+        return $this->classroomRepository->delete($classroom);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Contracts\Repositories\TeacherRepositoryInterface;
 use App\Contracts\Services\TeacherServiceInterface;
 use App\Models\Teacher;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -10,33 +11,24 @@ use Illuminate\Support\Facades\DB;
 
 class TeacherService implements TeacherServiceInterface
 {
+    public function __construct(
+        protected TeacherRepositoryInterface $teacherRepository
+    ) {}
+
     public function getPaginated(int $perPage = 15, ?string $search = null): LengthAwarePaginator
     {
-        $query = Teacher::with(['user', 'subjects', 'classrooms'])->latest();
-
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('nip', 'like', "%{$search}%")
-                    ->orWhere('nuptk', 'like', "%{$search}%")
-                    ->orWhereHas('user', function ($uq) use ($search) {
-                        $uq->where('name', 'like', "%{$search}%")
-                            ->orWhere('email', 'like', "%{$search}%");
-                    });
-            });
-        }
-
-        return $query->paginate($perPage);
+        return $this->teacherRepository->getPaginated($perPage, $search);
     }
 
     public function getAll(): Collection
     {
-        return Teacher::with('user')->get()->sortBy('name')->values();
+        return $this->teacherRepository->getAll();
     }
 
     public function create(array $data, array $subjectIds = []): Teacher
     {
         return DB::transaction(function () use ($data, $subjectIds) {
-            $teacher = Teacher::create([
+            $teacher = $this->teacherRepository->create([
                 'user_id' => $data['user_id'],
                 'nip' => $data['nip'] ?? null,
                 'nuptk' => $data['nuptk'] ?? null,
@@ -46,7 +38,7 @@ class TeacherService implements TeacherServiceInterface
             ]);
 
             if (! empty($subjectIds)) {
-                $teacher->subjects()->sync($subjectIds);
+                $this->teacherRepository->syncSubjects($teacher, $subjectIds);
             }
 
             return $teacher;
@@ -56,7 +48,7 @@ class TeacherService implements TeacherServiceInterface
     public function update(Teacher $teacher, array $data, array $subjectIds = []): Teacher
     {
         return DB::transaction(function () use ($teacher, $data, $subjectIds) {
-            $teacher->update([
+            $teacher = $this->teacherRepository->update($teacher, [
                 'nip' => $data['nip'] ?? null,
                 'nuptk' => $data['nuptk'] ?? null,
                 'gender' => $data['gender'] ?? 'L',
@@ -64,7 +56,7 @@ class TeacherService implements TeacherServiceInterface
                 'address' => $data['address'] ?? null,
             ]);
 
-            $teacher->subjects()->sync($subjectIds);
+            $this->teacherRepository->syncSubjects($teacher, $subjectIds);
 
             return $teacher;
         });
@@ -73,9 +65,7 @@ class TeacherService implements TeacherServiceInterface
     public function delete(Teacher $teacher): bool
     {
         return DB::transaction(function () use ($teacher) {
-            $teacher->subjects()->detach();
-
-            return (bool) $teacher->delete();
+            return $this->teacherRepository->delete($teacher);
         });
     }
 }

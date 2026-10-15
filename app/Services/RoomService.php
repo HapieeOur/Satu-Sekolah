@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Contracts\Repositories\RoomRepositoryInterface;
 use App\Contracts\Services\RoomServiceInterface;
 use App\Models\Room;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -9,29 +10,23 @@ use Illuminate\Database\Eloquent\Collection;
 
 class RoomService implements RoomServiceInterface
 {
+    public function __construct(
+        protected RoomRepositoryInterface $roomRepository
+    ) {}
+
     public function getPaginated(int $perPage = 15, ?string $search = null): LengthAwarePaginator
     {
-        $query = Room::latest();
-
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('code', 'like', "%{$search}%")
-                    ->orWhere('name', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%");
-            });
-        }
-
-        return $query->paginate($perPage);
+        return $this->roomRepository->getPaginated($perPage, $search);
     }
 
     public function getAll(): Collection
     {
-        return Room::orderBy('name')->get();
+        return $this->roomRepository->getAll();
     }
 
     public function create(array $data): Room
     {
-        return Room::create([
+        return $this->roomRepository->create([
             'code' => $data['code'],
             'name' => $data['name'],
             'capacity' => $data['capacity'] ?? 36,
@@ -41,18 +36,16 @@ class RoomService implements RoomServiceInterface
 
     public function update(Room $room, array $data): Room
     {
-        $room->update([
+        return $this->roomRepository->update($room, [
             'code' => $data['code'],
             'name' => $data['name'],
             'capacity' => $data['capacity'] ?? 36,
             'description' => $data['description'] ?? null,
         ]);
-
-        return $room;
     }
 
     public function delete(Room $room): bool
     {
-        return (bool) $room->delete();
+        return $this->roomRepository->delete($room);
     }
 }
