@@ -47,6 +47,22 @@ class Student extends Model
     }
 
     /**
+     * Internship placements of this student.
+     */
+    public function internshipPlacements(): HasMany
+    {
+        return $this->hasMany(InternshipPlacement::class);
+    }
+
+    /**
+     * Internship task submissions of this student.
+     */
+    public function taskSubmissions(): HasMany
+    {
+        return $this->hasMany(InternshipTaskSubmission::class);
+    }
+
+    /**
      * Scope only active students.
      */
     public function scopeActive(Builder $query): Builder

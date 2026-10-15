@@ -89,4 +89,79 @@ class PostService implements PostServiceInterface
 
         return $query->firstOrFail();
     }
+
+    public function getAdminPosts(array $filters = [], int $perPage = 15): LengthAwarePaginator
+    {
+        $query = Post::with('author');
+
+        if (! empty($filters['category'])) {
+            $query->where('category', $filters['category']);
+        }
+
+        if (isset($filters['is_published']) && $filters['is_published'] !== '') {
+            $query->where('is_published', (bool) $filters['is_published']);
+        }
+
+        if (! empty($filters['search'])) {
+            $search = $filters['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                    ->orWhere('excerpt', 'like', "%{$search}%")
+                    ->orWhere('content', 'like', "%{$search}%");
+            });
+        }
+
+        return $query->latest()->paginate($perPage)->withQueryString();
+    }
+
+    public function findPostById(int $id): Post
+    {
+        return Post::with('author')->findOrFail($id);
+    }
+
+    public function createPost(array $data, int $authorUserId): Post
+    {
+        $data['user_id'] = $authorUserId;
+
+        if (! empty($data['is_published']) && empty($data['published_at'])) {
+            $data['published_at'] = now();
+        }
+
+        return Post::create($data);
+    }
+
+    public function updatePost(int $id, array $data): Post
+    {
+        $post = Post::findOrFail($id);
+
+        if (! empty($data['is_published']) && empty($post->published_at)) {
+            $data['published_at'] = now();
+        } elseif (isset($data['is_published']) && ! $data['is_published']) {
+            $data['published_at'] = null;
+        }
+
+        $post->update($data);
+
+        return $post->fresh('author');
+    }
+
+    public function deletePost(int $id): bool
+    {
+        $post = Post::findOrFail($id);
+
+        return (bool) $post->delete();
+    }
+
+    public function togglePublish(int $id): Post
+    {
+        $post = Post::findOrFail($id);
+        $newStatus = ! $post->is_published;
+
+        $post->update([
+            'is_published' => $newStatus,
+            'published_at' => $newStatus ? ($post->published_at ?? now()) : null,
+        ]);
+
+        return $post;
+    }
 }

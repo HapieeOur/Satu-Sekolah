@@ -60,6 +60,22 @@ class Teacher extends Model
     }
 
     /**
+     * Internship placements mentored by this teacher.
+     */
+    public function internshipPlacements(): HasMany
+    {
+        return $this->hasMany(InternshipPlacement::class);
+    }
+
+    /**
+     * Internship tasks assigned by this teacher.
+     */
+    public function internshipTasks(): HasMany
+    {
+        return $this->hasMany(InternshipTask::class);
+    }
+
+    /**
      * Accessor for full teacher name from user relation.
      */
     public function getNameAttribute(): string
