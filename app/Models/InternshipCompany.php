@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class InternshipCompany extends Model
 {
@@ -37,5 +38,15 @@ class InternshipCompany extends Model
             'longitude' => 'decimal:7',
             'radius_meters' => 'integer',
         ];
+    }
+
+    public function placements(): HasMany
+    {
+        return $this->hasMany(InternshipPlacement::class);
+    }
+
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(InternshipTask::class);
     }
 }

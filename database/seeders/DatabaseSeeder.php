@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             DataMasterSeeder::class,
             ScheduleSeeder::class,
             AttendanceSeeder::class,
+            InternshipSeeder::class,
         ]);
     }
 }

@@ -63,6 +63,14 @@ class AcademicYear extends Model
     }
 
     /**
+     * Internship placements in this academic year.
+     */
+    public function internshipPlacements(): HasMany
+    {
+        return $this->hasMany(InternshipPlacement::class);
+    }
+
+    /**
      * Full label helper (e.g., "2026/2027 Ganjil").
      */
     public function getLabelAttribute(): string

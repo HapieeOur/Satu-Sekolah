@@ -6,6 +6,8 @@ use App\Contracts\Repositories\AcademicYearRepositoryInterface;
 use App\Contracts\Repositories\AttendanceRepositoryInterface;
 use App\Contracts\Repositories\ClassroomRepositoryInterface;
 use App\Contracts\Repositories\InternshipCompanyRepositoryInterface;
+use App\Contracts\Repositories\InternshipMonitoringRepositoryInterface;
+use App\Contracts\Repositories\InternshipPlacementRepositoryInterface;
 use App\Contracts\Repositories\RoomRepositoryInterface;
 use App\Contracts\Repositories\ScheduleRepositoryInterface;
 use App\Contracts\Repositories\StudentRepositoryInterface;
@@ -15,6 +17,7 @@ use App\Contracts\Services\AcademicYearServiceInterface;
 use App\Contracts\Services\AttendanceServiceInterface;
 use App\Contracts\Services\ClassroomServiceInterface;
 use App\Contracts\Services\InternshipCompanyServiceInterface;
+use App\Contracts\Services\InternshipServiceInterface;
 use App\Contracts\Services\PostServiceInterface;
 use App\Contracts\Services\RoomServiceInterface;
 use App\Contracts\Services\ScheduleServiceInterface;
@@ -28,6 +31,8 @@ use App\Repositories\AcademicYearRepository;
 use App\Repositories\AttendanceRepository;
 use App\Repositories\ClassroomRepository;
 use App\Repositories\InternshipCompanyRepository;
+use App\Repositories\InternshipMonitoringRepository;
+use App\Repositories\InternshipPlacementRepository;
 use App\Repositories\RoomRepository;
 use App\Repositories\ScheduleRepository;
 use App\Repositories\StudentRepository;
@@ -37,6 +42,7 @@ use App\Services\AcademicYearService;
 use App\Services\AttendanceService;
 use App\Services\ClassroomService;
 use App\Services\InternshipCompanyService;
+use App\Services\InternshipService;
 use App\Services\PostService;
 use App\Services\RoomService;
 use App\Services\ScheduleService;
@@ -153,6 +159,21 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             AttendanceRepositoryInterface::class,
             AttendanceRepository::class
+        );
+
+        $this->app->bind(
+            InternshipPlacementRepositoryInterface::class,
+            InternshipPlacementRepository::class
+        );
+
+        $this->app->bind(
+            InternshipMonitoringRepositoryInterface::class,
+            InternshipMonitoringRepository::class
+        );
+
+        $this->app->bind(
+            InternshipServiceInterface::class,
+            InternshipService::class
         );
     }
 
