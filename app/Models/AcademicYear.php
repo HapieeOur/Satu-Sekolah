@@ -55,6 +55,14 @@ class AcademicYear extends Model
     }
 
     /**
+     * Schedules in this academic year.
+     */
+    public function schedules(): HasMany
+    {
+        return $this->hasMany(Schedule::class);
+    }
+
+    /**
      * Full label helper (e.g., "2026/2027 Ganjil").
      */
     public function getLabelAttribute(): string

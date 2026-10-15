@@ -125,6 +125,51 @@
                     </a>
                 </div>
             </div>
+
+            <!-- Akademik & Jadwal (Admin) -->
+            <div>
+                <p class="px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Akademik</p>
+                <div class="space-y-1">
+                    <a href="{{ route('admin.schedules.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition {{ request()->routeIs('admin.schedules.*') ? 'bg-brand text-white' : 'text-slate-300 hover:bg-navy-light hover:text-white' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        Jadwal Pelajaran
+                    </a>
+                </div>
+            </div>
+            @endrole
+
+            <!-- Kegiatan Guru -->
+            @role('guru')
+            <div>
+                <p class="px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Kegiatan Guru</p>
+                <div class="space-y-1">
+                    <a href="{{ route('teacher.schedules.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition {{ request()->routeIs('teacher.schedules.*') ? 'bg-brand text-white' : 'text-slate-300 hover:bg-navy-light hover:text-white' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        Jadwal Mengajar
+                    </a>
+                    <a href="{{ route('teacher.attendances.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition {{ request()->routeIs('teacher.attendances.*') ? 'bg-brand text-white' : 'text-slate-300 hover:bg-navy-light hover:text-white' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                        Presensi Siswa Mapel
+                    </a>
+                </div>
+            </div>
+            @endrole
+
+            <!-- Wali Kelas -->
+            @role('wali_kelas')
+            <div>
+                <p class="px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Wali Kelas</p>
+                <div class="space-y-1">
+                    <a href="{{ route('homeroom.dashboard') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition {{ request()->routeIs('homeroom.dashboard') ? 'bg-brand text-white' : 'text-slate-300 hover:bg-navy-light hover:text-white' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                        Dashboard Kelas Binaan
+                    </a>
+                    <a href="{{ route('homeroom.attendances.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition {{ request()->routeIs('homeroom.attendances.*') ? 'bg-brand text-white' : 'text-slate-300 hover:bg-navy-light hover:text-white' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        Presensi Kelas Binaan
+                    </a>
+                </div>
+            </div>
             @endrole
 
             <!-- Info Role Aktif Pengguna -->
@@ -210,7 +255,8 @@
                     </div>
                 @endif
 
-                {{ $slot }}
+                {{ $slot ?? '' }}
+                @yield('content')
             </div>
         </main>
     </div>

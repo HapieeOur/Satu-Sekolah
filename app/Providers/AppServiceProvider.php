@@ -3,17 +3,21 @@
 namespace App\Providers;
 
 use App\Contracts\Repositories\AcademicYearRepositoryInterface;
+use App\Contracts\Repositories\AttendanceRepositoryInterface;
 use App\Contracts\Repositories\ClassroomRepositoryInterface;
 use App\Contracts\Repositories\InternshipCompanyRepositoryInterface;
 use App\Contracts\Repositories\RoomRepositoryInterface;
+use App\Contracts\Repositories\ScheduleRepositoryInterface;
 use App\Contracts\Repositories\StudentRepositoryInterface;
 use App\Contracts\Repositories\SubjectRepositoryInterface;
 use App\Contracts\Repositories\TeacherRepositoryInterface;
 use App\Contracts\Services\AcademicYearServiceInterface;
+use App\Contracts\Services\AttendanceServiceInterface;
 use App\Contracts\Services\ClassroomServiceInterface;
 use App\Contracts\Services\InternshipCompanyServiceInterface;
 use App\Contracts\Services\PostServiceInterface;
 use App\Contracts\Services\RoomServiceInterface;
+use App\Contracts\Services\ScheduleServiceInterface;
 use App\Contracts\Services\StudentServiceInterface;
 use App\Contracts\Services\SubjectServiceInterface;
 use App\Contracts\Services\TeacherServiceInterface;
@@ -21,17 +25,21 @@ use App\Contracts\Services\UserServiceInterface;
 use App\Models\User;
 use App\Policies\UserPolicy;
 use App\Repositories\AcademicYearRepository;
+use App\Repositories\AttendanceRepository;
 use App\Repositories\ClassroomRepository;
 use App\Repositories\InternshipCompanyRepository;
 use App\Repositories\RoomRepository;
+use App\Repositories\ScheduleRepository;
 use App\Repositories\StudentRepository;
 use App\Repositories\SubjectRepository;
 use App\Repositories\TeacherRepository;
 use App\Services\AcademicYearService;
+use App\Services\AttendanceService;
 use App\Services\ClassroomService;
 use App\Services\InternshipCompanyService;
 use App\Services\PostService;
 use App\Services\RoomService;
+use App\Services\ScheduleService;
 use App\Services\StudentService;
 use App\Services\SubjectService;
 use App\Services\TeacherService;
@@ -91,6 +99,16 @@ class AppServiceProvider extends ServiceProvider
             InternshipCompanyService::class
         );
 
+        $this->app->bind(
+            ScheduleServiceInterface::class,
+            ScheduleService::class
+        );
+
+        $this->app->bind(
+            AttendanceServiceInterface::class,
+            AttendanceService::class
+        );
+
         // Repositories
         $this->app->bind(
             AcademicYearRepositoryInterface::class,
@@ -125,6 +143,16 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             InternshipCompanyRepositoryInterface::class,
             InternshipCompanyRepository::class
+        );
+
+        $this->app->bind(
+            ScheduleRepositoryInterface::class,
+            ScheduleRepository::class
+        );
+
+        $this->app->bind(
+            AttendanceRepositoryInterface::class,
+            AttendanceRepository::class
         );
     }
 

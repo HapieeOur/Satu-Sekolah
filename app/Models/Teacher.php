@@ -52,6 +52,14 @@ class Teacher extends Model
     }
 
     /**
+     * Teaching schedules for this teacher.
+     */
+    public function schedules(): HasMany
+    {
+        return $this->hasMany(Schedule::class);
+    }
+
+    /**
      * Accessor for full teacher name from user relation.
      */
     public function getNameAttribute(): string

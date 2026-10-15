@@ -3,59 +3,132 @@
         Dashboard Wali Kelas
     </x-slot>
 
-    <!-- Welcome Card -->
+    <!-- Welcome & Classroom Overview Banner -->
     <div class="bg-surface rounded-xl p-6 border border-border shadow-sm">
-        <div class="flex items-start justify-between">
+        <div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
             <div>
-                <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 mb-3">
-                    Portal Wali Kelas
-                </span>
-                <h2 class="text-xl font-bold text-navy">Selamat Datang, {{ $user->name }}</h2>
-                <p class="text-sm text-slate-500 mt-1">Area pemantauan khusus untuk data siswa, absensi, dan perkembangan kelas binaan Anda.</p>
-            </div>
-            <div class="hidden sm:block">
-                <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-lg">
-                    WK
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                        Portal Wali Kelas
+                    </span>
+                    @if($classroom)
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-semibold bg-navy-light/10 text-navy border border-navy/20">
+                            Kelas {{ $classroom->name }}
+                        </span>
+                    @endif
                 </div>
+                <h2 class="text-xl font-bold text-navy">Selamat Datang, {{ $user->name }}</h2>
+                <p class="text-xs text-slate-500 mt-1">
+                    @if($classroom)
+                        Wali Kelas {{ $classroom->name }} &bull; Program Keahlian {{ $classroom->major }} &bull; Tahun Ajaran {{ $classroom->academicYear?->name ?? '-' }}
+                    @else
+                        Akun Anda belum terhubung dengan penugasan kelas binaan. Hubungi administrator sekolah.
+                    @endif
+                </p>
             </div>
-        </div>
-
-        <div class="mt-6 pt-6 border-t border-border flex flex-wrap gap-4 text-xs text-slate-600">
-            <div>
-                <span class="text-slate-400 block uppercase tracking-wider text-[10px] font-semibold">Nama Wali</span>
-                <span class="font-medium text-slate-800">{{ $user->name }}</span>
-            </div>
-            <div class="h-8 w-px bg-border hidden sm:block"></div>
-            <div>
-                <span class="text-slate-400 block uppercase tracking-wider text-[10px] font-semibold">Email</span>
-                <span class="font-medium text-slate-800">{{ $user->email }}</span>
-            </div>
-            <div class="h-8 w-px bg-border hidden sm:block"></div>
-            <div>
-                <span class="text-slate-400 block uppercase tracking-wider text-[10px] font-semibold">Tanggung Jawab</span>
-                <span class="font-medium text-slate-800">Manajemen Siswa & Kelas</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Info Sections -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div class="bg-surface p-5 rounded-xl border border-border shadow-sm">
-            <h3 class="text-sm font-bold text-navy mb-2">Data Siswa Kelas</h3>
-            <p class="text-xs text-slate-500 mb-4">Daftar siswa pada kelas binaan Anda akan dimuat secara otomatis setelah penetapan kelas dan tahun ajaran aktif pada Tahap 2.</p>
-            <div class="p-3 bg-canvas rounded-lg border border-border text-xs text-slate-600 flex items-center gap-2">
-                <svg class="w-4 h-4 text-brand shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                <span>Siswa terhubung langsung melalui relasi data master kelas.</span>
-            </div>
-        </div>
-
-        <div class="bg-surface p-5 rounded-xl border border-border shadow-sm">
-            <h3 class="text-sm font-bold text-navy mb-2">Pemantauan Siswa PKL</h3>
-            <p class="text-xs text-slate-500 mb-4">Siswa di kelas Anda yang sedang menjalani program Praktik Kerja Lapangan (PKL) dapat dipantau perkembangannya melalui modul PKL.</p>
-            <div class="p-3 bg-canvas rounded-lg border border-border text-xs text-slate-600 flex items-center gap-2">
-                <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                <span>Terintegrasi dengan penempatan industri mitra DUDI.</span>
-            </div>
+            @if($classroom)
+                <div class="flex items-center gap-2">
+                    <a href="{{ route('homeroom.attendances.index') }}" class="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold text-white bg-brand rounded-lg hover:bg-brand-hover shadow-sm transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                        <span>Kelola Presensi Kelas</span>
+                    </a>
+                </div>
+            @endif
         </div>
     </div>
+
+    @if($classroom)
+        <!-- Real Statistics Metrics -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-surface rounded-xl p-5 border border-border shadow-sm">
+                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider block">Total Siswa Terdaftar</span>
+                <div class="mt-2 flex items-baseline gap-2">
+                    <span class="text-3xl font-extrabold text-navy">{{ $totalStudents }}</span>
+                    <span class="text-xs text-slate-400 font-medium">siswa</span>
+                </div>
+                <p class="mt-1 text-[11px] text-slate-500">Kelas binaan {{ $classroom->name }}</p>
+            </div>
+
+            <div class="bg-surface rounded-xl p-5 border border-border shadow-sm">
+                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider block">Tingkat Kehadiran Hari Ini</span>
+                <div class="mt-2 flex items-baseline gap-2">
+                    <span class="text-3xl font-extrabold text-emerald-700">{{ $attendanceSummary['attendance_rate'] }}%</span>
+                </div>
+                <p class="mt-1 text-[11px] text-slate-500">{{ $attendanceSummary['hadir'] + $attendanceSummary['terlambat'] }} dari {{ $attendanceSummary['total'] }} tercatat hadir</p>
+            </div>
+
+            <div class="bg-surface rounded-xl p-5 border border-border shadow-sm">
+                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider block">Izin & Sakit Hari Ini</span>
+                <div class="mt-2 flex items-baseline gap-2">
+                    <span class="text-3xl font-extrabold text-amber-700">{{ $attendanceSummary['izin'] + $attendanceSummary['sakit'] }}</span>
+                    <span class="text-xs text-slate-500 font-normal">({{ $attendanceSummary['izin'] }} izin, {{ $attendanceSummary['sakit'] }} sakit)</span>
+                </div>
+                <p class="mt-1 text-[11px] text-slate-500">Surat & konfirmasi tercatat</p>
+            </div>
+
+            <div class="bg-surface rounded-xl p-5 border border-border shadow-sm">
+                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider block">Tanpa Keterangan (Alpa)</span>
+                <div class="mt-2 flex items-baseline gap-2">
+                    <span class="text-3xl font-extrabold {{ $attendanceSummary['alpa'] > 0 ? 'text-rose-700' : 'text-slate-800' }}">{{ $attendanceSummary['alpa'] }}</span>
+                    <span class="text-xs text-slate-400 font-medium">siswa</span>
+                </div>
+                <p class="mt-1 text-[11px] text-slate-500">Memerlukan tindak lanjut wali kelas</p>
+            </div>
+        </div>
+
+        <!-- Recent Attendance Entries -->
+        <div class="bg-surface rounded-xl border border-border shadow-sm overflow-hidden">
+            <div class="p-5 border-b border-border flex items-center justify-between">
+                <div>
+                    <h3 class="text-sm font-bold text-navy">Presensi Siswa Terbaru Hari Ini</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Catatan presensi terakhir siswa kelas {{ $classroom->name }}</p>
+                </div>
+                <a href="{{ route('homeroom.attendances.index') }}" class="text-xs font-semibold text-brand hover:underline">
+                    Lihat Seluruh Log &rarr;
+                </a>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-slate-50 border-b border-border text-slate-700 font-semibold uppercase tracking-wider text-[11px]">
+                        <tr>
+                            <th class="py-3 px-4">NIS</th>
+                            <th class="py-3 px-4">Nama Siswa</th>
+                            <th class="py-3 px-4">Jam Masuk</th>
+                            <th class="py-3 px-4">Status</th>
+                            <th class="py-3 px-4">Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-border">
+                        @forelse($recentAttendances as $att)
+                            <tr class="hover:bg-slate-50/75 transition">
+                                <td class="py-3 px-4 font-mono text-slate-700">{{ $att->student?->nis ?? '-' }}</td>
+                                <td class="py-3 px-4 font-semibold text-navy">{{ $att->student?->name ?? '-' }}</td>
+                                <td class="py-3 px-4 font-mono text-slate-600">{{ $att->check_in_time ? substr($att->check_in_time, 0, 5) : '-' }}</td>
+                                <td class="py-3 px-4">
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold {{ $att->status->badgeClass() }}">
+                                        {{ $att->status->label() }}
+                                    </span>
+                                </td>
+                                <td class="py-3 px-4 text-slate-600">{{ $att->notes ?? '-' }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="py-8 text-center text-slate-500">
+                                    Belum ada catatan presensi hari ini.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @else
+        <div class="bg-surface rounded-xl p-8 border border-border text-center">
+            <h3 class="text-sm font-bold text-navy">Tidak Ada Kelas Binaan</h3>
+            <p class="text-xs text-slate-500 mt-1 max-w-md mx-auto">
+                Akun pendidik Anda saat ini belum ditetapkan sebagai Wali Kelas di data master kelas. Silakan koordinasi dengan Admin Sekolah untuk pengaturan penugasan kelas.
+            </p>
+        </div>
+    @endif
 </x-app-layout>

@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             PostSeeder::class,
             DataMasterSeeder::class,
+            ScheduleSeeder::class,
+            AttendanceSeeder::class,
         ]);
     }
 }
