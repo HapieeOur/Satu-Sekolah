@@ -1,11 +1,19 @@
 <?php
 
+use App\Http\Controllers\Admin\AcademicYearController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\ClassroomController;
+use App\Http\Controllers\Admin\InternshipCompanyController;
+use App\Http\Controllers\Admin\RoomController;
+use App\Http\Controllers\Admin\StudentController;
+use App\Http\Controllers\Admin\SubjectController;
+use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Homeroom\HomeroomDashboardController;
 use App\Http\Controllers\Internship\InternshipMentorDashboardController;
+use App\Http\Controllers\Public\PublicPageController;
 use App\Http\Controllers\Teacher\TeacherDashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +22,16 @@ use Illuminate\Support\Facades\Route;
 | Web Routes
 |--------------------------------------------------------------------------
 */
+
+// Public Routes (Accessible without authentication)
+Route::get('/', [PublicPageController::class, 'home'])->name('public.home');
+Route::get('/profil', [PublicPageController::class, 'profile'])->name('public.profile');
+Route::get('/berita', [PublicPageController::class, 'news'])->name('public.news');
+Route::get('/berita/{slug}', [PublicPageController::class, 'newsShow'])->name('public.news.show');
+Route::get('/pengumuman', [PublicPageController::class, 'announcements'])->name('public.announcements');
+Route::get('/pengumuman/{slug}', [PublicPageController::class, 'announcementShow'])->name('public.announcements.show');
+Route::get('/acara', [PublicPageController::class, 'events'])->name('public.events');
+Route::get('/acara/{slug}', [PublicPageController::class, 'eventShow'])->name('public.events.show');
 
 // Guest Routes
 Route::middleware('guest')->group(function () {
@@ -27,9 +45,6 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // Smart Dashboard Router
-    Route::get('/', function () {
-        return redirect()->route('dashboard');
-    });
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Admin Area
@@ -39,6 +54,17 @@ Route::middleware(['auth', 'active'])->group(function () {
         // User Management
         Route::resource('users', UserController::class);
         Route::post('/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
+
+        // Data Master
+        Route::resource('academic-years', AcademicYearController::class);
+        Route::post('/academic-years/{academic_year}/set-active', [AcademicYearController::class, 'setActive'])->name('academic-years.set-active');
+
+        Route::resource('teachers', TeacherController::class);
+        Route::resource('classrooms', ClassroomController::class);
+        Route::resource('students', StudentController::class);
+        Route::resource('subjects', SubjectController::class);
+        Route::resource('rooms', RoomController::class);
+        Route::resource('internship-companies', InternshipCompanyController::class);
     });
 
     // Guru Area

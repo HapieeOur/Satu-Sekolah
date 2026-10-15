@@ -55,7 +55,7 @@ class Post extends Model
 
         static::creating(function (Post $post) {
             if (empty($post->slug)) {
-                $post->slug = Str::slug($post->title) . '-' . Str::random(5);
+                $post->slug = Str::slug($post->title).'-'.Str::random(5);
             }
         });
     }
