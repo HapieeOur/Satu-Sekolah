@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\ClassroomController;
 use App\Http\Controllers\Admin\InternshipCompanyController;
 use App\Http\Controllers\Admin\RoomController;
+use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\TeacherController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\Homeroom\HomeroomDashboardController;
 use App\Http\Controllers\Internship\InternshipMentorDashboardController;
 use App\Http\Controllers\Public\PublicPageController;
 use App\Http\Controllers\Teacher\TeacherDashboardController;
+use App\Http\Controllers\Teacher\TeacherScheduleController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -65,11 +67,16 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::resource('subjects', SubjectController::class);
         Route::resource('rooms', RoomController::class);
         Route::resource('internship-companies', InternshipCompanyController::class);
+
+        // Jadwal Pelajaran
+        Route::get('/schedules/teachers-by-subject/{subject}', [ScheduleController::class, 'teachersBySubject'])->name('schedules.teachers-by-subject');
+        Route::resource('schedules', ScheduleController::class);
     });
 
     // Guru Area
     Route::prefix('teacher')->name('teacher.')->middleware('role:guru')->group(function () {
         Route::get('/dashboard', [TeacherDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/schedules', [TeacherScheduleController::class, 'index'])->name('schedules.index');
     });
 
     // Wali Kelas Area

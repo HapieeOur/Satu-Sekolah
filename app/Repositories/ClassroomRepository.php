@@ -24,6 +24,11 @@ class ClassroomRepository implements ClassroomRepositoryInterface
         return $query->paginate($perPage);
     }
 
+    public function getAll(): Collection
+    {
+        return Classroom::with('academicYear')->orderBy('grade_level')->orderBy('name')->get();
+    }
+
     public function getAllForActiveYear(): Collection
     {
         return Classroom::whereHas('academicYear', function ($q) {

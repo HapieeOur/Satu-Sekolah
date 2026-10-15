@@ -19,6 +19,11 @@ class ClassroomService implements ClassroomServiceInterface
         return $this->classroomRepository->getPaginated($perPage, $academicYearId, $gradeLevel);
     }
 
+    public function getAll(): Collection
+    {
+        return $this->classroomRepository->getAll();
+    }
+
     public function getAllForActiveYear(): Collection
     {
         return $this->classroomRepository->getAllForActiveYear();

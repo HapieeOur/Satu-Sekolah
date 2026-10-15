@@ -10,6 +10,8 @@ interface ClassroomRepositoryInterface
 {
     public function getPaginated(int $perPage = 15, ?int $academicYearId = null, ?int $gradeLevel = null): LengthAwarePaginator;
 
+    public function getAll(): Collection;
+
     public function getAllForActiveYear(): Collection;
 
     public function findById(int $id): ?Classroom;

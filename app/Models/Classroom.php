@@ -47,4 +47,12 @@ class Classroom extends Model
     {
         return $this->hasMany(Student::class);
     }
+
+    /**
+     * Schedules for this classroom.
+     */
+    public function schedules(): HasMany
+    {
+        return $this->hasMany(Schedule::class);
+    }
 }
