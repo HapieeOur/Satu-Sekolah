@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\ClassroomController;
 use App\Http\Controllers\Admin\InternshipAttendanceController as AdminInternshipAttendanceController;
 use App\Http\Controllers\Admin\InternshipCompanyController;
 use App\Http\Controllers\Admin\InternshipPlacementController;
+use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Admin\StudentController;
@@ -85,6 +87,14 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::resource('internships/placements', InternshipPlacementController::class)->names('internships.placements');
         Route::get('internships/attendances', [AdminInternshipAttendanceController::class, 'index'])->name('internships.attendances.index');
         Route::post('internships/attendances/{attendance}/correct', [AdminInternshipAttendanceController::class, 'correct'])->name('internships.attendances.correct');
+
+        // Publikasi Berita, Pengumuman, & Acara (Admin)
+        Route::post('posts/{post}/toggle-publish', [PostController::class, 'togglePublish'])->name('posts.toggle-publish');
+        Route::resource('posts', PostController::class);
+
+        // Laporan Institusi (Admin)
+        Route::get('reports/academic', [ReportController::class, 'academic'])->name('reports.academic');
+        Route::get('reports/internship', [ReportController::class, 'internship'])->name('reports.internship');
     });
 
     // Guru Area

@@ -42,4 +42,34 @@ interface PostServiceInterface
      * Find a published post by slug and optional category, aborting 404 if not found or unpublished.
      */
     public function findPublishedBySlugOrFail(string $slug, ?string $category = null): Post;
+
+    /**
+     * Get paginated posts for Admin management.
+     */
+    public function getAdminPosts(array $filters = [], int $perPage = 15): LengthAwarePaginator;
+
+    /**
+     * Find post by ID.
+     */
+    public function findPostById(int $id): Post;
+
+    /**
+     * Create a new post.
+     */
+    public function createPost(array $data, int $authorUserId): Post;
+
+    /**
+     * Update an existing post.
+     */
+    public function updatePost(int $id, array $data): Post;
+
+    /**
+     * Delete a post.
+     */
+    public function deletePost(int $id): bool;
+
+    /**
+     * Toggle post publication status.
+     */
+    public function togglePublish(int $id): Post;
 }

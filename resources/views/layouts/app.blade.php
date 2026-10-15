@@ -150,6 +150,32 @@
                     </a>
                 </div>
             </div>
+
+            <!-- Informasi Sekolah (Admin) -->
+            <div>
+                <p class="px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Informasi Sekolah</p>
+                <div class="space-y-1">
+                    <a href="{{ route('admin.posts.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition {{ request()->routeIs('admin.posts.*') ? 'bg-brand text-white' : 'text-slate-300 hover:bg-navy-light hover:text-white' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+                        Berita & Acara
+                    </a>
+                </div>
+            </div>
+
+            <!-- Laporan Institusi (Admin) -->
+            <div>
+                <p class="px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Laporan</p>
+                <div class="space-y-1">
+                    <a href="{{ route('admin.reports.academic') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition {{ request()->routeIs('admin.reports.academic') ? 'bg-brand text-white' : 'text-slate-300 hover:bg-navy-light hover:text-white' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        Laporan Akademik
+                    </a>
+                    <a href="{{ route('admin.reports.internship') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition {{ request()->routeIs('admin.reports.internship') ? 'bg-brand text-white' : 'text-slate-300 hover:bg-navy-light hover:text-white' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        Laporan PKL
+                    </a>
+                </div>
+            </div>
             @endrole
 
             <!-- Kegiatan Guru -->
