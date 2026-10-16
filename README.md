@@ -389,6 +389,6 @@ Lisensi proyek belum ditentukan. Tambahkan file `LICENSE` dan sesuaikan bagian i
 ---
 
 <p align="center">
-&#x20; \<strong>Satu-Sekolah</strong><br>
-&#x20; \<sub>Satu platform untuk mendukung pengelolaan sekolah yang lebih terintegrasi.</sub>
+&#x20; <strong>Satu-Sekolah</strong><br>
+&#x20; <sub>Satu platform untuk mendukung pengelolaan sekolah yang lebih terintegrasi.</sub>
 </p>
