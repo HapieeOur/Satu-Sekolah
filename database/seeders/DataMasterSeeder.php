@@ -179,8 +179,23 @@ class DataMasterSeeder extends Seeder
             ['nis' => '20261202', 'nisn' => '0061234502', 'name' => 'Gita Maharani', 'gender' => 'P', 'classroom_id' => $kelas12Rpl->id, 'phone' => '082100000005', 'parent_name' => 'Wahyudi', 'parent_phone' => '081300000005'],
         ];
 
-        foreach ($studentsData as $student) {
-            Student::firstOrCreate(['nis' => $student['nis']], $student);
+        foreach ($studentsData as $studentRow) {
+            $user = User::firstOrCreate(
+                ['email' => $studentRow['nis'].'@student.oneschool.sch.id'],
+                [
+                    'name' => $studentRow['name'],
+                    'phone' => $studentRow['phone'],
+                    'password' => Hash::make('password'),
+                    'is_active' => true,
+                ]
+            );
+            $user->syncRoles(['siswa']);
+
+            $studentRow['user_id'] = $user->id;
+            $student = Student::firstOrCreate(['nis' => $studentRow['nis']], $studentRow);
+            if (! $student->user_id) {
+                $student->update(['user_id' => $user->id]);
+            }
         }
 
         // 8. Mitra DUDI PKL (Internship Companies)

@@ -49,6 +49,13 @@ class RoleAndPermissionSeeder extends Seeder
             'internship.review_journals',
             'internship.manage_tasks',
             'internship.review_leaves',
+
+            // Siswa permissions
+            'siswa.dashboard',
+            'internship.attendance',
+            'internship.journal',
+            'internship.tasks',
+            'internship.leaves',
         ];
 
         foreach ($permissions as $permission) {
@@ -86,6 +93,17 @@ class RoleAndPermissionSeeder extends Seeder
             'internship.review_journals',
             'internship.manage_tasks',
             'internship.review_leaves',
+        ]);
+
+        $siswaRole = Role::firstOrCreate(['name' => 'siswa', 'guard_name' => 'web']);
+        $siswaRole->syncPermissions([
+            'siswa.dashboard',
+            'internship.attendance',
+            'internship.journal',
+            'internship.tasks',
+            'internship.leaves',
+            'schedules.view_own',
+            'news.view',
         ]);
     }
 }
