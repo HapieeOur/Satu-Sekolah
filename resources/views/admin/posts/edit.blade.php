@@ -4,103 +4,127 @@
     </x-slot>
 
     <div class="max-w-4xl mx-auto space-y-6">
-        <!-- Back Navigation & Title -->
-        <div class="flex items-center gap-3">
-            <a href="{{ route('admin.posts.index') }}" class="p-2 rounded-lg bg-surface hover:bg-slate-100 text-slate-600 border border-border transition min-h-[44px] min-w-[44px] flex items-center justify-center">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        <!-- Back Navigation -->
+        <div class="flex items-center justify-between">
+            <a href="{{ route('admin.posts.index') }}" class="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 hover:text-indigo-600 transition group">
+                <svg class="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                <span>Kembali ke Daftar Publikasi</span>
             </a>
-            <div>
-                <h1 class="text-xl font-bold text-navy">Edit Konten Publikasi</h1>
-                <p class="text-xs text-slate-600 mt-0.5">Perbarui informasi untuk "{{ $post->title }}".</p>
-            </div>
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
+                Mode Edit Artikel
+            </span>
         </div>
 
         <!-- Form Card -->
-        <div class="bg-surface rounded-xl border border-border p-6 shadow-sm">
-            <form method="POST" action="{{ route('admin.posts.update', $post->id) }}" class="space-y-5">
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+            <div class="p-6 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white">
+                <h2 class="text-lg font-bold">Edit Konten: {{ $post->title }}</h2>
+                <p class="text-xs text-slate-300 mt-1">Perbarui judul, kategori, isi artikel, jadwal acara, atau status publikasi.</p>
+            </div>
+
+            <form method="POST" action="{{ route('admin.posts.update', $post->id) }}" class="p-6 md:p-8 space-y-5 text-xs">
                 @csrf
                 @method('PUT')
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
                     <div class="sm:col-span-2">
-                        <label for="title" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Judul Konten <span class="text-danger">*</span></label>
+                        <label for="title" class="block font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                            Judul Konten <span class="text-rose-500">*</span>
+                        </label>
                         <input type="text" name="title" id="title" value="{{ old('title', $post->title) }}" required
-                               class="w-full text-xs rounded-lg border-border focus:border-brand focus:ring-1 focus:ring-brand bg-white text-slate-800">
+                               class="w-full px-4 py-2.5 text-xs rounded-xl border border-slate-200 focus:bg-white focus:ring-2 focus:ring-brand/20 focus:border-brand bg-slate-50/50 text-slate-800 transition">
                         @error('title')
-                            <p class="mt-1 text-xs text-danger">{{ $message }}</p>
+                            <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div>
-                        <label for="category" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Kategori Konten <span class="text-danger">*</span></label>
+                        <label for="category" class="block font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                            Kategori Konten <span class="text-rose-500">*</span>
+                        </label>
                         <select name="category" id="category" required onchange="toggleEventFields(this.value)"
-                                class="w-full text-xs rounded-lg border-border focus:border-brand focus:ring-1 focus:ring-brand bg-white text-slate-800">
-                            <option value="berita" {{ old('category', $post->category) == 'berita' ? 'selected' : '' }}>Berita</option>
-                            <option value="pengumuman" {{ old('category', $post->category) == 'pengumuman' ? 'selected' : '' }}>Pengumuman</option>
-                            <option value="acara" {{ old('category', $post->category) == 'acara' ? 'selected' : '' }}>Acara Sekolah</option>
+                                class="w-full px-4 py-2.5 text-xs rounded-xl border border-slate-200 focus:bg-white focus:ring-2 focus:ring-brand/20 focus:border-brand bg-slate-50/50 text-slate-800 transition font-medium">
+                            <option value="berita" {{ old('category', $post->category) == 'berita' ? 'selected' : '' }}>Berita Sekolah</option>
+                            <option value="pengumuman" {{ old('category', $post->category) == 'pengumuman' ? 'selected' : '' }}>Pengumuman Resmi</option>
+                            <option value="acara" {{ old('category', $post->category) == 'acara' ? 'selected' : '' }}>Agenda / Acara</option>
                         </select>
                         @error('category')
-                            <p class="mt-1 text-xs text-danger">{{ $message }}</p>
+                            <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
 
                 <!-- Event Specific Fields -->
-                <div id="eventFields" class="{{ old('category', $post->category) == 'acara' ? '' : 'hidden' }} p-4 bg-slate-50 border border-slate-200 rounded-lg space-y-4">
-                    <p class="text-xs font-bold text-navy uppercase tracking-wider">Detail Acara Sekolah</p>
+                <div id="eventFields" class="{{ old('category', $post->category) == 'acara' ? '' : 'hidden' }} p-5 bg-indigo-50/40 border border-indigo-100 rounded-2xl space-y-4">
+                    <div class="flex items-center gap-2">
+                        <span class="w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        </span>
+                        <div>
+                            <p class="text-xs font-bold text-slate-900 uppercase tracking-wider">Detail Pelaksanaan Acara</p>
+                            <p class="text-[11px] text-slate-500">Tentukan tanggal, waktu mulai, dan lokasi penyelenggaraan acara.</p>
+                        </div>
+                    </div>
+
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
-                            <label for="event_date" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Tanggal Acara</label>
+                            <label for="event_date" class="block font-bold uppercase tracking-wider text-slate-700 mb-1">Tanggal Acara</label>
                             <input type="date" name="event_date" id="event_date" value="{{ old('event_date', $post->event_date?->format('Y-m-d')) }}"
-                                   class="w-full text-xs rounded-lg border-border focus:border-brand focus:ring-1 focus:ring-brand bg-white text-slate-800">
+                                   class="w-full px-4 py-2.5 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand/20 focus:border-brand bg-white text-slate-800 font-mono transition">
                         </div>
                         <div>
-                            <label for="event_time" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Waktu / Jam (HH:mm)</label>
+                            <label for="event_time" class="block font-bold uppercase tracking-wider text-slate-700 mb-1">Waktu / Jam (HH:mm)</label>
                             <input type="text" name="event_time" id="event_time" value="{{ old('event_time', $post->event_time ? substr($post->event_time, 0, 5) : '') }}" placeholder="08:00"
-                                   class="w-full text-xs rounded-lg border-border focus:border-brand focus:ring-1 focus:ring-brand bg-white text-slate-800 font-mono">
+                                   class="w-full px-4 py-2.5 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand/20 focus:border-brand bg-white text-slate-800 font-mono transition">
                         </div>
                         <div>
-                            <label for="event_location" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Lokasi / Ruangan</label>
-                            <input type="text" name="event_location" id="event_location" value="{{ old('event_location', $post->event_location) }}" placeholder="Contoh: Aula Gedung A"
-                                   class="w-full text-xs rounded-lg border-border focus:border-brand focus:ring-1 focus:ring-brand bg-white text-slate-800">
+                            <label for="event_location" class="block font-bold uppercase tracking-wider text-slate-700 mb-1">Lokasi / Ruangan</label>
+                            <input type="text" name="event_location" id="event_location" value="{{ old('event_location', $post->event_location) }}" placeholder="Contoh: Aula Utama Gedung B"
+                                   class="w-full px-4 py-2.5 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand/20 focus:border-brand bg-white text-slate-800 transition">
                         </div>
                     </div>
                 </div>
 
                 <div>
-                    <label for="excerpt" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Ringkasan Singkat (Excerpt)</label>
+                    <label for="excerpt" class="block font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                        Ringkasan Singkat (Excerpt)
+                    </label>
                     <textarea name="excerpt" id="excerpt" rows="2"
-                              class="w-full text-xs rounded-lg border-border focus:border-brand focus:ring-1 focus:ring-brand bg-white text-slate-800">{{ old('excerpt', $post->excerpt) }}</textarea>
+                              class="w-full px-4 py-2.5 text-xs rounded-xl border border-slate-200 focus:bg-white focus:ring-2 focus:ring-brand/20 focus:border-brand bg-slate-50/50 text-slate-800 transition leading-relaxed">{{ old('excerpt', $post->excerpt) }}</textarea>
                     @error('excerpt')
-                        <p class="mt-1 text-xs text-danger">{{ $message }}</p>
+                        <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <div>
-                    <label for="content" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Isi Konten Lengkap <span class="text-danger">*</span></label>
+                    <label for="content" class="block font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                        Isi Konten Lengkap <span class="text-rose-500">*</span>
+                    </label>
                     <textarea name="content" id="content" rows="8" required
-                              class="w-full text-xs rounded-lg border-border focus:border-brand focus:ring-1 focus:ring-brand bg-white text-slate-800 font-sans leading-relaxed">{{ old('content', $post->content) }}</textarea>
+                              class="w-full px-4 py-3 text-xs rounded-xl border border-slate-200 focus:bg-white focus:ring-2 focus:ring-brand/20 focus:border-brand bg-slate-50/50 text-slate-800 transition leading-relaxed font-sans">{{ old('content', $post->content) }}</textarea>
                     @error('content')
-                        <p class="mt-1 text-xs text-danger">{{ $message }}</p>
+                        <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div>
-                    <label class="flex items-center gap-2 cursor-pointer">
+                <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/60">
+                    <label class="inline-flex items-center gap-3 cursor-pointer">
                         <input type="hidden" name="is_published" value="0">
                         <input type="checkbox" name="is_published" value="1" {{ old('is_published', $post->is_published) ? 'checked' : '' }}
-                               class="rounded border-border text-brand focus:ring-brand h-4 w-4">
-                        <span class="text-xs font-semibold text-slate-800">Terbitkan langsung ke publik</span>
+                               class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300">
+                        <div>
+                            <span class="font-bold text-slate-800 text-xs">Terbitkan langsung ke publik</span>
+                            <p class="text-[11px] text-slate-500 mt-0.5">Jika tidak dicentang, konten disimpan sebagai draf dan tidak tampil di portal depan.</p>
+                        </div>
                     </label>
-                    <p class="text-[11px] text-slate-500 mt-0.5 ml-6">Jika tidak dicentang, konten disimpan sebagai draf dan tidak tampil di halaman depan.</p>
                 </div>
 
-                <!-- Submit Button -->
-                <div class="pt-4 border-t border-border flex items-center justify-end gap-3">
-                    <a href="{{ route('admin.posts.index') }}" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-navy hover:bg-slate-100 rounded-lg transition min-h-[44px] flex items-center">
+                <!-- Action Buttons -->
+                <div class="pt-6 border-t border-slate-100 flex items-center justify-end gap-3">
+                    <a href="{{ route('admin.posts.index') }}" class="px-5 py-2.5 border border-slate-200 text-slate-600 hover:bg-slate-50 font-semibold rounded-xl transition">
                         Batal
                     </a>
-                    <button type="submit" class="px-5 py-2.5 text-xs font-semibold text-white bg-brand rounded-lg hover:bg-brand-hover shadow-sm transition min-h-[44px]">
+                    <button type="submit" class="px-6 py-2.5 bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-md shadow-indigo-500/20 transition">
                         Perbarui Konten
                     </button>
                 </div>
