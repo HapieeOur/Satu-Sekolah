@@ -6,6 +6,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'Dashboard' }} — {{ config('app.name', 'SatuSekolah') }}</title>
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
+
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -76,18 +81,15 @@
         <!-- Brand / Header -->
         <div class="h-16 flex items-center justify-between px-5 border-b border-slate-800 bg-slate-950/40">
             <a href="{{ route('dashboard') }}" class="flex items-center gap-3 group">
-                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand via-indigo-600 to-violet-600 text-white flex items-center justify-center font-extrabold text-base shadow-md shadow-brand/30 group-hover:scale-105 transition-transform duration-200">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 14l9-5-9-5-9 5 9 5z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
-                    </svg>
+                <div class="w-9 h-9 rounded-xl bg-white p-1 flex items-center justify-center shadow-md shadow-brand/20 group-hover:scale-105 transition-transform duration-200">
+                    <img src="{{ asset('images/logo/icon.png') }}" alt="oneSchool" class="w-full h-full object-contain">
                 </div>
                 <div>
                     <div class="flex items-center gap-1.5">
-                        <span class="font-extrabold text-white text-base tracking-tight leading-tight">SatuSekolah</span>
+                        <span class="font-extrabold text-white text-base tracking-tight leading-tight">oneSchool</span>
                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
                     </div>
-                    <span class="text-[10px] text-slate-400 font-medium">Sistem Informasi Terpadu</span>
+                    <span class="text-[10px] text-slate-400 font-medium">Digital Learning Platform</span>
                 </div>
             </a>
             <button onclick="toggleSidebar()" class="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">

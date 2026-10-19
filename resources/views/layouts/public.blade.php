@@ -6,6 +6,11 @@
     <title>{{ $title ?? 'Satu-Sekolah' }} — Portal Informasi Sekolah Terpadu</title>
     <meta name="description" content="Sistem Informasi Sekolah Satu-Sekolah — Portal Administrasi Akademik, Presensi, dan Monitoring Praktik Kerja Lapangan.">
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
+
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -96,20 +101,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-18">
                 <!-- Brand / Logo -->
-                <a href="{{ route('public.home') }}" class="flex items-center gap-3.5 group cursor-pointer">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand via-indigo-600 to-violet-600 text-white flex items-center justify-center font-extrabold text-lg shadow-md shadow-brand/25 group-hover:scale-105 transition-transform duration-200">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 14l9-5-9-5-9 5 9 5z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="flex items-center gap-1.5">
-                            <span class="font-extrabold text-navy text-lg leading-tight tracking-tight group-hover:text-brand transition">SatuSekolah</span>
-                            <span class="px-1.5 py-0.2 rounded text-[9px] font-bold uppercase tracking-wider bg-indigo-50 text-brand border border-indigo-200/60">Digital</span>
-                        </div>
-                        <span class="text-[11px] text-slate-500 font-medium block">Sistem Informasi Akademik &amp; PKL</span>
-                    </div>
+                <a href="{{ route('public.home') }}" class="flex items-center gap-3 group cursor-pointer py-1">
+                    <img src="{{ asset('images/logo/logo.png') }}" alt="oneSchool" class="h-9 sm:h-10 w-auto object-contain group-hover:scale-[1.02] transition-transform duration-200">
                 </a>
 
                 <!-- Desktop Navigation Links -->
@@ -207,12 +200,12 @@
                 <!-- Col 1: About & Identity -->
                 <div class="space-y-4 md:col-span-5">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand to-violet-600 text-white flex items-center justify-center font-extrabold text-lg shadow-md shadow-brand/30">
-                            S
+                        <div class="w-10 h-10 rounded-xl bg-white p-1.5 flex items-center justify-center shadow-md shadow-brand/20">
+                            <img src="{{ asset('images/logo/icon.png') }}" alt="oneSchool" class="w-full h-full object-contain">
                         </div>
                         <div>
-                            <span class="font-extrabold text-white text-lg tracking-tight block">SatuSekolah</span>
-                            <span class="text-[11px] text-indigo-300 font-medium">Sistem Informasi Manajemen Sekolah Terpadu</span>
+                            <span class="font-extrabold text-white text-lg tracking-tight block">oneSchool</span>
+                            <span class="text-[11px] text-indigo-300 font-medium">Digital Learning Platform &amp; PKL</span>
                         </div>
                     </div>
                     <p class="text-xs text-slate-400 leading-relaxed max-w-sm">
