@@ -81,6 +81,7 @@ abstract class ApiController extends Controller
     protected function currentStudent(): ?Student
     {
         $user = $this->currentUser();
+
         return $user?->student;
     }
 
@@ -90,6 +91,7 @@ abstract class ApiController extends Controller
     protected function currentTeacher(): ?Teacher
     {
         $user = $this->currentUser();
+
         return $user?->teacher;
     }
 }

@@ -3,7 +3,6 @@
 namespace Tests\Feature\Api;
 
 use App\Models\Post;
-use App\Models\User;
 use Database\Seeders\DataMasterSeeder;
 use Database\Seeders\PostSeeder;
 use Database\Seeders\RoleAndPermissionSeeder;

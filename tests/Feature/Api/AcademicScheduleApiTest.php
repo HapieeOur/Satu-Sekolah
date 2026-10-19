@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Api;
 
-use App\Models\Classroom;
 use App\Models\Schedule;
 use App\Models\Student;
 use App\Models\User;
@@ -34,7 +33,7 @@ class AcademicScheduleApiTest extends TestCase
         $student = Student::where('nis', '20261101')->first();
         $token = $student->user->createToken('test')->plainTextToken;
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+        $response = $this->withHeader('Authorization', 'Bearer '.$token)
             ->getJson('/api/v1/student/schedules');
 
         $response->assertStatus(200)
@@ -56,7 +55,7 @@ class AcademicScheduleApiTest extends TestCase
         $teacherUser = User::where('email', 'guru@oneschool.sch.id')->first();
         $token = $teacherUser->createToken('test')->plainTextToken;
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+        $response = $this->withHeader('Authorization', 'Bearer '.$token)
             ->getJson('/api/v1/teacher/schedules');
 
         $response->assertStatus(200)
@@ -82,7 +81,7 @@ class AcademicScheduleApiTest extends TestCase
             ];
         }
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+        $response = $this->withHeader('Authorization', 'Bearer '.$token)
             ->postJson('/api/v1/teacher/attendances', [
                 'schedule_id' => $schedule->id,
                 'classroom_id' => $classroom->id,

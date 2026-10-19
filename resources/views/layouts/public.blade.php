@@ -16,7 +16,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS with Reference Tokens -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -24,33 +24,33 @@
                 extend: {
                     colors: {
                         navy: {
-                            DEFAULT: '#0F172A', // Slate 900
-                            light: '#1E293B',   // Slate 800
-                            dark: '#020617',    // Slate 950
-                            subtle: '#334155',  // Slate 700
+                            DEFAULT: '#171B61',
+                            sidebar: '#131652',
+                            dark: '#0D1040',
+                            light: '#1F257D',
                         },
                         brand: {
-                            DEFAULT: '#4F46E5', // Indigo 600
-                            hover: '#4338CA',   // Indigo 700
-                            light: '#EEF2FF',   // Indigo 50
-                            dark: '#3730A3',    // Indigo 800
+                            DEFAULT: '#233DFF',
+                            hover: '#1B30D9',
+                            light: '#E5ECFF',
+                            lavender: '#ECEBFA',
+                            dark: '#171B61',
                         },
                         accent: {
-                            cyan: '#06B6D4',
-                            emerald: '#10B981',
-                            amber: '#F59E0B',
-                            violet: '#8B5CF6',
+                            yellow: '#F4CF52',
+                            blue: '#E5ECFF',
+                            lavender: '#ECEBFA',
                         },
-                        canvas: '#F8FAFC',
+                        canvas: '#F4F6FB',
                         surface: '#FFFFFF',
-                        border: '#E2E8F0',
+                        border: '#E8EDF5',
                     },
                     fontFamily: {
                         sans: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
                     },
                     boxShadow: {
-                        'card': '0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.02)',
-                        'glow': '0 0 25px -5px rgba(79, 70, 229, 0.35)',
+                        'card': '0 4px 20px -2px rgba(23, 27, 97, 0.05), 0 2px 6px -1px rgba(23, 27, 97, 0.02)',
+                        'glow': '0 0 25px -5px rgba(35, 61, 255, 0.35)',
                     }
                 }
             }
@@ -60,89 +60,72 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <style>
-        /* Smooth transitions & anti-slop micro-effects */
         .glass-nav {
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-        }
-        .hero-pattern {
-            background-color: #F8FAFC;
-            background-image: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
-                              radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.10) 0px, transparent 50%),
-                              radial-gradient(at 50% 100%, rgba(6, 182, 212, 0.08) 0px, transparent 50%);
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
         }
     </style>
 </head>
-<body class="min-h-full font-sans antialiased text-slate-800 bg-[#F8FAFC] flex flex-col justify-between selection:bg-brand selection:text-white" x-data="{ mobileMenuOpen: false }">
+<body class="min-h-full font-sans antialiased text-slate-800 bg-[#F4F6FB] flex flex-col justify-between selection:bg-brand selection:text-white" x-data="{ mobileMenuOpen: false }">
 
-    <!-- Top Announcement Ticker / Info Bar -->
-    <div class="bg-gradient-to-r from-navy via-navy-light to-navy text-white text-[11px] font-medium py-1.5 px-4 border-b border-white/10 hidden sm:block">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-brand text-white shadow-xs">
-                    SMK Unggulan
-                </span>
-                <span class="text-slate-300">Pusat Keunggulan Teknologi & Monitoring PKL Terintegrasi DUDI</span>
-            </div>
-            <div class="flex items-center gap-4 text-slate-400">
-                <span class="flex items-center gap-1.5">
-                    <svg class="w-3.5 h-3.5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                    Terakreditasi A (BAN-S/M)
-                </span>
-                <span class="text-slate-600">•</span>
-                <span class="text-slate-300">Hubungi: (021) 7890-1234</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Main Navigation Bar -->
-    <header class="sticky top-0 z-50 glass-nav border-b border-border/80 transition-all duration-200">
+    <!-- Main Navigation Bar (Inspired by Reference Image B) -->
+    <header class="sticky top-0 z-50 glass-nav border-b border-slate-200/80 transition-all duration-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-18">
-                <!-- Brand / Logo -->
+            <div class="flex items-center justify-between h-20">
+                <!-- Brand / Logo (Reference Image B style: Bold typographic wordmark) -->
                 <a href="{{ route('public.home') }}" class="flex items-center gap-3 group cursor-pointer py-1">
-                    <img src="{{ asset('images/logo/logo.png') }}" alt="oneSchool" class="h-9 sm:h-10 w-auto object-contain group-hover:scale-[1.02] transition-transform duration-200">
+                    <div class="w-10 h-10 rounded-2xl bg-white p-1.5 flex items-center justify-center shadow-md shadow-indigo-950/20 group-hover:scale-105 transition-transform duration-200">
+                        <img src="{{ asset('images/logo/icon.png') }}" alt="oneSchool" class="w-full h-full object-contain">
+                    </div>
+                    <div>
+                        <span class="font-black text-xl tracking-tight text-[#171B61] group-hover:text-[#233DFF] transition-colors">
+                            SATU<span class="text-[#233DFF]">SEKOLAH</span><span class="text-[#F4CF52]">.</span>
+                        </span>
+                        <span class="block text-[10px] font-semibold text-slate-400 tracking-wider uppercase leading-none">Keunggulan Vokasi</span>
+                    </div>
                 </a>
 
-                <!-- Desktop Navigation Links -->
-                <nav class="hidden md:flex items-center gap-1 bg-slate-100/70 p-1.5 rounded-full border border-slate-200/60 text-xs font-semibold">
-                    <a href="{{ route('public.home') }}" class="px-3.5 py-1.5 rounded-full transition-all duration-150 {{ request()->routeIs('public.home') ? 'bg-white text-brand shadow-xs font-bold' : 'text-slate-600 hover:text-navy hover:bg-white/50' }}">
-                        Beranda
+                <!-- Desktop Navigation Links (Reference Image B: Clean spaced horizontal menu) -->
+                <nav class="hidden lg:flex items-center gap-8 text-xs font-bold uppercase tracking-wider text-slate-600">
+                    <a href="{{ route('public.home') }}" class="py-1 transition-colors {{ request()->routeIs('public.home') ? 'text-[#233DFF] border-b-2 border-[#233DFF]' : 'hover:text-[#171B61]' }}">
+                        Home
                     </a>
-                    <a href="{{ route('public.profile') }}" class="px-3.5 py-1.5 rounded-full transition-all duration-150 {{ request()->routeIs('public.profile') ? 'bg-white text-brand shadow-xs font-bold' : 'text-slate-600 hover:text-navy hover:bg-white/50' }}">
-                        Profil Sekolah
+                    <a href="{{ route('public.profile') }}" class="py-1 transition-colors {{ request()->routeIs('public.profile') ? 'text-[#233DFF] border-b-2 border-[#233DFF]' : 'hover:text-[#171B61]' }}">
+                        Profil
                     </a>
-                    <a href="{{ route('public.news') }}" class="px-3.5 py-1.5 rounded-full transition-all duration-150 {{ request()->routeIs('public.news*') ? 'bg-white text-brand shadow-xs font-bold' : 'text-slate-600 hover:text-navy hover:bg-white/50' }}">
-                        Kabar &amp; Berita
+                    <a href="{{ route('public.events') }}" class="py-1 transition-colors {{ request()->routeIs('public.events*') ? 'text-[#233DFF] border-b-2 border-[#233DFF]' : 'hover:text-[#171B61]' }}">
+                        Kegiatan
                     </a>
-                    <a href="{{ route('public.announcements') }}" class="px-3.5 py-1.5 rounded-full transition-all duration-150 {{ request()->routeIs('public.announcements*') ? 'bg-white text-brand shadow-xs font-bold' : 'text-slate-600 hover:text-navy hover:bg-white/50' }}">
+                    <a href="{{ route('public.news') }}" class="py-1 transition-colors {{ request()->routeIs('public.news*') ? 'text-[#233DFF] border-b-2 border-[#233DFF]' : 'hover:text-[#171B61]' }}">
+                        Berita
+                    </a>
+                    <a href="{{ route('public.announcements') }}" class="py-1 transition-colors {{ request()->routeIs('public.announcements*') ? 'text-[#233DFF] border-b-2 border-[#233DFF]' : 'hover:text-[#171B61]' }}">
                         Pengumuman
                     </a>
-                    <a href="{{ route('public.events') }}" class="px-3.5 py-1.5 rounded-full transition-all duration-150 {{ request()->routeIs('public.events*') ? 'bg-white text-brand shadow-xs font-bold' : 'text-slate-600 hover:text-navy hover:bg-white/50' }}">
-                        Agenda Acara
+                    <a href="#kontak" class="py-1 transition-colors hover:text-[#171B61]">
+                        Kontak
                     </a>
                 </nav>
 
-                <!-- Auth Action Button -->
-                <div class="hidden md:flex items-center gap-3">
+                <!-- Auth Action Button (Reference Image B: Pill Login Button) -->
+                <div class="hidden sm:flex items-center gap-3">
                     @auth
-                        <a href="{{ route('dashboard') }}" class="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-white bg-gradient-to-r from-brand to-violet-600 hover:from-brand-hover hover:to-violet-700 rounded-xl shadow-sm hover:shadow-glow transition-all duration-200">
+                        <a href="{{ route('dashboard') }}" class="inline-flex items-center gap-2 px-6 py-2.5 text-xs font-bold text-white bg-[#233DFF] hover:bg-[#1B30D9] rounded-full shadow-md shadow-indigo-600/25 hover:shadow-indigo-600/40 hover:-translate-y-0.5 transition-all duration-150">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                             <span>Ke Dashboard</span>
                         </a>
                     @else
-                        <a href="{{ route('login') }}" class="inline-flex items-center gap-2 px-4 py-2.5 text-xs font-bold text-white bg-navy hover:bg-navy-light rounded-xl shadow-sm hover:shadow-md transition-all duration-200 group">
-                            <span>Masuk Portal</span>
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                            <svg class="w-3.5 h-3.5 text-slate-300 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                        <a href="{{ route('login') }}" class="inline-flex items-center gap-2 px-7 py-2.5 text-xs font-bold text-white bg-[#233DFF] hover:bg-[#1B30D9] rounded-full shadow-md shadow-indigo-600/25 hover:shadow-indigo-600/40 hover:-translate-y-0.5 transition-all duration-150">
+                            <span>Login</span>
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                         </a>
                     @endauth
                 </div>
 
                 <!-- Mobile Menu Button -->
-                <div class="flex items-center md:hidden">
-                    <button @click="mobileMenuOpen = !mobileMenuOpen" type="button" aria-label="Toggle Menu" class="p-2.5 rounded-xl text-slate-700 hover:text-navy hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-brand/30 transition">
+                <div class="flex items-center lg:hidden">
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" type="button" aria-label="Toggle Menu" class="p-2.5 rounded-xl text-slate-700 hover:text-navy hover:bg-slate-100 focus:outline-none transition">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path x-show="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                             <path x-show="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -153,31 +136,34 @@
         </div>
 
         <!-- Mobile Menu Dropdown -->
-        <div x-show="mobileMenuOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-2" class="md:hidden border-b border-border bg-white/95 backdrop-blur-md px-4 pt-3 pb-5 space-y-1.5 shadow-xl">
+        <div x-show="mobileMenuOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-2" class="lg:hidden border-b border-border bg-white/95 backdrop-blur-md px-4 pt-3 pb-5 space-y-1.5 shadow-xl">
             <a href="{{ route('public.home') }}" class="block px-3.5 py-2.5 rounded-xl text-sm font-semibold {{ request()->routeIs('public.home') ? 'bg-indigo-50 text-brand font-bold' : 'text-slate-700 hover:bg-slate-50' }}">
-                Beranda
+                Home
             </a>
             <a href="{{ route('public.profile') }}" class="block px-3.5 py-2.5 rounded-xl text-sm font-semibold {{ request()->routeIs('public.profile') ? 'bg-indigo-50 text-brand font-bold' : 'text-slate-700 hover:bg-slate-50' }}">
-                Profil Sekolah
+                Profil
+            </a>
+            <a href="{{ route('public.events') }}" class="block px-3.5 py-2.5 rounded-xl text-sm font-semibold {{ request()->routeIs('public.events*') ? 'bg-indigo-50 text-brand font-bold' : 'text-slate-700 hover:bg-slate-50' }}">
+                Kegiatan
             </a>
             <a href="{{ route('public.news') }}" class="block px-3.5 py-2.5 rounded-xl text-sm font-semibold {{ request()->routeIs('public.news*') ? 'bg-indigo-50 text-brand font-bold' : 'text-slate-700 hover:bg-slate-50' }}">
-                Kabar &amp; Berita
+                Berita
             </a>
             <a href="{{ route('public.announcements') }}" class="block px-3.5 py-2.5 rounded-xl text-sm font-semibold {{ request()->routeIs('public.announcements*') ? 'bg-indigo-50 text-brand font-bold' : 'text-slate-700 hover:bg-slate-50' }}">
                 Pengumuman
             </a>
-            <a href="{{ route('public.events') }}" class="block px-3.5 py-2.5 rounded-xl text-sm font-semibold {{ request()->routeIs('public.events*') ? 'bg-indigo-50 text-brand font-bold' : 'text-slate-700 hover:bg-slate-50' }}">
-                Agenda Acara
+            <a href="#kontak" class="block px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                Kontak
             </a>
             <div class="pt-3 mt-2 border-t border-slate-100">
                 @auth
-                    <a href="{{ route('dashboard') }}" class="flex items-center justify-center gap-2 w-full py-2.5 px-4 text-xs font-bold text-white bg-brand rounded-xl shadow-sm">
+                    <a href="{{ route('dashboard') }}" class="flex items-center justify-center gap-2 w-full py-2.5 px-4 text-xs font-bold text-white bg-brand rounded-full shadow-sm">
                         <span>Ke Dashboard</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                     </a>
                 @else
-                    <a href="{{ route('login') }}" class="flex items-center justify-center gap-2 w-full py-2.5 px-4 text-xs font-bold text-white bg-navy rounded-xl shadow-sm">
-                        <span>Masuk Portal Guru &amp; Tenaga Pendidik</span>
+                    <a href="{{ route('login') }}" class="flex items-center justify-center gap-2 w-full py-2.5 px-4 text-xs font-bold text-white bg-brand rounded-full shadow-sm">
+                        <span>Login ke Portal</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                     </a>
                 @endauth
@@ -263,7 +249,7 @@
 
             <!-- Bottom Copyright & Badges -->
             <div class="mt-12 pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-                <p>&copy; {{ date('Y') }} SatuSekolah. Seluruh hak cipta dilindungi undang-undang.</p>
+                <p>&copy; {{ date('Y') }} Satu-Sekolah. Seluruh hak cipta dilindungi undang-undang.</p>
                 <div class="flex items-center gap-4 text-[11px] text-slate-400">
                     <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-800 border border-slate-700">
                         <span class="w-2 h-2 rounded-full bg-emerald-400"></span>

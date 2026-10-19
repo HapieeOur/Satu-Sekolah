@@ -25,6 +25,7 @@ use App\Contracts\Services\StudentServiceInterface;
 use App\Contracts\Services\SubjectServiceInterface;
 use App\Contracts\Services\TeacherServiceInterface;
 use App\Contracts\Services\UserServiceInterface;
+use App\Http\Controllers\NotificationController;
 use App\Models\User;
 use App\Policies\UserPolicy;
 use App\Repositories\AcademicYearRepository;
@@ -50,7 +51,9 @@ use App\Services\StudentService;
 use App\Services\SubjectService;
 use App\Services\TeacherService;
 use App\Services\UserService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -183,5 +186,27 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::policy(User::class, UserPolicy::class);
+
+        View::composer('layouts.app', function ($view) {
+            if (Auth::check()) {
+                try {
+                    $notifications = NotificationController::getUserNotifications(Auth::user());
+                    $view->with([
+                        'headerNotifications' => $notifications->take(5),
+                        'headerUnreadCount' => $notifications->where('is_unread', true)->count(),
+                    ]);
+                } catch (\Throwable $e) {
+                    $view->with([
+                        'headerNotifications' => collect(),
+                        'headerUnreadCount' => 0,
+                    ]);
+                }
+            } else {
+                $view->with([
+                    'headerNotifications' => collect(),
+                    'headerUnreadCount' => 0,
+                ]);
+            }
+        });
     }
 }

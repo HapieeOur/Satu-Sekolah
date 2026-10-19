@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Api;
 
-use App\Models\InternshipCompany;
 use App\Models\InternshipPlacement;
 use App\Models\Student;
 use App\Models\User;
@@ -20,7 +19,9 @@ class StudentInternshipApiTest extends TestCase
     use RefreshDatabase;
 
     protected User $studentUser;
+
     protected Student $student;
+
     protected string $token;
 
     protected function setUp(): void
@@ -40,7 +41,7 @@ class StudentInternshipApiTest extends TestCase
 
     public function test_student_can_get_active_placement(): void
     {
-        $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $response = $this->withHeader('Authorization', 'Bearer '.$this->token)
             ->getJson('/api/v1/student/internship/placement');
 
         $response->assertStatus(200)
@@ -75,7 +76,7 @@ class StudentInternshipApiTest extends TestCase
         $file = UploadedFile::fake()->image('selfie.jpg', 600, 600);
 
         // Coordinates very close to company (within radius)
-        $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $response = $this->withHeader('Authorization', 'Bearer '.$this->token)
             ->postJson('/api/v1/student/internship/attendance/check-in', [
                 'latitude' => $company->latitude,
                 'longitude' => $company->longitude,
@@ -102,7 +103,7 @@ class StudentInternshipApiTest extends TestCase
         $file = UploadedFile::fake()->image('selfie_far.jpg', 600, 600);
 
         // Coordinates 5 km away from Jakarta office
-        $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $response = $this->withHeader('Authorization', 'Bearer '.$this->token)
             ->postJson('/api/v1/student/internship/attendance/check-in', [
                 'latitude' => -6.175392,
                 'longitude' => 106.827153,
@@ -124,7 +125,7 @@ class StudentInternshipApiTest extends TestCase
         $file = UploadedFile::fake()->image('selfie.jpg', 600, 600);
 
         // First check in
-        $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $this->withHeader('Authorization', 'Bearer '.$this->token)
             ->postJson('/api/v1/student/internship/attendance/check-in', [
                 'latitude' => $placement->company->latitude,
                 'longitude' => $placement->company->longitude,
@@ -132,7 +133,7 @@ class StudentInternshipApiTest extends TestCase
             ])->assertStatus(201);
 
         // Then check out
-        $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $response = $this->withHeader('Authorization', 'Bearer '.$this->token)
             ->postJson('/api/v1/student/internship/attendance/check-out', [
                 'latitude' => $placement->company->latitude,
                 'longitude' => $placement->company->longitude,
@@ -151,7 +152,7 @@ class StudentInternshipApiTest extends TestCase
 
         $file = UploadedFile::fake()->image('journal_proof.jpg', 800, 600);
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $response = $this->withHeader('Authorization', 'Bearer '.$this->token)
             ->postJson('/api/v1/student/internship/journals', [
                 'date' => now()->toDateString(),
                 'title' => 'Implementasi REST API & Otentikasi Sanctum',
@@ -167,7 +168,7 @@ class StudentInternshipApiTest extends TestCase
 
     public function test_student_can_submit_leave_request(): void
     {
-        $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $response = $this->withHeader('Authorization', 'Bearer '.$this->token)
             ->postJson('/api/v1/student/internship/leaves', [
                 'type' => 'izin',
                 'start_date' => now()->addDays(2)->toDateString(),
@@ -184,7 +185,7 @@ class StudentInternshipApiTest extends TestCase
     public function test_student_can_view_tasks_and_submit_solution(): void
     {
         // 1. View tasks
-        $tasksResponse = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $tasksResponse = $this->withHeader('Authorization', 'Bearer '.$this->token)
             ->getJson('/api/v1/student/internship/tasks');
 
         $tasksResponse->assertStatus(200)
@@ -197,7 +198,7 @@ class StudentInternshipApiTest extends TestCase
             // 2. Submit solution
             $file = UploadedFile::fake()->create('submission.pdf', 500, 'application/pdf');
 
-            $submitResponse = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+            $submitResponse = $this->withHeader('Authorization', 'Bearer '.$this->token)
                 ->postJson("/api/v1/student/internship/tasks/{$taskId}/submit", [
                     'submission_file' => $file,
                     'student_notes' => 'Laporan tugas telah selesai disusun sesuai arahan mentor.',

@@ -7,10 +7,10 @@ class GeofenceService
     /**
      * Calculate distance between two GPS coordinates in meters using Haversine formula.
      *
-     * @param float $lat1 Latitude of point 1
-     * @param float $lon1 Longitude of point 1
-     * @param float $lat2 Latitude of point 2
-     * @param float $lon2 Longitude of point 2
+     * @param  float  $lat1  Latitude of point 1
+     * @param  float  $lon1  Longitude of point 1
+     * @param  float  $lat2  Latitude of point 2
+     * @param  float  $lon2  Longitude of point 2
      * @return float Distance in meters
      */
     public static function calculateDistance(float $lat1, float $lon1, float $lat2, float $lon2): float
@@ -34,11 +34,6 @@ class GeofenceService
     /**
      * Check if given coordinates are within the specified radius (in meters) of target coordinates.
      *
-     * @param float $userLat
-     * @param float $userLon
-     * @param float $targetLat
-     * @param float $targetLon
-     * @param int $radiusMeters
      * @return array{is_within_radius: bool, distance_meters: float}
      */
     public static function checkGeofence(

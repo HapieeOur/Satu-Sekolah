@@ -167,6 +167,7 @@ class InternshipService implements InternshipServiceInterface
             'pendingJournalsCount' => $pendingJournalsCount,
             'pendingLeavesCount' => $pendingLeavesCount,
             'recentJournals' => $recentJournals,
+            'activeMentees' => $activeMentees,
         ];
     }
 

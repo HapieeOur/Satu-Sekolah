@@ -123,8 +123,8 @@ class StudentInternshipController extends ApiController
         );
 
         $message = $isWithin
-            ? 'Presensi masuk berhasil direkam dalam radius kantor (' . round($geofence['distance_meters']) . 'm).'
-            : 'Presensi masuk berhasil direkam di luar radius kantor (' . round($geofence['distance_meters']) . 'm) dan menunggu verifikasi pembimbing.';
+            ? 'Presensi masuk berhasil direkam dalam radius kantor ('.round($geofence['distance_meters']).'m).'
+            : 'Presensi masuk berhasil direkam di luar radius kantor ('.round($geofence['distance_meters']).'m) dan menunggu verifikasi pembimbing.';
 
         return $this->respondWithSuccess(new InternshipAttendanceResource($attendance), $message, 201);
     }

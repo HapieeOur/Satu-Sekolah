@@ -21,7 +21,7 @@ class PostResource extends JsonResource
             'category' => $this->category,
             'excerpt' => $this->excerpt,
             'content' => $this->content,
-            'featured_image_url' => $this->featured_image ? asset('storage/' . $this->featured_image) : null,
+            'featured_image_url' => $this->featured_image ? asset('storage/'.$this->featured_image) : null,
             'event_date' => $this->event_date?->format('Y-m-d'),
             'event_time' => $this->event_time,
             'event_location' => $this->event_location,

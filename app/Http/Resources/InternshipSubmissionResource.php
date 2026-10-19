@@ -24,7 +24,7 @@ class InternshipSubmissionResource extends JsonResource
                 'name' => $this->student->name,
                 'classroom' => $this->student->classroom?->name,
             ] : null,
-            'submission_file_url' => $this->submission_file_path ? asset('storage/' . $this->submission_file_path) : null,
+            'submission_file_url' => $this->submission_file_path ? asset('storage/'.$this->submission_file_path) : null,
             'student_notes' => $this->student_notes,
             'submitted_at' => $this->submitted_at?->format('Y-m-d H:i:s'),
             'status' => $this->status?->value ?? $this->status,

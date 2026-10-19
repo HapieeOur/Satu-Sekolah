@@ -19,7 +19,7 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
-            'avatar_url' => $this->avatar ? asset('storage/' . $this->avatar) : null,
+            'avatar_url' => $this->avatar ? asset('storage/'.$this->avatar) : null,
             'is_active' => (bool) $this->is_active,
             'roles' => $this->roles->pluck('name'),
             'student' => $this->whenLoaded('student', fn () => new StudentProfileResource($this->student), $this->student ? new StudentProfileResource($this->student) : null),

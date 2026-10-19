@@ -15,6 +15,8 @@ use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\OAuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Homeroom\HomeroomAttendanceController;
 use App\Http\Controllers\Homeroom\HomeroomDashboardController;
@@ -24,7 +26,10 @@ use App\Http\Controllers\InternshipMentor\MentorJournalController;
 use App\Http\Controllers\InternshipMentor\MentorLeaveRequestController;
 use App\Http\Controllers\InternshipMentor\MentorStudentController;
 use App\Http\Controllers\InternshipMentor\MentorTaskController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Public\PublicPageController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Teacher\TeacherAttendanceController;
 use App\Http\Controllers\Teacher\TeacherDashboardController;
 use App\Http\Controllers\Teacher\TeacherScheduleController;
@@ -50,6 +55,19 @@ Route::get('/acara/{slug}', [PublicPageController::class, 'eventShow'])->name('p
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+
+    // Google OAuth SSO
+    Route::get('/auth/google', [OAuthController::class, 'redirectToGoogle'])->name('oauth.google');
+    Route::get('/auth/google/callback', [OAuthController::class, 'handleGoogleCallback'])->name('oauth.google.callback');
+
+    // Lupa Kata Sandi dengan OTP
+    Route::get('/forgot-password', [ForgotPasswordController::class, 'showForgotPasswordForm'])->name('password.request');
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendOtp'])->name('password.email');
+    Route::get('/verify-otp', [ForgotPasswordController::class, 'showVerifyOtpForm'])->name('password.otp');
+    Route::post('/verify-otp', [ForgotPasswordController::class, 'verifyOtp'])->name('password.verify-otp');
+    Route::post('/resend-otp', [ForgotPasswordController::class, 'resendOtp'])->name('password.resend-otp');
+    Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('password.reset');
+    Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
 });
 
 // Authenticated Routes
@@ -59,6 +77,18 @@ Route::middleware(['auth', 'active'])->group(function () {
 
     // Smart Dashboard Router
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Profile Management (Semua Akun)
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+    // Notification Center (Semua Akun)
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.mark-all-read');
+
+    // Global Search (Semua Akun)
+    Route::get('/search', [SearchController::class, 'index'])->name('search.index');
+    Route::get('/search/api', [SearchController::class, 'api'])->name('search.api');
 
     // Admin Area
     Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {

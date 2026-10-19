@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Api;
 
-use App\Models\Student;
 use App\Models\User;
 use Database\Seeders\DataMasterSeeder;
 use Database\Seeders\RoleAndPermissionSeeder;
@@ -98,7 +97,7 @@ class AuthApiTest extends TestCase
         $user = User::where('email', 'pembimbing@oneschool.sch.id')->first();
         $token = $user->createToken('test')->plainTextToken;
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+        $response = $this->withHeader('Authorization', 'Bearer '.$token)
             ->getJson('/api/v1/auth/me');
 
         $response->assertStatus(200)
@@ -111,7 +110,7 @@ class AuthApiTest extends TestCase
         $user = User::where('email', 'pembimbing@oneschool.sch.id')->first();
         $token = $user->createToken('test')->plainTextToken;
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+        $response = $this->withHeader('Authorization', 'Bearer '.$token)
             ->postJson('/api/v1/auth/logout');
 
         $response->assertStatus(200)

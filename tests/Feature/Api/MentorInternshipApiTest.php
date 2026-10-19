@@ -2,18 +2,14 @@
 
 namespace Tests\Feature\Api;
 
-use App\Enums\InternshipAttendanceStatus;
-use App\Enums\InternshipJournalStatus;
 use App\Enums\InternshipLeaveStatus;
 use App\Enums\InternshipLeaveType;
 use App\Enums\InternshipTaskSubmissionStatus;
-use App\Enums\InternshipVerificationStatus;
 use App\Models\InternshipAttendance;
 use App\Models\InternshipCompany;
 use App\Models\InternshipJournal;
 use App\Models\InternshipLeaveRequest;
 use App\Models\InternshipPlacement;
-use App\Models\InternshipTask;
 use App\Models\InternshipTaskSubmission;
 use App\Models\Teacher;
 use App\Models\User;
@@ -29,7 +25,9 @@ class MentorInternshipApiTest extends TestCase
     use RefreshDatabase;
 
     protected User $mentorUser;
+
     protected Teacher $teacher;
+
     protected string $token;
 
     protected function setUp(): void
@@ -48,7 +46,7 @@ class MentorInternshipApiTest extends TestCase
 
     public function test_mentor_can_list_mentees(): void
     {
-        $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $response = $this->withHeader('Authorization', 'Bearer '.$this->token)
             ->getJson('/api/v1/mentor/mentees');
 
         $response->assertStatus(200)
@@ -70,7 +68,7 @@ class MentorInternshipApiTest extends TestCase
         $placement = InternshipPlacement::where('teacher_id', $this->teacher->id)->first();
         $attendance = InternshipAttendance::where('internship_placement_id', $placement->id)->first();
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $response = $this->withHeader('Authorization', 'Bearer '.$this->token)
             ->postJson("/api/v1/mentor/attendances/{$attendance->id}/verify", [
                 'action' => 'verify',
             ]);
@@ -85,7 +83,7 @@ class MentorInternshipApiTest extends TestCase
         $placement = InternshipPlacement::where('teacher_id', $this->teacher->id)->first();
         $attendance = InternshipAttendance::where('internship_placement_id', $placement->id)->first();
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $response = $this->withHeader('Authorization', 'Bearer '.$this->token)
             ->postJson("/api/v1/mentor/attendances/{$attendance->id}/verify", [
                 'action' => 'reject',
                 'rejection_reason' => 'Foto selfie tidak jelas dan tidak berada di kantor',
@@ -103,7 +101,7 @@ class MentorInternshipApiTest extends TestCase
         $journal = InternshipJournal::where('internship_placement_id', $placement->id)->first();
 
         // 1. Approve journal
-        $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $response = $this->withHeader('Authorization', 'Bearer '.$this->token)
             ->postJson("/api/v1/mentor/journals/{$journal->id}/review", [
                 'action' => 'approve',
                 'mentor_notes' => 'Pekerjaan sangat baik dan deskriptif.',
@@ -114,7 +112,7 @@ class MentorInternshipApiTest extends TestCase
             ->assertJsonPath('data.status', 'approved');
 
         // 2. Request revision
-        $revisionResponse = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $revisionResponse = $this->withHeader('Authorization', 'Bearer '.$this->token)
             ->postJson("/api/v1/mentor/journals/{$journal->id}/review", [
                 'action' => 'revision',
                 'mentor_notes' => 'Tolong lampirkan screenshot pull request.',
@@ -141,7 +139,7 @@ class MentorInternshipApiTest extends TestCase
             ]);
         }
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $response = $this->withHeader('Authorization', 'Bearer '.$this->token)
             ->postJson("/api/v1/mentor/leaves/{$leave->id}/review", [
                 'action' => 'approve',
                 'review_notes' => 'Disetujui oleh pembimbing.',
@@ -157,7 +155,7 @@ class MentorInternshipApiTest extends TestCase
         $company = InternshipCompany::first();
 
         // 1. Create task
-        $taskResponse = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $taskResponse = $this->withHeader('Authorization', 'Bearer '.$this->token)
             ->postJson('/api/v1/mentor/tasks', [
                 'internship_company_id' => $company->id,
                 'title' => 'Tugas Laporan Analisis Kebutuhan Sistem',
@@ -182,7 +180,7 @@ class MentorInternshipApiTest extends TestCase
         ]);
 
         // 3. Mentor grades submission
-        $gradeResponse = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $gradeResponse = $this->withHeader('Authorization', 'Bearer '.$this->token)
             ->postJson("/api/v1/mentor/tasks/submissions/{$submission->id}/grade", [
                 'grade' => 95,
                 'mentor_feedback' => 'Analisis komprehensif, diagram use case rapi.',

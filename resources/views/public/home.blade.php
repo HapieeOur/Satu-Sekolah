@@ -1,197 +1,127 @@
 <x-public-layout title="Beranda">
-    <!-- Hero Section -->
-    <section class="relative hero-pattern pt-12 pb-20 lg:pt-20 lg:pb-28 border-b border-border/80 overflow-hidden">
-        <!-- Floating Ambient Glows -->
-        <div class="absolute top-1/4 -left-20 w-80 h-80 bg-brand/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute bottom-10 right-0 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl pointer-events-none">
-        </div>
+    <!-- Hero Section (Following Reference Image B) -->
+    <section class="relative bg-gradient-to-b from-[#F0F4FA] via-[#F8FAFD] to-[#FFFFFF] pt-12 pb-20 lg:pt-20 lg:pb-32 border-b border-slate-200/80 overflow-hidden">
+        <!-- Subtle Vector Wave & Decorative Background Shapes (Reference Image B) -->
+        <svg class="absolute top-0 right-0 w-1/2 h-full opacity-35 pointer-events-none text-indigo-300" viewBox="0 0 500 500" fill="none" preserveAspectRatio="none">
+            <path d="M50 0 C150 120 50 250 200 350 C300 420 400 480 500 500 L500 0 Z" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 3"/>
+            <path d="M120 0 C220 150 140 280 280 390 C360 450 440 480 500 500" stroke="currentColor" stroke-width="1"/>
+        </svg>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
 
-                <!-- Hero Left: Text & CTA -->
-                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
-                    <div
-                        class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-white text-brand border border-indigo-100 shadow-xs">
-                        <span class="w-2 h-2 rounded-full bg-brand animate-pulse"></span>
+                <!-- Hero Left: Typography & Dual CTAs (Reference Image B) -->
+                <div class="lg:col-span-6 space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] font-extrabold uppercase tracking-widest text-[#233DFF] bg-[#E5ECFF] border border-blue-200/80 shadow-xs">
+                        <span class="w-2 h-2 rounded-full bg-[#233DFF] animate-pulse"></span>
                         <span>Portal Resmi Sistem Informasi Satu-Sekolah</span>
-                        <span class="text-slate-300">•</span>
-                        <span class="text-slate-500 font-semibold">T.A. 2026/2027</span>
                     </div>
 
-                    <h1 class="text-3xl sm:text-5xl lg:text-5xl font-black text-navy tracking-tight leading-[1.15]">
-                        Transformasi Digital <br class="hidden sm:inline">
-                        <span
-                            class="bg-gradient-to-r from-brand via-indigo-600 to-violet-600 bg-clip-text text-transparent">Pendidikan
-                            Vokasi</span> Unggul &amp; Mandiri
+                    <h1 class="text-4xl sm:text-6xl lg:text-[58px] font-normal text-[#20211F] tracking-tight leading-[1.12]">
+                        Wujudkan <span class="font-extrabold text-[#171B61]">Masa Depan</span><br>
+                        <span class="font-extrabold text-[#233DFF]">Generasi Unggul</span> Berkarakter
                     </h1>
 
-                    <p
-                        class="text-sm sm:text-base text-slate-600 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-normal">
-                        Platform terintegrasi satu pintu untuk administrasi pembelajaran, presensi digital presisi,
-                        transparansi nilai, serta pemantauan Praktik Kerja Lapangan (PKL) berbasis GPS geofence dan
-                        bukti foto harian.
+                    <p class="text-base sm:text-lg text-[#707581] leading-relaxed max-w-xl mx-auto lg:mx-0 font-normal">
+                        Platform pendidikan terpadu satu pintu untuk pembelajaran vokasi modern, presensi digital presisi, transparansi nilai, serta sistem pemantauan Praktik Kerja Lapangan (PKL) presisi tinggi berbasis GPS.
                     </p>
 
-                    <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3.5 pt-2">
-                        <a href="{{ route('login') }}"
-                            class="inline-flex items-center gap-2.5 px-6 py-3.5 text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-brand via-indigo-600 to-violet-600 hover:from-brand-hover hover:to-violet-700 rounded-xl shadow-md hover:shadow-glow hover:-translate-y-0.5 transition-all duration-200">
-                            <span>Masuk Portal Guru & Admin</span>
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                    d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                            </svg>
-                        </a>
-                        <a href="{{ route('public.profile') }}"
-                            class="inline-flex items-center gap-2 px-5 py-3.5 text-xs sm:text-sm font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/90 rounded-xl shadow-xs hover:border-slate-300 transition-all duration-150">
-                            <span>Pelajari Profil Sekolah</span>
-                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 5l7 7-7 7" />
-                            </svg>
+                    <!-- CTAs: Warm Yellow Button + Circular Play Action (Reference Image B) -->
+                    <div class="flex flex-wrap items-center justify-center lg:justify-start gap-5 pt-3">
+                        @auth
+                            <a href="{{ route('dashboard') }}" class="px-8 py-4 rounded-full font-extrabold text-sm text-[#171B61] bg-[#F4CF52] hover:bg-[#e5be42] shadow-md shadow-amber-300/30 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 cursor-pointer">
+                                Ke Dashboard
+                            </a>
+                        @else
+                            <a href="{{ route('login') }}" class="px-8 py-4 rounded-full font-extrabold text-sm text-[#171B61] bg-[#F4CF52] hover:bg-[#e5be42] shadow-md shadow-amber-300/30 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 cursor-pointer">
+                                Masuk Portal Guru & Admin
+                            </a>
+                        @endauth
+
+                        <a href="{{ route('public.profile') }}" class="inline-flex items-center gap-3 text-xs sm:text-sm font-extrabold uppercase tracking-wider text-[#171B61] hover:text-[#233DFF] group transition-colors cursor-pointer">
+                            <span class="w-11 h-11 rounded-full bg-[#233DFF] text-white flex items-center justify-center shadow-md shadow-indigo-600/30 group-hover:scale-110 transition-transform duration-200">
+                                <svg class="w-4 h-4 translate-x-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </span>
+                            <span class="underline decoration-2 underline-offset-4">LIHAT PROFIL SEKOLAH</span>
                         </a>
                     </div>
 
                     <!-- Trust Indicators -->
-                    <div
-                        class="pt-4 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs text-slate-500 font-medium">
+                    <div class="pt-6 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs text-[#707581] font-semibold border-t border-slate-200/80">
                         <div class="flex items-center gap-2">
-                            <div
-                                class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
-                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                            <span>Terakreditasi A Nasional</span>
+                            <svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                            <span>Terakreditasi A BAN-S/M</span>
                         </div>
                         <div class="flex items-center gap-2">
-                            <div class="w-5 h-5 rounded-full bg-indigo-100 text-brand flex items-center justify-center">
-                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                            <span>Kurikulum Berbasis Industri (DUDI)</span>
+                            <svg class="w-4 h-4 text-[#233DFF]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                            <span>Kemitraan Industri DUDI Aktif</span>
                         </div>
                         <div class="flex items-center gap-2">
-                            <div
-                                class="w-5 h-5 rounded-full bg-violet-100 text-violet-600 flex items-center justify-center">
-                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </div>
+                            <svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
                             <span>Geofencing Presensi PKL</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Hero Right: Modern Bento Grid Showcase -->
-                <div class="lg:col-span-5">
-                    <div
-                        class="bg-white/90 backdrop-blur-md rounded-3xl border border-slate-200/80 p-6 sm:p-7 shadow-xl shadow-slate-200/50 space-y-5">
-                        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                            <div>
-                                <h3 class="text-xs font-bold uppercase tracking-wider text-navy">Indikator Mutu &amp;
-                                    Capaian</h3>
-                                <p class="text-[11px] text-slate-400">Ringkasan operasional SatuSekolah</p>
-                            </div>
-                            <span
-                                class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                Real-Time Sync
-                            </span>
-                        </div>
+                <!-- Hero Right: Asymmetrical Collage (Reference Image B) -->
+                <div class="lg:col-span-6 relative">
+                    <!-- Decorative Graphic Shapes -->
+                    <div class="absolute -top-6 right-8 w-32 h-32 rounded-full bg-[#F4CF52] -z-10"></div>
+                    <div class="absolute bottom-6 -left-6 w-10 h-10 rounded-full bg-[#233DFF]/20 -z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#ECEBFA] -z-10"></div>
 
-                        <div class="grid grid-cols-2 gap-3.5">
-                            <!-- Card 1 -->
-                            <div
-                                class="p-4 rounded-2xl bg-gradient-to-br from-indigo-50/80 to-slate-50 border border-indigo-100/60 hover:shadow-xs transition">
-                                <div
-                                    class="w-8 h-8 rounded-xl bg-brand text-white flex items-center justify-center shadow-xs mb-2">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
+                    <!-- 4-Piece Asymmetrical Image Collage -->
+                    <div class="grid grid-cols-2 gap-4 max-w-lg mx-auto relative z-10">
+                        <!-- Top Left: Circular Frame (Reference Image B) -->
+                        <div class="flex justify-end items-end p-2">
+                            <div class="w-44 h-44 sm:w-52 sm:h-52 rounded-full overflow-hidden border-4 border-white shadow-xl shadow-indigo-950/10 relative group bg-gradient-to-tr from-indigo-100 to-blue-50">
+                                <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=600&q=80" 
+                                     alt="Siswa Berprestasi" 
+                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                     onerror="this.style.display='none'">
+                                <div class="absolute inset-0 flex items-center justify-center p-4 text-center pointer-events-none -z-1">
+                                    <span class="text-xs font-bold text-indigo-900">Pembelajaran Kolaboratif</span>
                                 </div>
-                                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Status
-                                    Akreditasi</span>
-                                <span class="text-xl font-extrabold text-navy mt-0.5 block">A (Unggul)</span>
-                                <span class="text-[10px] text-indigo-600 font-semibold mt-0.5 block">BAN-S/M
-                                    Kemendikbud</span>
-                            </div>
-
-                            <!-- Card 2 -->
-                            <div
-                                class="p-4 rounded-2xl bg-gradient-to-br from-violet-50/80 to-slate-50 border border-violet-100/60 hover:shadow-xs transition">
-                                <div
-                                    class="w-8 h-8 rounded-xl bg-violet-600 text-white flex items-center justify-center shadow-xs mb-2">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                                    </svg>
-                                </div>
-                                <span
-                                    class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Program
-                                    Studi</span>
-                                <span class="text-xl font-extrabold text-navy mt-0.5 block">RPL &amp; TKJ</span>
-                                <span class="text-[10px] text-violet-600 font-semibold mt-0.5 block">Rekayasa &amp;
-                                    Jaringan</span>
-                            </div>
-
-                            <!-- Card 3 -->
-                            <div
-                                class="p-4 rounded-2xl bg-gradient-to-br from-emerald-50/80 to-slate-50 border border-emerald-100/60 hover:shadow-xs transition">
-                                <div
-                                    class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-xs mb-2">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                </div>
-                                <span
-                                    class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Geofence
-                                    PKL</span>
-                                <span class="text-xl font-extrabold text-emerald-700 mt-0.5 block">100 M Radius</span>
-                                <span class="text-[10px] text-emerald-600 font-semibold mt-0.5 block">Akurasi GPS
-                                    Presisi</span>
-                            </div>
-
-                            <!-- Card 4 -->
-                            <div
-                                class="p-4 rounded-2xl bg-gradient-to-br from-amber-50/80 to-slate-50 border border-amber-100/60 hover:shadow-xs transition">
-                                <div
-                                    class="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center shadow-xs mb-2">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                    </svg>
-                                </div>
-                                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Mitra
-                                    Industri</span>
-                                <span class="text-xl font-extrabold text-navy mt-0.5 block">DUDI Aktif</span>
-                                <span class="text-[10px] text-amber-700 font-semibold mt-0.5 block">Software House &amp;
-                                    ISP</span>
                             </div>
                         </div>
 
-                        <!-- Live Pulse Banner -->
-                        <div class="p-3.5 rounded-xl bg-slate-900 text-white flex items-center justify-between text-xs">
-                            <div class="flex items-center gap-2.5">
-                                <span class="relative flex h-2.5 w-2.5">
-                                    <span
-                                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-                                </span>
-                                <span class="text-slate-300 font-medium">Akses Portal Tenaga Pendidik Aktif</span>
+                        <!-- Top Right: Rounded Rectangle with Yellow Accent (Reference Image B) -->
+                        <div class="flex justify-start items-end p-2">
+                            <div class="w-44 h-52 sm:w-52 sm:h-60 rounded-3xl overflow-hidden border-4 border-white shadow-xl shadow-indigo-950/10 relative group bg-gradient-to-br from-amber-50 to-indigo-50">
+                                <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=600&q=80" 
+                                     alt="Aktivitas Belajar" 
+                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                     onerror="this.style.display='none'">
+                                <div class="absolute inset-0 flex items-center justify-center p-4 text-center pointer-events-none -z-1">
+                                    <span class="text-xs font-bold text-indigo-900">Siswa Berkarakter</span>
+                                </div>
                             </div>
-                            <a href="{{ route('login') }}"
-                                class="font-bold text-indigo-300 hover:text-white transition">Masuk &rarr;</a>
+                        </div>
+
+                        <!-- Bottom Left: Rounded Square with Soft Corner (Reference Image B) -->
+                        <div class="flex justify-end items-start p-2">
+                            <div class="w-44 h-52 sm:w-52 sm:h-56 rounded-3xl overflow-hidden border-4 border-white shadow-xl shadow-indigo-950/10 relative group bg-gradient-to-tr from-purple-50 to-indigo-50">
+                                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=600&q=80" 
+                                     alt="Kerja Sama Tim Siswa" 
+                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                     onerror="this.style.display='none'">
+                                <div class="absolute inset-0 flex items-center justify-center p-4 text-center pointer-events-none -z-1">
+                                    <span class="text-xs font-bold text-indigo-900">Inovasi Teknologi</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Right: Pill-Curved Card (Reference Image B) -->
+                        <div class="flex justify-start items-start p-2">
+                            <div class="w-44 h-48 sm:w-52 sm:h-52 rounded-t-[50px] rounded-b-3xl overflow-hidden border-4 border-white shadow-xl shadow-indigo-950/10 relative group bg-gradient-to-br from-emerald-50 to-blue-50">
+                                <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=600&q=80" 
+                                     alt="Praktik Kerja Lapangan" 
+                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                     onerror="this.style.display='none'">
+                                <div class="absolute inset-0 flex items-center justify-center p-4 text-center pointer-events-none -z-1">
+                                    <span class="text-xs font-bold text-indigo-900">Praktik Lapangan</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -200,334 +130,290 @@
         </div>
     </section>
 
-    <!-- Core Features Showcase (Students & Teachers Love This) -->
-    <section class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center max-w-2xl mx-auto mb-14 space-y-3">
-            <span
-                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-50 text-brand border border-indigo-200/60">
-                Fitur Unggulan Sistem
-            </span>
-            <h2 class="text-2xl sm:text-3xl font-black text-navy tracking-tight">
-                Didesain Spesifik untuk Siswa, Pendidik &amp; Mitra Industri
-            </h2>
-            <p class="text-xs sm:text-sm text-slate-600">
-                Solusi modern menyeluruh mulai dari kegiatan belajar mengajar harian hingga pengawasan siswa magang di
-                tempat kerja.
-            </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <!-- Feature 1 -->
-            <div
-                class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs hover:shadow-card hover:-translate-y-1 transition-all duration-200 space-y-4">
-                <div
-                    class="w-12 h-12 rounded-2xl bg-indigo-50 text-brand flex items-center justify-center border border-indigo-100">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 4v1m6 11h2m-6 0a2 2 0 01-2-2v-5a2 2 0 012-2h4a2 2 0 012 2v5a2 2 0 01-2 2h-4zm-8 4v-4m0 0h2m-2 0H4m4-4a2 2 0 012-2h4a2 2 0 012 2v5a2 2 0 01-2 2H8a2 2 0 01-2-2V9z" />
-                    </svg>
-                </div>
-                <h3 class="text-base font-extrabold text-navy">Presensi GPS Geofencing</h3>
-                <p class="text-xs text-slate-600 leading-relaxed">
-                    Siswa PKL melakukan presensi masuk dan pulang wajib berada dalam radius resmi kantor mitra dengan
-                    validasi koordinat GPS dan foto selfie.
+    <!-- Why Choose Us / Experience The Magic of Learning (Reference Image B) -->
+    <section class="py-20 bg-white border-b border-slate-200/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-14">
+                <span class="text-xs font-extrabold uppercase tracking-widest text-[#233DFF] block mb-2">MENGAPA MEMILIH KAMI</span>
+                <h2 class="text-3xl sm:text-4xl font-normal text-[#20211F] tracking-tight">
+                    Rasakan Pengalaman Belajar <span class="font-extrabold text-[#171B61]">Terbaik &amp; Nyata</span>
+                </h2>
+                <p class="text-sm text-[#707581] mt-3">
+                    Kurikulum berbasis industri, tenaga pendidik berkompeten, dan pendampingan Praktik Kerja Lapangan (PKL) berstandar profesional.
                 </p>
             </div>
 
-            <!-- Feature 2 -->
-            <div
-                class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs hover:shadow-card hover:-translate-y-1 transition-all duration-200 space-y-4">
-                <div
-                    class="w-12 h-12 rounded-2xl bg-violet-50 text-violet-600 flex items-center justify-center border border-violet-100">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
+            <!-- 4 Rounded Highlight Cards (Direct from Reference Image B) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1 -->
+                <div class="group rounded-3xl bg-[#F4F6FB] border border-slate-200/80 overflow-hidden shadow-xs hover:shadow-xl hover:shadow-indigo-950/5 transition-all duration-300">
+                    <div class="h-44 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=600&q=80" 
+                             alt="Kelas Vokasi" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                             onerror="this.style.display='none'">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                        <span class="absolute bottom-3 left-4 text-xs font-bold text-white uppercase tracking-wider">Kurikulum Terapan</span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-base font-bold text-[#171B61] group-hover:text-[#233DFF] transition-colors">
+                            Kurikulum Selaras Industri
+                        </h3>
+                        <p class="text-xs text-[#707581] mt-2 leading-relaxed">
+                            Materi ajar disusun langsung bersama mitra Dunia Usaha dan Dunia Industri (DUDI) untuk menjamin relevansi kompetensi lulusan.
+                        </p>
+                    </div>
                 </div>
-                <h3 class="text-base font-extrabold text-navy">Jurnal Kegiatan Harian</h3>
-                <p class="text-xs text-slate-600 leading-relaxed">
-                    Catatan harian kerja praktek siswa diverifikasi langsung oleh guru pembimbing dengan fitur status
-                    Disetujui, Perlu Revisi, atau Ditolak.
-                </p>
-            </div>
 
-            <!-- Feature 3 -->
-            <div
-                class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs hover:shadow-card hover:-translate-y-1 transition-all duration-200 space-y-4">
-                <div
-                    class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
+                <!-- Card 2 -->
+                <div class="group rounded-3xl bg-[#F4F6FB] border border-slate-200/80 overflow-hidden shadow-xs hover:shadow-xl hover:shadow-indigo-950/5 transition-all duration-300">
+                    <div class="h-44 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=600&q=80" 
+                             alt="Laboratorium Modern" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                             onerror="this.style.display='none'">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                        <span class="absolute bottom-3 left-4 text-xs font-bold text-white uppercase tracking-wider">Fasilitas Modern</span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-base font-bold text-[#171B61] group-hover:text-[#233DFF] transition-colors">
+                            Laboratorium &amp; Workshop
+                        </h3>
+                        <p class="text-xs text-[#707581] mt-2 leading-relaxed">
+                            Fasilitas komputer spesifikasi tinggi dan perangkat jaringan mutakhir untuk mendukung praktik langsung siswa setiap hari.
+                        </p>
+                    </div>
                 </div>
-                <h3 class="text-base font-extrabold text-navy">Jadwal &amp; Presensi Kelas</h3>
-                <p class="text-xs text-slate-600 leading-relaxed">
-                    Bapak/Ibu guru dapat melihat agenda mengajar harian secara terstruktur dan mencatat kehadiran siswa
-                    mata pelajaran dalam hitungan detik.
-                </p>
-            </div>
 
-            <!-- Feature 4 -->
-            <div
-                class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs hover:shadow-card hover:-translate-y-1 transition-all duration-200 space-y-4">
-                <div
-                    class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-100">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
+                <!-- Card 3 -->
+                <div class="group rounded-3xl bg-[#F4F6FB] border border-slate-200/80 overflow-hidden shadow-xs hover:shadow-xl hover:shadow-indigo-950/5 transition-all duration-300">
+                    <div class="h-44 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=600&q=80" 
+                             alt="Sistem Terintegrasi" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                             onerror="this.style.display='none'">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                        <span class="absolute bottom-3 left-4 text-xs font-bold text-white uppercase tracking-wider">Geofence GPS</span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-base font-bold text-[#171B61] group-hover:text-[#233DFF] transition-colors">
+                            Monitoring PKL Real-Time
+                        </h3>
+                        <p class="text-xs text-[#707581] mt-2 leading-relaxed">
+                            Pemantauan kehadiran dan jurnal harian siswa magang dengan verifikasi lokasi GPS dan bukti foto terenkripsi.
+                        </p>
+                    </div>
                 </div>
-                <h3 class="text-base font-extrabold text-navy">Laporan Terpadu Institusi</h3>
-                <p class="text-xs text-slate-600 leading-relaxed">
-                    Rekapitulasi otomatis presensi siswa per kelas binaan bagi Wali Kelas serta laporan akademik dan
-                    evaluasi PKL bagi pihak manajemen sekolah.
-                </p>
+
+                <!-- Card 4 -->
+                <div class="group rounded-3xl bg-[#F4F6FB] border border-slate-200/80 overflow-hidden shadow-xs hover:shadow-xl hover:shadow-indigo-950/5 transition-all duration-300">
+                    <div class="h-44 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=600&q=80" 
+                             alt="Bimbingan Karir" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                             onerror="this.style.display='none'">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                        <span class="absolute bottom-3 left-4 text-xs font-bold text-white uppercase tracking-wider">Kesiapan Kerja</span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-base font-bold text-[#171B61] group-hover:text-[#233DFF] transition-colors">
+                            Penyaluran Lulusan
+                        </h3>
+                        <p class="text-xs text-[#707581] mt-2 leading-relaxed">
+                            Jalur rekrutmen langsung ke perusahaan mitra bagi siswa berprestasi selama masa praktik industri.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Latest News & Information Section -->
-    <section class="py-16 bg-white border-y border-border/80">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-            <!-- News Header -->
-            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+    <!-- News & Announcements Section (Backed by Real Database Data) -->
+    <section class="py-20 bg-[#F4F6FB] border-b border-slate-200/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
                 <div>
-                    <span class="text-xs font-bold uppercase tracking-wider text-brand block mb-1">Publikasi
-                        Resmi</span>
-                    <h2 class="text-2xl sm:text-3xl font-black text-navy tracking-tight">Kabar &amp; Prestasi Sekolah
-                    </h2>
+                    <span class="text-xs font-extrabold uppercase tracking-widest text-[#233DFF] block mb-2">KABAR TERKINI</span>
+                    <h2 class="text-3xl font-extrabold text-[#171B61] tracking-tight">Warta &amp; Berita Sekolah</h2>
+                    <p class="text-sm text-[#707581] mt-1">Publikasi informasi resmi seputar prestasi dan kegiatan Satu-Sekolah.</p>
                 </div>
-                <a href="{{ route('public.news') }}"
-                    class="inline-flex items-center gap-1.5 text-xs font-bold text-brand hover:text-brand-hover group">
+                <a href="{{ route('public.news') }}" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#233DFF] hover:text-[#171B61] transition group">
                     <span>Lihat Semua Berita</span>
-                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none"
-                        stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
+                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                 </a>
             </div>
 
-            <!-- News Cards Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 @forelse($latestNews as $news)
-                    <article
-                        class="group bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-xs hover:shadow-card hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between">
-                        <div>
-                            @if($news->featured_image)
-                                <div class="overflow-hidden h-48 bg-slate-100">
-                                    <img src="{{ asset('storage/' . $news->featured_image) }}" alt="{{ $news->title }}"
-                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                                </div>
-                            @else
-                                <div
-                                    class="w-full h-48 bg-gradient-to-br from-indigo-50 to-slate-100 border-b border-slate-100 flex items-center justify-center text-indigo-300">
-                                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                            d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                                    </svg>
-                                </div>
-                            @endif
-
-                            <div class="p-6 space-y-2.5">
-                                <div class="flex items-center gap-2">
-                                    <span
-                                        class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-indigo-50 text-brand border border-indigo-200/60">
-                                        Warta
-                                    </span>
-                                    <span class="text-[11px] text-slate-400 font-mono">
-                                        {{ $news->published_at ? $news->published_at->format('d M Y') : '-' }}
-                                    </span>
-                                </div>
-                                <h3
-                                    class="text-base font-bold text-navy group-hover:text-brand transition line-clamp-2 leading-snug">
-                                    <a href="{{ route('public.news.show', $news->slug) }}">{{ $news->title }}</a>
-                                </h3>
-                                <p class="text-xs text-slate-600 line-clamp-3 leading-relaxed">
-                                    {{ $news->excerpt ?: Str::limit(strip_tags($news->content), 120) }}
-                                </p>
+                    <article class="bg-white rounded-3xl border border-slate-200/80 overflow-hidden shadow-xs hover:shadow-xl hover:shadow-indigo-950/5 hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between">
+                        <div class="p-6 space-y-3">
+                            <div class="flex items-center justify-between text-xs text-slate-400">
+                                <span class="px-2.5 py-1 rounded-full font-bold uppercase tracking-wider text-[10px] bg-[#E5ECFF] text-[#233DFF]">
+                                    Berita
+                                </span>
+                                <span>{{ $news->published_at ? $news->published_at->translatedFormat('d M Y') : '-' }}</span>
                             </div>
+                            <h3 class="text-base font-bold text-[#171B61] hover:text-[#233DFF] transition-colors leading-snug line-clamp-2">
+                                <a href="{{ route('public.news.show', $news->slug) }}">{{ $news->title }}</a>
+                            </h3>
+                            <p class="text-xs text-[#707581] leading-relaxed line-clamp-3">
+                                {{ $news->excerpt ?? Str::limit(strip_tags($news->content), 120) }}
+                            </p>
                         </div>
-
-                        <div class="px-6 pb-6 pt-0">
-                            <a href="{{ route('public.news.show', $news->slug) }}"
-                                class="inline-flex items-center gap-1.5 text-xs font-bold text-brand hover:underline">
-                                <span>Baca Selengkapnya</span>
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 5l7 7-7 7" />
-                                </svg>
+                        <div class="px-6 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-between">
+                            <span class="text-[11px] text-slate-400 font-medium">Oleh: {{ $news->author?->name ?? 'Admin Sekolah' }}</span>
+                            <a href="{{ route('public.news.show', $news->slug) }}" class="text-xs font-bold text-[#233DFF] hover:underline inline-flex items-center gap-1">
+                                <span>Baca</span>
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                             </a>
                         </div>
                     </article>
                 @empty
-                    <div
-                        class="col-span-3 py-16 text-center text-slate-500 bg-slate-50 rounded-2xl border border-slate-200/80">
-                        <svg class="w-10 h-10 mx-auto text-slate-400 mb-2" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                        </svg>
-                        <p class="text-xs font-semibold text-navy">Belum ada berita yang dipublikasikan.</p>
+                    <div class="col-span-3 p-12 text-center bg-white rounded-3xl border border-slate-200/80">
+                        <p class="text-sm font-bold text-[#171B61]">Belum ada berita yang dipublikasikan.</p>
+                        <p class="text-xs text-[#707581] mt-1">Silakan kembali lagi nanti untuk membaca berita terbaru.</p>
                     </div>
                 @endforelse
             </div>
         </div>
     </section>
 
-    <!-- Announcements & Upcoming Events Dual Section -->
-    <section class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Public Announcements & Events Grid (Database-Backed) -->
+    <section class="py-20 bg-white border-b border-slate-200/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
 
-            <!-- Announcements Column -->
-            <div
-                class="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-xs flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
+                <!-- Announcements Column -->
+                <div class="lg:col-span-6 space-y-6">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-200/80">
                         <div>
-                            <span
-                                class="text-xs font-bold uppercase tracking-wider text-amber-600 block">Pemberitahuan</span>
-                            <h2 class="text-xl font-extrabold text-navy">Papan Pengumuman Resmi</h2>
+                            <span class="text-xs font-extrabold uppercase tracking-widest text-[#233DFF] block mb-1">PENGUMUMAN</span>
+                            <h2 class="text-2xl font-extrabold text-[#171B61]">Papan Pengumuman Resmi</h2>
                         </div>
-                        <a href="{{ route('public.announcements') }}"
-                            class="text-xs font-bold text-brand hover:underline inline-flex items-center gap-1">
-                            <span>Lihat Semua</span>
-                            <span>&rarr;</span>
-                        </a>
+                        <a href="{{ route('public.announcements') }}" class="text-xs font-bold text-[#233DFF] hover:underline">Semua &rarr;</a>
                     </div>
 
-                    <div class="space-y-3.5">
+                    <div class="space-y-4">
                         @forelse($announcements as $announcement)
-                            <div
-                                class="p-4 rounded-2xl bg-slate-50 border border-slate-200/70 hover:bg-slate-100/75 transition-all duration-150">
-                                <div class="flex items-center justify-between gap-2 mb-1.5">
-                                    <span
-                                        class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
-                                        Penting
-                                    </span>
-                                    <span class="text-[11px] text-slate-400 font-mono">
-                                        {{ $announcement->published_at ? $announcement->published_at->format('d/m/Y') : '-' }}
-                                    </span>
+                            <div class="p-5 rounded-2xl bg-[#F4F6FB] border border-slate-200/80 hover:border-blue-200 transition-all flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-2xl bg-[#E5ECFF] text-[#233DFF] flex items-center justify-center shrink-0">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>
                                 </div>
-                                <h4 class="text-xs sm:text-sm font-bold text-navy hover:text-brand transition">
-                                    <a
-                                        href="{{ route('public.announcements.show', $announcement->slug) }}">{{ $announcement->title }}</a>
-                                </h4>
-                                <p class="text-xs text-slate-600 mt-1 line-clamp-2 leading-relaxed">
-                                    {{ $announcement->excerpt ?: Str::limit(strip_tags($announcement->content), 100) }}
-                                </p>
+                                <div class="min-w-0 flex-1">
+                                    <span class="text-[11px] font-bold text-slate-400 block mb-0.5">
+                                        {{ $announcement->published_at ? $announcement->published_at->translatedFormat('d F Y') : '-' }}
+                                    </span>
+                                    <h3 class="text-sm font-bold text-[#171B61] hover:text-[#233DFF] transition truncate">
+                                        <a href="{{ route('public.announcements.show', $announcement->slug) }}">{{ $announcement->title }}</a>
+                                    </h3>
+                                    <p class="text-xs text-[#707581] mt-1 line-clamp-2">
+                                        {{ $announcement->excerpt ?? Str::limit(strip_tags($announcement->content), 100) }}
+                                    </p>
+                                </div>
                             </div>
                         @empty
-                            <div class="text-center py-8 text-slate-500 text-xs">
-                                Belum ada pengumuman baru saat ini.
+                            <div class="p-8 text-center bg-[#F4F6FB] rounded-2xl border border-slate-200/80">
+                                <p class="text-xs font-bold text-[#171B61]">Tidak ada pengumuman publik aktif saat ini.</p>
                             </div>
                         @endforelse
                     </div>
                 </div>
-            </div>
 
-            <!-- Upcoming Events Column -->
-            <div
-                class="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-xs flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
+                <!-- Events Column -->
+                <div class="lg:col-span-6 space-y-6">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-200/80">
                         <div>
-                            <span class="text-xs font-bold uppercase tracking-wider text-violet-600 block">Kalender
-                                Akademik</span>
-                            <h2 class="text-xl font-extrabold text-navy">Agenda &amp; Acara Mendatang</h2>
+                            <span class="text-xs font-extrabold uppercase tracking-widest text-[#233DFF] block mb-1">AGENDA AKADEMIK</span>
+                            <h2 class="text-2xl font-extrabold text-[#171B61]">Agenda &amp; Acara Sekolah</h2>
                         </div>
-                        <a href="{{ route('public.events') }}"
-                            class="text-xs font-bold text-brand hover:underline inline-flex items-center gap-1">
-                            <span>Lihat Semua</span>
-                            <span>&rarr;</span>
-                        </a>
+                        <a href="{{ route('public.events') }}" class="text-xs font-bold text-[#233DFF] hover:underline">Semua &rarr;</a>
                     </div>
 
-                    <div class="space-y-3.5">
+                    <div class="space-y-4">
                         @forelse($upcomingEvents as $event)
-                            <div
-                                class="p-4 rounded-2xl bg-slate-50 border border-slate-200/70 flex items-start gap-4 hover:bg-slate-100/75 transition-all duration-150">
-                                <div
-                                    class="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-100 to-indigo-100 border border-violet-200/60 text-violet-700 flex flex-col items-center justify-center shrink-0 shadow-xs">
-                                    <span
-                                        class="text-base font-black leading-none">{{ $event->event_date ? $event->event_date->format('d') : '-' }}</span>
-                                    <span
-                                        class="text-[10px] uppercase font-bold leading-none mt-1">{{ $event->event_date ? $event->event_date->format('M Y') : '-' }}</span>
+                            <div class="p-5 rounded-2xl bg-[#F4F6FB] border border-slate-200/80 hover:border-indigo-200 transition-all flex items-start gap-4">
+                                <div class="w-12 h-14 rounded-2xl bg-[#171B61] text-white flex flex-col items-center justify-center shrink-0 shadow-sm">
+                                    <span class="text-[10px] font-bold uppercase tracking-wider text-amber-300">
+                                        {{ $event->published_at ? $event->published_at->translatedFormat('M') : 'AGENDA' }}
+                                    </span>
+                                    <span class="text-lg font-black leading-none">
+                                        {{ $event->published_at ? $event->published_at->format('d') : '•' }}
+                                    </span>
                                 </div>
-                                <div class="space-y-1 min-w-0">
-                                    <h4 class="text-xs sm:text-sm font-bold text-navy hover:text-brand transition truncate">
+                                <div class="min-w-0 flex-1">
+                                    <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-[#233DFF] mb-0.5">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        {{ $event->published_at ? $event->published_at->translatedFormat('l, d F Y') : 'Terjadwal' }}
+                                    </span>
+                                    <h3 class="text-sm font-bold text-[#171B61] hover:text-[#233DFF] transition truncate">
                                         <a href="{{ route('public.events.show', $event->slug) }}">{{ $event->title }}</a>
-                                    </h4>
-                                    <div class="text-xs text-slate-500 space-y-0.5">
-                                        <p class="flex items-center gap-1.5 truncate">
-                                            <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none"
-                                                stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            </svg>
-                                            <span>{{ $event->event_location ?? 'Kampus Utama' }}</span>
-                                        </p>
-                                        @if($event->event_time)
-                                            <p class="flex items-center gap-1.5 font-mono text-[11px] text-slate-600">
-                                                <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none"
-                                                    stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg>
-                                                <span>{{ substr($event->event_time, 0, 5) }} WIB</span>
-                                            </p>
-                                        @endif
-                                    </div>
+                                    </h3>
+                                    <p class="text-xs text-[#707581] mt-1 line-clamp-2">
+                                        {{ $event->excerpt ?? Str::limit(strip_tags($event->content), 100) }}
+                                    </p>
                                 </div>
                             </div>
                         @empty
-                            <div class="text-center py-8 text-slate-500 text-xs">
-                                Tidak ada agenda terdekat saat ini.
+                            <div class="p-8 text-center bg-[#F4F6FB] rounded-2xl border border-slate-200/80">
+                                <p class="text-xs font-bold text-[#171B61]">Tidak ada agenda acara mendatang saat ini.</p>
                             </div>
                         @endforelse
                     </div>
                 </div>
-            </div>
 
+            </div>
         </div>
     </section>
 
-    <!-- School Motto & Community Callout CTA -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <div
-            class="relative rounded-3xl bg-gradient-to-r from-navy via-slate-900 to-indigo-950 p-8 sm:p-12 text-white overflow-hidden shadow-2xl border border-slate-800">
-            <!-- Background Glow -->
-            <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-brand/30 rounded-full blur-3xl pointer-events-none">
-            </div>
+    <!-- School Contact & Location Section -->
+    <section id="kontak" class="py-20 bg-[#F4F6FB]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div class="lg:col-span-5 space-y-4">
+                    <span class="text-xs font-extrabold uppercase tracking-widest text-[#233DFF] block">LAYANAN INFORMASI</span>
+                    <h2 class="text-3xl font-extrabold text-[#171B61] tracking-tight">Hubungi Satu-Sekolah</h2>
+                    <p class="text-sm text-[#707581] leading-relaxed">
+                        Pintu komunikasi terbuka bagi calon peserta didik, orang tua/wali murid, serta mitra industri DUDI.
+                    </p>
+                    <div class="space-y-3 pt-2 text-xs text-slate-700">
+                        <div class="flex items-center gap-3 p-3.5 rounded-2xl bg-white border border-slate-200/80">
+                            <div class="w-8 h-8 rounded-xl bg-[#E5ECFF] text-[#233DFF] flex items-center justify-center shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            </div>
+                            <span>Jl. Pendidikan No. 01, Kompleks Edukasi Modern, Indonesia</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-3.5 rounded-2xl bg-white border border-slate-200/80">
+                            <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                            </div>
+                            <span>(021) 7890-1234 (Jam Kerja: 07.30 - 16.00 WIB)</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-3.5 rounded-2xl bg-white border border-slate-200/80">
+                            <div class="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                            </div>
+                            <span>info@satusekolah.sch.id &bull; humas@satusekolah.sch.id</span>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="relative z-10 max-w-2xl space-y-4">
-                <span
-                    class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold bg-white/10 text-indigo-300 border border-white/15">
-                    Maju Bersama SMK Vokasi
-                </span>
-                <h3 class="text-2xl sm:text-3xl font-black tracking-tight">
-                    Bersinergi Menghadirkan Generasi Digital yang Kompeten &amp; Berkarakter
-                </h3>
-                <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
-                    Didukung sarana laboratorium komputasi terkini, pengajar bersertifikasi industri, dan kerjasama
-                    penempatan PKL di puluhan perusahaan teknologi terpercaya.
-                </p>
-                <div class="pt-2 flex flex-wrap items-center gap-3">
-                    <a href="{{ route('public.profile') }}"
-                        class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white text-navy font-bold text-xs sm:text-sm shadow-md hover:bg-slate-100 transition">
-                        <span>Lihat Profil Kejuruan</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                    </a>
-                    <a href="{{ route('login') }}"
-                        class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs sm:text-sm border border-white/20 transition">
-                        <span>Portal Masuk Guru &amp; Admin</span>
-                    </a>
+                <div class="lg:col-span-7">
+                    <div class="bg-white p-8 rounded-3xl border border-slate-200/80 shadow-md shadow-indigo-950/5 space-y-4">
+                        <h3 class="text-lg font-bold text-[#171B61]">Portal Informasi Terpadu</h3>
+                        <p class="text-xs text-[#707581] leading-relaxed">
+                            Aplikasi web Satu-Sekolah mengintegrasikan seluruh layanan administrasi kepegawaian, proses belajar mengajar, serta pengawasan Praktik Kerja Lapangan (PKL) secara daring dan akuntabel.
+                        </p>
+                        <div class="grid grid-cols-2 gap-4 pt-2">
+                            <div class="p-4 rounded-2xl bg-[#ECEBFA] text-[#171B61]">
+                                <span class="text-xs font-bold block">Tenaga Pendidik &amp; Guru</span>
+                                <span class="text-[11px] text-[#707581] mt-0.5 block">Akses jadwal mengajar dan presensi kelas harian.</span>
+                            </div>
+                            <div class="p-4 rounded-2xl bg-[#E5ECFF] text-[#171B61]">
+                                <span class="text-xs font-bold block">Pembimbing PKL</span>
+                                <span class="text-[11px] text-[#707581] mt-0.5 block">Review jurnal, izin, dan rekapitulasi kehadiran magang.</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

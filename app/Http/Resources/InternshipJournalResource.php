@@ -20,7 +20,7 @@ class InternshipJournalResource extends JsonResource
             'date' => $this->date?->format('Y-m-d'),
             'title' => $this->title,
             'activity_description' => $this->activity_description,
-            'attachment_url' => $this->attachment_path ? asset('storage/' . $this->attachment_path) : null,
+            'attachment_url' => $this->attachment_path ? asset('storage/'.$this->attachment_path) : null,
             'status' => $this->status?->value ?? $this->status,
             'status_label' => method_exists($this->status, 'label') ? $this->status->label() : ucfirst($this->status?->value ?? (string) $this->status),
             'mentor_notes' => $this->mentor_notes,

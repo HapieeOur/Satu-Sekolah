@@ -22,7 +22,7 @@ class InternshipLeaveResource extends JsonResource
             'start_date' => $this->start_date?->format('Y-m-d'),
             'end_date' => $this->end_date?->format('Y-m-d'),
             'reason' => $this->reason,
-            'attachment_url' => $this->attachment_path ? asset('storage/' . $this->attachment_path) : null,
+            'attachment_url' => $this->attachment_path ? asset('storage/'.$this->attachment_path) : null,
             'status' => $this->status?->value ?? $this->status,
             'status_label' => method_exists($this->status, 'label') ? $this->status->label() : ucfirst($this->status?->value ?? (string) $this->status),
             'review_notes' => $this->review_notes,
