@@ -1,7 +1,7 @@
-FROM node:20-alpine AS node_builder
+FROM node:22-alpine AS node_builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm install --ignore-scripts
+RUN npm install -g npm@latest && npm install --ignore-scripts
 COPY . .
 RUN npm run build
 
