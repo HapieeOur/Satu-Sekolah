@@ -160,24 +160,44 @@ class ForgotPasswordTest extends TestCase
         $loginResponse->assertRedirect(route('dashboard'));
     }
 
-    public function test_login_page_has_no_demo_buttons_and_has_oauth_and_forgot_password(): void
+    public function test_cannot_reset_password_using_the_same_previous_password(): void
+    {
+        $user = User::where('email', 'admin@oneschool.sch.id')->first();
+        $resetToken = 'valid-test-token-456';
+
+        DB::table('password_reset_tokens')->insert([
+            'email' => $user->email,
+            'token' => $resetToken,
+            'created_at' => now(),
+        ]);
+
+        // Attempt to reset with existing password ('password')
+        $response = $this->post(route('password.update'), [
+            'token' => $resetToken,
+            'email' => $user->email,
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ]);
+
+        $response->assertSessionHasErrors('password');
+        $this->assertEquals(
+            'Kata sandi baru tidak boleh sama dengan kata sandi lama Anda saat ini. Silakan buat kata sandi yang berbeda.',
+            session('errors')->first('password')
+        );
+
+        // Password remains unchanged
+        $user->refresh();
+        $this->assertTrue(Hash::check('password', $user->password));
+    }
+
+    public function test_login_page_has_no_demo_buttons_or_oauth_and_has_forgot_password(): void
     {
         $response = $this->get(route('login'));
 
         $response->assertStatus(200);
         $response->assertDontSee('Akun Demo');
         $response->assertDontSee('fillCredentials');
+        $response->assertDontSee('Masuk dengan Google');
         $response->assertSee('Lupa kata sandi?');
-        $response->assertSee('Masuk dengan Google');
-    }
-
-    public function test_oauth_google_redirect_informs_when_unconfigured(): void
-    {
-        config(['services.google.client_id' => null]);
-
-        $response = $this->get(route('oauth.google'));
-
-        $response->assertRedirect(route('login'));
-        $response->assertSessionHas('info');
     }
 }

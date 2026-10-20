@@ -38,6 +38,21 @@ class PublicPageTest extends TestCase
         $response->assertSee('Satu-Sekolah');
         $response->assertSee('Portal Resmi Sistem Informasi Satu-Sekolah');
         $response->assertSee('Masuk Portal Guru & Admin', false);
+        $response->assertSee('STATISTIK & KINERJA SATU-SEKOLAH', false);
+        $response->assertSee('Peserta Didik Aktif');
+        $response->assertSee('Guru &amp; Instruktur Ahli', false);
+        $response->assertSee('Mitra Industri Aktif');
+        $response->assertSee('Rombel &amp; Laboratorium', false);
+    }
+
+    public function test_public_profile_displays_institution_statistics_strip(): void
+    {
+        $response = $this->get(route('public.profile'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Akreditasi A');
+        $response->assertSee('Standar Mutu Pendidikan Nasional Unggul');
+        $response->assertSee('Siswa Vokasi Berprestasi Terdaftar');
     }
 
     public function test_authenticated_user_sees_dashboard_link_on_public_home(): void

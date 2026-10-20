@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Contracts\Services\UserServiceInterface;
+use App\Models\Student;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -23,11 +24,15 @@ class UserService implements UserServiceInterface
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'phone' => $data['phone'] ?? null,
+                'nis' => ! empty($data['nis']) ? $data['nis'] : null,
+                'nisn' => ! empty($data['nisn']) ? $data['nisn'] : null,
                 'password' => Hash::make($data['password']),
                 'is_active' => $data['is_active'] ?? true,
             ]);
 
             $user->syncRoles($roles);
+
+            $this->syncStudentProfile($user, $data, $roles);
 
             return $user;
         });
@@ -49,6 +54,14 @@ class UserService implements UserServiceInterface
                 'is_active' => $data['is_active'] ?? true,
             ];
 
+            if (array_key_exists('nis', $data)) {
+                $updateData['nis'] = ! empty($data['nis']) ? $data['nis'] : null;
+            }
+
+            if (array_key_exists('nisn', $data)) {
+                $updateData['nisn'] = ! empty($data['nisn']) ? $data['nisn'] : null;
+            }
+
             if (! empty($data['password'])) {
                 $updateData['password'] = Hash::make($data['password']);
             }
@@ -56,8 +69,62 @@ class UserService implements UserServiceInterface
             $user->update($updateData);
             $user->syncRoles($roles);
 
+            $this->syncStudentProfile($user, $data, $roles);
+
             return $user;
         });
+    }
+
+    /**
+     * Synchronize linked Student record if user is a student or has NIS/NISN.
+     *
+     * @param  array<string, mixed>  $data
+     * @param  array<string>  $roles
+     */
+    protected function syncStudentProfile(User $user, array $data, array $roles): void
+    {
+        $isStudent = in_array('siswa', $roles) || ! empty($data['nis']) || ! empty($data['nisn']);
+        if (! $isStudent) {
+            return;
+        }
+
+        $student = Student::where('user_id', $user->id)
+            ->orWhere(function ($q) use ($data) {
+                if (! empty($data['nis'])) {
+                    $q->orWhere('nis', $data['nis']);
+                }
+                if (! empty($data['nisn'])) {
+                    $q->orWhere('nisn', $data['nisn']);
+                }
+            })
+            ->first();
+
+        if ($student) {
+            $studentUpdate = ['user_id' => $user->id];
+            if (! empty($data['nis'])) {
+                $studentUpdate['nis'] = $data['nis'];
+            }
+            if (! empty($data['nisn'])) {
+                $studentUpdate['nisn'] = $data['nisn'];
+            }
+            if (! empty($data['name'])) {
+                $studentUpdate['name'] = $data['name'];
+            }
+            if (! empty($data['phone'])) {
+                $studentUpdate['phone'] = $data['phone'];
+            }
+            $student->update($studentUpdate);
+        } elseif (! empty($data['nis'])) {
+            Student::create([
+                'user_id' => $user->id,
+                'nis' => $data['nis'],
+                'nisn' => ! empty($data['nisn']) ? $data['nisn'] : null,
+                'name' => $user->name,
+                'phone' => $user->phone ?? null,
+                'gender' => 'L',
+                'status' => 'aktif',
+            ]);
+        }
     }
 
     /**

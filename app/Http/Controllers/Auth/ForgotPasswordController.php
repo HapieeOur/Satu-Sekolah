@@ -248,6 +248,14 @@ class ForgotPasswordController extends Controller
         }
 
         $user = User::where('email', $request->email)->firstOrFail();
+
+        // Validasi agar kata sandi baru tidak sama dengan kata sandi lama / saat ini
+        if (Hash::check($request->password, $user->password)) {
+            return back()->withErrors([
+                'password' => 'Kata sandi baru tidak boleh sama dengan kata sandi lama Anda saat ini. Silakan buat kata sandi yang berbeda.',
+            ]);
+        }
+
         $user->password = Hash::make($request->password);
         $user->save();
 

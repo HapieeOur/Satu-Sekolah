@@ -39,6 +39,36 @@ class AuthTest extends TestCase
         $response->assertRedirect('/dashboard');
     }
 
+    public function test_students_can_authenticate_using_nisn(): void
+    {
+        $studentUser = User::where('email', 'siswa@oneschool.sch.id')->first();
+        $this->assertNotNull($studentUser);
+        $this->assertEquals('0071234567', $studentUser->nisn);
+
+        $response = $this->post('/login', [
+            'email' => '0071234567',
+            'password' => 'password',
+        ]);
+
+        $this->assertAuthenticatedAs($studentUser);
+        $response->assertRedirect('/dashboard');
+    }
+
+    public function test_students_can_authenticate_using_nis(): void
+    {
+        $studentUser = User::where('email', 'siswa@oneschool.sch.id')->first();
+        $this->assertNotNull($studentUser);
+        $this->assertEquals('20241001', $studentUser->nis);
+
+        $response = $this->post('/login', [
+            'email' => '20241001',
+            'password' => 'password',
+        ]);
+
+        $this->assertAuthenticatedAs($studentUser);
+        $response->assertRedirect('/dashboard');
+    }
+
     public function test_users_can_not_authenticate_with_invalid_password(): void
     {
         $this->post('/login', [
@@ -85,6 +115,12 @@ class AuthTest extends TestCase
         $this->actingAs($pembimbing)
             ->get('/dashboard')
             ->assertRedirect(route('internship-mentor.dashboard'));
+
+        // 5. Siswa to student dashboard
+        $siswa = User::where('email', 'siswa@oneschool.sch.id')->first();
+        $this->actingAs($siswa)
+            ->get('/dashboard')
+            ->assertRedirect(route('student.dashboard'));
     }
 
     public function test_users_can_logout(): void

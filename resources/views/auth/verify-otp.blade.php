@@ -16,7 +16,7 @@
                 <div class="inline-flex items-center gap-1.5 mt-2 px-3 py-1 bg-slate-100 rounded-full border border-slate-200 text-xs font-bold text-slate-800">
                     <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                     <span>{{ $email }}</span>
-                    <a href="{{ route('password.request') }}" class="text-[11px] text-[#16646A] hover:underline ml-1">Ubah</a>
+                    <a href="{{ route('password.request') }}" class="text-[11px] text-[#233DFF] hover:underline ml-1">Ubah</a>
                 </div>
             </div>
 
@@ -64,7 +64,7 @@
                             required 
                             autofocus 
                             placeholder="······"
-                            class="block w-full py-3.5 px-4 text-center font-mono text-2xl tracking-[12px] sm:tracking-[16px] font-black rounded-2xl border @error('otp') border-rose-400 bg-rose-50 text-rose-950 @else border-slate-300 bg-white text-slate-900 @enderror placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-[#16646A]/25 focus:border-[#16646A] transition shadow-2xs"
+                            class="block w-full py-3.5 px-4 text-center font-mono text-2xl tracking-[12px] sm:tracking-[16px] font-black rounded-2xl border @error('otp') border-rose-400 bg-rose-50 text-rose-950 @else border-slate-300 bg-white text-slate-900 @enderror placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-[#233DFF]/20 focus:border-[#233DFF] transition shadow-2xs"
                         >
                     </div>
                     @error('otp')
@@ -78,7 +78,7 @@
                 <div class="pt-2">
                     <button 
                         type="submit" 
-                        class="w-full flex justify-center items-center gap-2 py-3.5 px-4 rounded-xl text-sm font-extrabold text-white bg-[#16646A] hover:bg-[#125257] active:bg-[#0E4145] shadow-lg shadow-[#16646A]/30 hover:shadow-[#16646A]/45 hover:-translate-y-0.5 transition duration-150 cursor-pointer"
+                        class="w-full flex justify-center items-center gap-2 py-3.5 px-4 rounded-xl text-sm font-extrabold text-white bg-[#233DFF] hover:bg-[#1B30D9] active:bg-[#1524A3] shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/45 hover:-translate-y-0.5 transition duration-150 cursor-pointer"
                     >
                         <span>Verifikasi &amp; Lanjutkan</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
@@ -92,7 +92,7 @@
                     @csrf
                     <p class="text-xs text-slate-600">
                         Tidak menerima kode OTP? 
-                        <button type="submit" class="font-extrabold text-[#16646A] hover:text-[#0E4145] hover:underline cursor-pointer">
+                        <button type="submit" class="font-extrabold text-[#233DFF] hover:text-[#171B61] hover:underline cursor-pointer">
                             Kirim Ulang OTP
                         </button>
                     </p>

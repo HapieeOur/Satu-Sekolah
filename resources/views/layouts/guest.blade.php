@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full bg-[#EEF3F5]">
+<html lang="id" class="h-full bg-[#F4F6FB]">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,24 +23,25 @@
             theme: {
                 extend: {
                     colors: {
-                        spruce: {
-                            DEFAULT: '#16646A',
-                            hover: '#125257',
-                            dark: '#0C2B2E',
-                            darker: '#081E21',
-                            light: '#22B4BB',
-                            surface: '#EBF4F5',
-                        },
                         navy: {
                             DEFAULT: '#171B61',
                             sidebar: '#131652',
                             dark: '#0D1040',
+                            light: '#1F257D',
                         },
                         brand: {
-                            DEFAULT: '#16646A',
-                            hover: '#125257',
-                            indigo: '#233DFF',
+                            DEFAULT: '#233DFF',
+                            hover: '#1B30D9',
+                            light: '#E5ECFF',
+                            lavender: '#ECEBFA',
+                            dark: '#171B61',
                         },
+                        accent: {
+                            yellow: '#F4CF52',
+                            blue: '#E5ECFF',
+                            lavender: '#ECEBFA',
+                        },
+                        canvas: '#F4F6FB',
                     },
                     fontFamily: {
                         sans: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
@@ -50,12 +51,12 @@
         }
     </script>
 </head>
-<body class="min-h-full font-sans antialiased text-slate-800 flex items-center justify-center p-3 sm:p-6 lg:p-8 relative overflow-x-hidden bg-[#EEF3F5] selection:bg-[#16646A] selection:text-white">
+<body class="min-h-full font-sans antialiased text-slate-800 flex items-center justify-center p-3 sm:p-6 lg:p-8 relative overflow-x-hidden bg-[#F4F6FB] selection:bg-[#233DFF] selection:text-white">
 
     <!-- Subtle Ambient Background Glows -->
-    <div class="fixed -top-40 -left-40 w-[500px] h-[500px] bg-teal-200/35 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="fixed -bottom-40 -right-40 w-[500px] h-[500px] bg-sky-200/35 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-white/40 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="fixed -top-40 -left-40 w-[500px] h-[500px] bg-blue-200/30 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="fixed -bottom-40 -right-40 w-[500px] h-[500px] bg-indigo-200/30 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-white/50 rounded-full blur-3xl pointer-events-none"></div>
 
     <div class="relative z-10 w-full max-w-6xl my-auto">
         {{ $slot }}

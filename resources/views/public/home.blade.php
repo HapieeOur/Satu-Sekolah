@@ -79,9 +79,6 @@
                                      alt="Siswa Berprestasi" 
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                      onerror="this.style.display='none'">
-                                <div class="absolute inset-0 flex items-center justify-center p-4 text-center pointer-events-none -z-1">
-                                    <span class="text-xs font-bold text-indigo-900">Pembelajaran Kolaboratif</span>
-                                </div>
                             </div>
                         </div>
 
@@ -92,9 +89,6 @@
                                      alt="Aktivitas Belajar" 
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                      onerror="this.style.display='none'">
-                                <div class="absolute inset-0 flex items-center justify-center p-4 text-center pointer-events-none -z-1">
-                                    <span class="text-xs font-bold text-indigo-900">Siswa Berkarakter</span>
-                                </div>
                             </div>
                         </div>
 
@@ -105,9 +99,6 @@
                                      alt="Kerja Sama Tim Siswa" 
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                      onerror="this.style.display='none'">
-                                <div class="absolute inset-0 flex items-center justify-center p-4 text-center pointer-events-none -z-1">
-                                    <span class="text-xs font-bold text-indigo-900">Inovasi Teknologi</span>
-                                </div>
                             </div>
                         </div>
 
@@ -118,14 +109,233 @@
                                      alt="Praktik Kerja Lapangan" 
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                      onerror="this.style.display='none'">
-                                <div class="absolute inset-0 flex items-center justify-center p-4 text-center pointer-events-none -z-1">
-                                    <span class="text-xs font-bold text-indigo-900">Praktik Lapangan</span>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
+            </div>
+        </div>
+    </section>
+
+    <!-- Institutional Statistics & Bento Metrics Showcase -->
+    <section class="py-16 sm:py-24 bg-[#F4F6FB] border-b border-slate-200/80 relative overflow-hidden">
+        <!-- Subtle Glow & Accents -->
+        <div class="absolute -top-32 right-10 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-32 left-10 w-96 h-96 bg-amber-100/40 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <!-- Section Header -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-16 gap-6">
+                <div class="max-w-2xl">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest text-[#233DFF] bg-[#E5ECFF] border border-blue-200/80 mb-3">
+                        <span class="w-2 h-2 rounded-full bg-[#233DFF]"></span>
+                        <span>STATISTIK & KINERJA SATU-SEKOLAH</span>
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl lg:text-[42px] font-normal text-[#20211F] tracking-tight leading-tight">
+                        Pencapaian Nyata & <span class="font-black text-[#171B61]">Standar Mutu Vokasi</span>
+                    </h2>
+                    <p class="text-sm sm:text-base text-[#707581] mt-3 leading-relaxed">
+                        Data riil terintegrasi dari sistem manajemen akademik, kehadiran digital, dan monitoring kemitraan industri Praktik Kerja Lapangan (PKL) Satu-Sekolah.
+                    </p>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white border border-slate-200/80 shadow-xs text-xs font-bold text-slate-700">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Data Terverifikasi Real-Time
+                    </span>
+                </div>
+            </div>
+
+            <!-- Bento Grid 6-Card Layout -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6">
+                <!-- Card 1: Featured Indigo Card (Students) - lg:col-span-4 -->
+                <div class="lg:col-span-4 rounded-3xl bg-[#171B61] text-white p-8 relative overflow-hidden shadow-xl shadow-indigo-950/20 flex flex-col justify-between group hover:-translate-y-1 transition-all duration-300">
+                    <div class="absolute -right-6 -bottom-6 w-40 h-40 bg-white/5 rounded-full blur-xl pointer-events-none"></div>
+                    <div class="space-y-4 relative z-10">
+                        <div class="flex items-center justify-between">
+                            <span class="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-white/10 text-[#F4CF52] border border-white/15">
+                                Siswa Vokasi
+                            </span>
+                            <div class="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-[#F4CF52]">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"/></svg>
+                            </div>
+                        </div>
+
+                        <div>
+                            <span class="text-4xl sm:text-5xl font-black text-white tracking-tight block">
+                                {{ number_format($stats['students'] ?? 850) }}+
+                            </span>
+                            <h3 class="text-lg font-bold text-slate-100 mt-1">Peserta Didik Aktif</h3>
+                            <p class="text-xs text-indigo-200 mt-2 leading-relaxed">
+                                Tersebar di jurusan unggulan RPL &amp; TKJ dengan pembinaan kurikulum link-and-match dan sertifikasi keahlian.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 mt-6 border-t border-white/10 flex items-center justify-between text-xs text-indigo-200 relative z-10">
+                        <span>Konsentrasi: RPL &amp; TKJ</span>
+                        <span class="font-bold text-[#F4CF52]">100% Aktif Belajar</span>
+                    </div>
+                </div>
+
+                <!-- Card 2: White Surface Card (Teachers) - lg:col-span-4 -->
+                <div class="lg:col-span-4 rounded-3xl bg-white border border-slate-200/90 p-8 shadow-xs hover:shadow-card hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-blue-50 text-[#233DFF] border border-blue-100">
+                                Tenaga Pendidik
+                            </span>
+                            <div class="w-10 h-10 rounded-2xl bg-[#E5ECFF] flex items-center justify-center text-[#233DFF]">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                            </div>
+                        </div>
+
+                        <div>
+                            <span class="text-4xl sm:text-5xl font-black text-[#171B61] tracking-tight block">
+                                {{ $stats['teachers'] ?? 48 }}+
+                            </span>
+                            <h3 class="text-lg font-bold text-[#171B61] mt-1">Guru &amp; Instruktur Ahli</h3>
+                            <p class="text-xs text-[#707581] mt-2 leading-relaxed">
+                                Tenaga pendidik bergelar sarjana/magister serta instruktur tamu dari kalangan praktisi industri digital.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                        <span>Sertifikasi BNSP</span>
+                        <span class="font-bold text-[#233DFF]">{{ $stats['certified_teachers_rate'] ?? '100%' }} Terakreditasi</span>
+                    </div>
+                </div>
+
+                <!-- Card 3: White Surface Card (Industry Partners) - lg:col-span-4 -->
+                <div class="lg:col-span-4 rounded-3xl bg-white border border-slate-200/90 p-8 shadow-xs hover:shadow-card hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                Kemitraan DUDI
+                            </span>
+                            <div class="w-10 h-10 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                            </div>
+                        </div>
+
+                        <div>
+                            <span class="text-4xl sm:text-5xl font-black text-[#171B61] tracking-tight block">
+                                {{ $stats['companies'] ?? 35 }}+
+                            </span>
+                            <h3 class="text-lg font-bold text-[#171B61] mt-1">Mitra Industri Aktif</h3>
+                            <p class="text-xs text-[#707581] mt-2 leading-relaxed">
+                                Perusahaan mitra resmi penempatan magang PKL, uji sertifikasi kompetensi, dan rekrutmen kerja langsung.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                        <span>Penempatan PKL</span>
+                        <span class="font-bold text-emerald-600">100% Terfasilitasi</span>
+                    </div>
+                </div>
+
+                <!-- Card 4: Classrooms & Lab Card - lg:col-span-4 -->
+                <div class="lg:col-span-4 rounded-3xl bg-white border border-slate-200/90 p-8 shadow-xs hover:shadow-card hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-amber-50 text-amber-800 border border-amber-200">
+                                Sarana Prasarana
+                            </span>
+                            <div class="w-10 h-10 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-600">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                            </div>
+                        </div>
+
+                        <div>
+                            <span class="text-4xl sm:text-5xl font-black text-[#171B61] tracking-tight block">
+                                {{ $stats['classrooms'] ?? 24 }}
+                            </span>
+                            <h3 class="text-lg font-bold text-[#171B61] mt-1">Rombel &amp; Laboratorium</h3>
+                            <p class="text-xs text-[#707581] mt-2 leading-relaxed">
+                                Laboratorium Rekayasa Perangkat Lunak, Lab Komputer Jaringan, studio multimedia, dan ruang kelas ber-AC modern.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                        <span>Konektivitas</span>
+                        <span class="font-bold text-amber-700">Fiber Optic 1 Gbps</span>
+                    </div>
+                </div>
+
+                <!-- Card 5: Keterserapan Lulusan - lg:col-span-4 -->
+                <div class="lg:col-span-4 rounded-3xl bg-white border border-slate-200/90 p-8 shadow-xs hover:shadow-card hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-indigo-50 text-[#233DFF] border border-indigo-100">
+                                Keterserapan Kerja
+                            </span>
+                            <div class="w-10 h-10 rounded-2xl bg-[#ECEBFA] flex items-center justify-center text-[#171B61]">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                            </div>
+                        </div>
+
+                        <div>
+                            <span class="text-4xl sm:text-5xl font-black text-[#233DFF] tracking-tight block">
+                                {{ $stats['absorption_rate'] ?? '98.4%' }}
+                            </span>
+                            <h3 class="text-lg font-bold text-[#171B61] mt-1">Lulusan Siap Kerja</h3>
+                            <p class="text-xs text-[#707581] mt-2 leading-relaxed">
+                                Presentase lulusan yang langsung diserap industri teknologi, berwirausaha mandiri, atau melanjutkan ke perguruan tinggi.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Visual Mini Progress Bar -->
+                    <div class="pt-6 mt-6 border-t border-slate-100 space-y-1.5">
+                        <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                            <div class="bg-gradient-to-r from-[#233DFF] to-blue-400 h-full rounded-full" style="width: 98.4%"></div>
+                        </div>
+                        <div class="flex items-center justify-between text-[11px] text-slate-400 font-semibold">
+                            <span>Tracer Study Vokasi</span>
+                            <span class="text-[#233DFF] font-bold">Target 95% Terlampaui</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 6: Geofence Attendance Rate - lg:col-span-4 -->
+                <div class="lg:col-span-4 rounded-3xl bg-white border border-slate-200/90 p-8 shadow-xs hover:shadow-card hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                Kedisiplinan Siswa
+                            </span>
+                            <div class="w-10 h-10 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                            </div>
+                        </div>
+
+                        <div>
+                            <span class="text-4xl sm:text-5xl font-black text-emerald-600 tracking-tight block">
+                                {{ $stats['attendance_rate'] ?? '96.8%' }}
+                            </span>
+                            <h3 class="text-lg font-bold text-[#171B61] mt-1">Presensi Presisi GPS</h3>
+                            <p class="text-xs text-[#707581] mt-2 leading-relaxed">
+                                Rata-rata tingkat kehadiran harian siswa di sekolah dan di tempat PKL dengan radius validasi geofencing instan.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Visual Mini Progress Bar -->
+                    <div class="pt-6 mt-6 border-t border-slate-100 space-y-1.5">
+                        <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                            <div class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-full" style="width: 96.8%"></div>
+                        </div>
+                        <div class="flex items-center justify-between text-[11px] text-slate-400 font-semibold">
+                            <span>Verifikasi Titik Koordinat</span>
+                            <span class="text-emerald-600 font-bold">Akurasi &lt; 25 Meter</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>

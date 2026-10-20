@@ -41,6 +41,14 @@ class Classroom extends Model
     }
 
     /**
+     * Alias for homeroom teacher relation.
+     */
+    public function teacher(): BelongsTo
+    {
+        return $this->homeroomTeacher();
+    }
+
+    /**
      * Students enrolled in this classroom.
      */
     public function students(): HasMany

@@ -4,11 +4,21 @@
     </x-slot>
 
     <div class="space-y-6">
+        <!-- Flash Message -->
+        @if (session('success'))
+            <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center justify-between shadow-xs">
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    <span>{{ session('success') }}</span>
+                </div>
+            </div>
+        @endif
+
         <!-- Header -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
                 <h1 class="text-xl sm:text-2xl font-black text-navy tracking-tight">Presensi Siswa Mata Pelajaran</h1>
-                <p class="text-xs text-slate-500 mt-0.5">Pemantauan kehadiran peserta didik pada sesi mata pelajaran dan kelas binaan Anda.</p>
+                <p class="text-xs text-slate-500 mt-0.5">Pencatatan dan pemantauan kehadiran peserta didik pada sesi mata pelajaran kelas Anda secara langsung.</p>
             </div>
         </div>
 
@@ -83,63 +93,122 @@
                     </div>
                 </div>
 
-                <!-- Students Attendance Table -->
-                <div class="bg-white rounded-3xl border border-slate-200/90 overflow-hidden shadow-xs">
-                    <div class="px-6 py-4 bg-slate-50/80 border-b border-slate-100 flex items-center justify-between">
-                        <h3 class="font-extrabold text-sm text-navy">Presensi Siswa Kelas pada Sesi Ini</h3>
-                        <span class="text-xs text-slate-400 font-medium">{{ $enrolledStudents->count() }} peserta didik</span>
-                    </div>
+                <!-- Students Attendance Form & Table -->
+                <form method="POST" action="{{ route('teacher.attendances.store') }}" class="space-y-4">
+                    @csrf
+                    <input type="hidden" name="schedule_id" value="{{ $schedule->id }}">
+                    <input type="hidden" name="date" value="{{ $date }}">
 
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs">
-                            <thead class="bg-slate-50/40 text-slate-500 uppercase font-bold text-[10px] border-b border-slate-100">
-                                <tr>
-                                    <th scope="col" class="py-3 px-6 w-12">No</th>
-                                    <th scope="col" class="py-3 px-6">NIS</th>
-                                    <th scope="col" class="py-3 px-6">Nama Siswa</th>
-                                    <th scope="col" class="py-3 px-6">Waktu Masuk</th>
-                                    <th scope="col" class="py-3 px-6">Status Kehadiran</th>
-                                    <th scope="col" class="py-3 px-6">Catatan / Keterangan</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100">
-                                @forelse ($enrolledStudents as $idx => $student)
-                                    @php
-                                        $attRecord = $attendances->firstWhere('student_id', $student->id);
-                                    @endphp
-                                    <tr class="hover:bg-slate-50/75 transition">
-                                        <td class="py-4 px-6 text-slate-400 font-mono">{{ $idx + 1 }}</td>
-                                        <td class="py-4 px-6 font-mono font-medium text-slate-500">{{ $student->nis }}</td>
-                                        <td class="py-4 px-6 font-bold text-navy text-xs sm:text-sm">{{ $student->name }}</td>
-                                        <td class="py-4 px-6 font-mono font-semibold text-slate-600">
-                                            {{ $attRecord && $attRecord->check_in_time ? substr((string) $attRecord->check_in_time, 0, 5) : '-' }}
-                                        </td>
-                                        <td class="py-4 px-6">
-                                            @if ($attRecord)
-                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold border {{ $attRecord->status->badgeClass() }}">
-                                                    {{ $attRecord->status->label() }}
-                                                </span>
-                                            @else
-                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-500 border border-slate-200">
-                                                    Belum Tercatat
-                                                </span>
-                                            @endif
-                                        </td>
-                                        <td class="py-4 px-6 text-slate-500">
-                                            {{ $attRecord?->notes ?? '-' }}
-                                        </td>
-                                    </tr>
-                                @empty
+                    <div class="bg-white rounded-3xl border border-slate-200/90 overflow-hidden shadow-xs">
+                        <div class="px-6 py-4 bg-slate-50/80 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div>
+                                <h3 class="font-extrabold text-sm text-navy">Pencatatan Presensi Sesi Ini</h3>
+                                <p class="text-[11px] text-slate-500">Pilih status kehadiran setiap peserta didik lalu klik Simpan Presensi.</p>
+                            </div>
+
+                            @if ($enrolledStudents->isNotEmpty())
+                                <div class="flex items-center gap-2">
+                                    <button type="button" onclick="setAllAttendance('hadir')" class="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-bold rounded-xl transition cursor-pointer">
+                                        &check; Tandai Semua Hadir
+                                    </button>
+                                    <button type="submit" class="px-4 py-2 bg-[#233DFF] hover:bg-indigo-700 text-white text-xs font-black rounded-xl shadow-md shadow-indigo-900/20 transition cursor-pointer flex items-center gap-1.5">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
+                                        <span>Simpan Presensi</span>
+                                    </button>
+                                </div>
+                            @endif
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead class="bg-slate-50/40 text-slate-500 uppercase font-bold text-[10px] border-b border-slate-100">
                                     <tr>
-                                        <td colspan="6" class="py-12 text-center text-xs text-slate-400 italic">
-                                            Tidak ada data siswa terdaftar pada kelas ini.
-                                        </td>
+                                        <th scope="col" class="py-3 px-6 w-12">No</th>
+                                        <th scope="col" class="py-3 px-6">NIS</th>
+                                        <th scope="col" class="py-3 px-6">Nama Siswa</th>
+                                        <th scope="col" class="py-3 px-6">Status Kehadiran</th>
+                                        <th scope="col" class="py-3 px-6">Catatan / Keterangan</th>
                                     </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    @forelse ($enrolledStudents as $idx => $student)
+                                        @php
+                                            $attRecord = $attendances->firstWhere('student_id', $student->id);
+                                            $currentStatus = $attRecord ? $attRecord->status->value : 'hadir';
+                                        @endphp
+                                        <tr class="hover:bg-slate-50/75 transition">
+                                            <td class="py-4 px-6 text-slate-400 font-mono">{{ $idx + 1 }}</td>
+                                            <td class="py-4 px-6 font-mono font-medium text-slate-500">{{ $student->nis }}</td>
+                                            <td class="py-4 px-6 font-bold text-navy text-xs sm:text-sm">
+                                                {{ $student->name }}
+                                                @if ($attRecord && $attRecord->check_in_time)
+                                                    <span class="block text-[10px] font-normal text-slate-400 font-mono mt-0.5">Waktu: {{ substr((string) $attRecord->check_in_time, 0, 5) }}</span>
+                                                @endif
+                                            </td>
+                                            <td class="py-4 px-6">
+                                                <div class="flex items-center gap-1.5 flex-wrap">
+                                                    @foreach (['hadir' => 'Hadir', 'terlambat' => 'Terlambat', 'izin' => 'Izin', 'sakit' => 'Sakit', 'alpa' => 'Alpa'] as $val => $lbl)
+                                                        @php
+                                                            $colorClass = match($val) {
+                                                                'hadir' => 'peer-checked:bg-emerald-600 peer-checked:text-white peer-checked:border-emerald-600 text-emerald-800 bg-emerald-50/80 border-emerald-200 hover:bg-emerald-100',
+                                                                'terlambat' => 'peer-checked:bg-amber-500 peer-checked:text-white peer-checked:border-amber-500 text-amber-800 bg-amber-50/80 border-amber-200 hover:bg-amber-100',
+                                                                'izin' => 'peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-600 text-blue-800 bg-blue-50/80 border-blue-200 hover:bg-blue-100',
+                                                                'sakit' => 'peer-checked:bg-purple-600 peer-checked:text-white peer-checked:border-purple-600 text-purple-800 bg-purple-50/80 border-purple-200 hover:bg-purple-100',
+                                                                'alpa' => 'peer-checked:bg-rose-600 peer-checked:text-white peer-checked:border-rose-600 text-rose-800 bg-rose-50/80 border-rose-200 hover:bg-rose-100',
+                                                            };
+                                                        @endphp
+                                                        <label class="cursor-pointer select-none">
+                                                            <input type="radio" 
+                                                                   name="attendances[{{ $student->id }}][status]" 
+                                                                   value="{{ $val }}" 
+                                                                   class="hidden peer attendance-radio-{{ $val }}" 
+                                                                   {{ $currentStatus === $val ? 'checked' : '' }}>
+                                                            <span class="inline-block px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-all shadow-2xs {{ $colorClass }}">
+                                                                {{ $lbl }}
+                                                            </span>
+                                                        </label>
+                                                    @endforeach
+                                                </div>
+                                            </td>
+                                            <td class="py-4 px-6">
+                                                <input type="text" 
+                                                       name="attendances[{{ $student->id }}][notes]" 
+                                                       value="{{ $attRecord?->notes }}" 
+                                                       placeholder="Keterangan opsional..." 
+                                                       class="w-full max-w-xs text-xs rounded-xl border-slate-200 focus:border-brand focus:ring-1 focus:ring-brand bg-slate-50/60 focus:bg-white text-slate-700 py-1.5 px-3">
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="5" class="py-12 text-center text-xs text-slate-400 italic">
+                                                Tidak ada data siswa terdaftar pada kelas ini.
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+
+                        @if ($enrolledStudents->isNotEmpty())
+                            <div class="px-6 py-4 bg-slate-50/60 border-t border-slate-100 flex items-center justify-between">
+                                <span class="text-xs text-slate-500 font-medium">Total: {{ $enrolledStudents->count() }} peserta didik</span>
+                                <button type="submit" class="px-5 py-2.5 bg-[#233DFF] hover:bg-indigo-700 text-white text-xs font-black rounded-xl shadow-md shadow-indigo-900/20 transition cursor-pointer flex items-center gap-1.5">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
+                                    <span>Simpan Presensi Sesi Ini</span>
+                                </button>
+                            </div>
+                        @endif
                     </div>
-                </div>
+                </form>
+
+                <script>
+                    function setAllAttendance(status) {
+                        const radios = document.querySelectorAll('.attendance-radio-' + status);
+                        radios.forEach(radio => {
+                            radio.checked = true;
+                        });
+                    }
+                </script>
             @endif
         @endif
     </div>

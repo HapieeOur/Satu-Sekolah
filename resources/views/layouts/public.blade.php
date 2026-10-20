@@ -229,13 +229,13 @@
                     </p>
                     <div class="pt-2">
                         @auth
-                            <a href="{{ route('dashboard') }}" class="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-white bg-brand hover:bg-brand-hover rounded-xl shadow-xs transition">
+                            <a href="{{ route('dashboard') }}" class="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-bold text-white bg-[#233DFF] hover:bg-[#1B30D9] rounded-full shadow-md shadow-indigo-600/30 transition">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                                 <span>Buka Dashboard</span>
                             </a>
                         @else
-                            <a href="{{ route('login') }}" class="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl transition">
-                                <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
+                            <a href="{{ route('login') }}" class="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-extrabold text-[#171B61] bg-[#F4CF52] hover:bg-[#e5be42] rounded-full shadow-md shadow-amber-400/20 transition cursor-pointer">
+                                <svg class="w-4 h-4 text-[#171B61]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
                                 <span>Masuk ke Akun Pendidik</span>
                             </a>
                         @endauth

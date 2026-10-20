@@ -72,5 +72,19 @@ class UserSeeder extends Seeder
             ]
         );
         $nonaktif->syncRoles(['guru']);
+
+        // 6. Akun Siswa untuk pengujian login via NISN / NIS / Email
+        $siswa = User::firstOrCreate(
+            ['email' => 'siswa@oneschool.sch.id'],
+            [
+                'name' => 'Aditya Pratama',
+                'nis' => '20241001',
+                'nisn' => '0071234567',
+                'password' => Hash::make('password'),
+                'phone' => '081234567895',
+                'is_active' => true,
+            ]
+        );
+        $siswa->syncRoles(['siswa']);
     }
 }

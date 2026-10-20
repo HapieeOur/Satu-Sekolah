@@ -50,6 +50,11 @@ class ProfileController extends Controller
         $user->email = $validated['email'];
 
         if (! empty($validated['new_password'])) {
+            if (Hash::check($validated['new_password'], $user->password)) {
+                return back()->withErrors([
+                    'new_password' => 'Kata sandi baru tidak boleh sama dengan kata sandi saat ini.',
+                ]);
+            }
             $user->password = Hash::make($validated['new_password']);
         }
 

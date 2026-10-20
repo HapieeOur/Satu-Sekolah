@@ -4,6 +4,8 @@
     </x-slot>
 
     <div class="space-y-7">
+        <x-role-switcher />
+
         <!-- Top Class Row: "Ihre Klassen" / "Kelas Anda" (Reference Image A) -->
         <div>
             <div class="flex items-center justify-between mb-3.5">

@@ -83,21 +83,21 @@
     <!-- Sidebar Desktop & Mobile (Reference Image A Dark Indigo Vertical Sidebar) -->
     <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-[#131652] border-r border-[#1C206B] text-slate-200 flex flex-col transition-transform duration-300 ease-in-out -translate-x-full lg:translate-x-0 lg:static lg:inset-auto lg:z-auto shadow-2xl lg:shadow-none">
         
-        <!-- Brand / Header (Graduation cap icon from Reference Image A) -->
-        <div class="h-18 flex items-center justify-between px-5 border-b border-[#1C206B] bg-[#0E103D]">
-            <a href="{{ route('dashboard') }}" class="flex items-center gap-3 group">
-                <div class="w-10 h-10 rounded-2xl bg-white p-1.5 flex items-center justify-center shadow-md shadow-indigo-900/40 group-hover:scale-105 transition-transform duration-200">
+        <!-- Brand / Header with spacious breathing room -->
+        <div class="h-20 min-h-[80px] flex items-center justify-between px-6 py-4 border-b border-[#1C206B] bg-[#0E103D]">
+            <a href="{{ route('dashboard') }}" class="flex items-center gap-3.5 group">
+                <div class="w-11 h-11 rounded-2xl bg-white p-2 flex items-center justify-center shadow-lg shadow-black/20 group-hover:scale-105 transition-transform duration-200 shrink-0">
                     <img src="{{ asset('images/logo/icon.png') }}" alt="oneSchool" class="w-full h-full object-contain">
                 </div>
-                <div>
+                <div class="min-w-0">
                     <div class="flex items-center gap-1.5">
                         <span class="font-black text-white text-base tracking-tight leading-tight">SATU-SEKOLAH</span>
-                        <span class="w-1.5 h-1.5 rounded-full bg-[#F4CF52]"></span>
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#F4CF52] shrink-0"></span>
                     </div>
-                    <span class="text-[10px] text-indigo-300 font-medium">Digital School Platform</span>
+                    <span class="text-[10px] text-indigo-300 font-medium tracking-wide block truncate">Digital School Platform</span>
                 </div>
             </a>
-            <button onclick="toggleSidebar()" aria-label="Tutup Menu" class="lg:hidden p-1.5 rounded-lg text-indigo-300 hover:text-white hover:bg-[#1D2275] transition">
+            <button onclick="toggleSidebar()" aria-label="Tutup Menu" class="lg:hidden p-2 rounded-xl text-indigo-300 hover:text-white hover:bg-[#1D2275] transition shrink-0 ml-1 cursor-pointer">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
@@ -283,6 +283,31 @@
             </div>
             @endrole
 
+            <!-- Portal Siswa -->
+            @role('siswa')
+            <div>
+                <p class="px-3 text-[10px] font-bold text-indigo-300/70 uppercase tracking-wider mb-1.5">Portal Siswa</p>
+                <div class="space-y-1">
+                    <a href="{{ route('student.dashboard') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition-all duration-150 {{ request()->routeIs('student.dashboard') ? 'bg-[#233DFF] text-white shadow-md shadow-indigo-900/40 font-bold' : 'text-indigo-200/80 hover:bg-[#1D2275] hover:text-white' }}">
+                        <svg class="w-4 h-4 shrink-0 {{ request()->routeIs('student.dashboard') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                        <span>Beranda Siswa</span>
+                    </a>
+                    <a href="{{ route('student.schedules.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition-all duration-150 {{ request()->routeIs('student.schedules.*') ? 'bg-[#233DFF] text-white shadow-md shadow-indigo-900/40 font-bold' : 'text-indigo-200/80 hover:bg-[#1D2275] hover:text-white' }}">
+                        <svg class="w-4 h-4 shrink-0 {{ request()->routeIs('student.schedules.*') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        <span>Jadwal Pelajaran</span>
+                    </a>
+                    <a href="{{ route('student.attendances.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition-all duration-150 {{ request()->routeIs('student.attendances.*') ? 'bg-[#233DFF] text-white shadow-md shadow-indigo-900/40 font-bold' : 'text-indigo-200/80 hover:bg-[#1D2275] hover:text-white' }}">
+                        <svg class="w-4 h-4 shrink-0 {{ request()->routeIs('student.attendances.*') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <span>Presensi Saya</span>
+                    </a>
+                    <a href="{{ route('student.internship.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition-all duration-150 {{ request()->routeIs('student.internship.*') ? 'bg-[#233DFF] text-white shadow-md shadow-indigo-900/40 font-bold' : 'text-indigo-200/80 hover:bg-[#1D2275] hover:text-white' }}">
+                        <svg class="w-4 h-4 shrink-0 {{ request()->routeIs('student.internship.*') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                        <span>Informasi PKL</span>
+                    </a>
+                </div>
+            </div>
+            @endrole
+
             <!-- Info Role Aktif Pengguna -->
             <div class="pt-3 border-t border-slate-800/80">
                 <p class="px-3 text-[10px] font-bold text-indigo-300/70 uppercase tracking-wider mb-2">Peran Aktif</p>
@@ -294,6 +319,7 @@
                                 'guru' => 'bg-emerald-950/80 text-emerald-300 border-emerald-700/50',
                                 'wali_kelas' => 'bg-amber-950/80 text-amber-300 border-amber-700/50',
                                 'guru_pembimbing_pkl' => 'bg-sky-950/80 text-sky-300 border-sky-700/50',
+                                'siswa' => 'bg-cyan-950/80 text-cyan-300 border-cyan-700/50',
                                 default => 'bg-slate-800 text-slate-300 border-slate-700'
                             };
                         @endphp
@@ -329,7 +355,7 @@
     <div class="flex-1 flex flex-col min-w-0 overflow-hidden bg-[#F4F6FB]">
         
         <!-- Topbar (Reference Image A Header: Date Navigator, Search, Notification, Profile) -->
-        <header class="h-18 bg-white/95 backdrop-blur-md border-b border-slate-200/80 flex items-center justify-between px-4 sm:px-6 lg:px-8 z-10 shrink-0">
+        <header class="h-20 min-h-[80px] bg-white/95 backdrop-blur-md border-b border-slate-200/80 flex items-center justify-between px-4 sm:px-6 lg:px-8 z-10 shrink-0">
             <!-- Left: Date Navigator & Header (Reference Image A) -->
             <div class="flex items-center gap-4">
                 <button onclick="toggleSidebar()" aria-label="Toggle Sidebar" class="lg:hidden p-2 rounded-xl text-slate-600 hover:text-navy hover:bg-slate-100 transition cursor-pointer">

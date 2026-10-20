@@ -57,7 +57,7 @@
                             autofocus 
                             autocomplete="new-password"
                             placeholder="Minimal 8 karakter"
-                            class="block w-full pl-10 pr-11 py-3 rounded-xl border @error('password') border-rose-400 bg-rose-50 text-rose-950 @else border-slate-300 bg-white text-slate-900 @enderror text-xs sm:text-sm font-medium placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#16646A]/25 focus:border-[#16646A] transition shadow-2xs"
+                            class="block w-full pl-10 pr-11 py-3 rounded-xl border @error('password') border-rose-400 bg-rose-50 text-rose-950 @else border-slate-300 bg-white text-slate-900 @enderror text-xs sm:text-sm font-medium placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#233DFF]/20 focus:border-[#233DFF] transition shadow-2xs"
                         >
                         <button 
                             type="button" 
@@ -89,7 +89,7 @@
                             required 
                             autocomplete="new-password"
                             placeholder="Ketik ulang kata sandi baru"
-                            class="block w-full pl-10 pr-11 py-3 rounded-xl border border-slate-300 bg-white text-slate-900 text-xs sm:text-sm font-medium placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#16646A]/25 focus:border-[#16646A] transition shadow-2xs"
+                            class="block w-full pl-10 pr-11 py-3 rounded-xl border border-slate-300 bg-white text-slate-900 text-xs sm:text-sm font-medium placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#233DFF]/20 focus:border-[#233DFF] transition shadow-2xs"
                         >
                         <button 
                             type="button" 
@@ -105,7 +105,7 @@
                 <div class="pt-2">
                     <button 
                         type="submit" 
-                        class="w-full flex justify-center items-center gap-2 py-3.5 px-4 rounded-xl text-sm font-extrabold text-white bg-[#16646A] hover:bg-[#125257] active:bg-[#0E4145] shadow-lg shadow-[#16646A]/30 hover:shadow-[#16646A]/45 hover:-translate-y-0.5 transition duration-150 cursor-pointer"
+                        class="w-full flex justify-center items-center gap-2 py-3.5 px-4 rounded-xl text-sm font-extrabold text-white bg-[#233DFF] hover:bg-[#1B30D9] active:bg-[#1524A3] shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/45 hover:-translate-y-0.5 transition duration-150 cursor-pointer"
                     >
                         <span>Simpan Kata Sandi Baru</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
@@ -114,7 +114,7 @@
             </form>
 
             <div class="mt-6 pt-5 border-t border-slate-200 text-center">
-                <a href="{{ route('login') }}" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-800 transition">
+                <a href="{{ route('login') }}" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-[#233DFF] transition">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                     <span>Batalkan &amp; Kembali ke Halaman Masuk</span>
                 </a>

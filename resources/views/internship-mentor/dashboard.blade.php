@@ -3,6 +3,8 @@
         Dashboard Pembimbing PKL
     </x-slot>
 
+    <x-role-switcher />
+
     <!-- Top Role & Welcome Header -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
         <div>

@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\Student;
+use App\Models\Teacher;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,11 +32,33 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request): RedirectResponse
     {
-        $credentials = $request->only('email', 'password');
+        $loginInput = trim((string) $request->input('email'));
+        $password = (string) $request->input('password');
 
-        if (! Auth::attempt($credentials, $request->boolean('remember'))) {
+        // Resolve user by Email, NISN / NIS (User), NISN / NIS (Student), or NIP (Teacher)
+        $user = User::where('email', $loginInput)->first();
+
+        if (! $user) {
+            $user = User::where('nisn', $loginInput)->orWhere('nis', $loginInput)->first();
+        }
+
+        if (! $user) {
+            $student = Student::where('nisn', $loginInput)->orWhere('nis', $loginInput)->first();
+            if ($student && $student->user) {
+                $user = $student->user;
+            }
+        }
+
+        if (! $user) {
+            $teacher = Teacher::where('nip', $loginInput)->first();
+            if ($teacher && $teacher->user) {
+                $user = $teacher->user;
+            }
+        }
+
+        if (! $user || ! Auth::attempt(['id' => $user->id, 'password' => $password], $request->boolean('remember'))) {
             throw ValidationException::withMessages([
-                'email' => 'Email atau password yang Anda masukkan salah.',
+                'email' => 'Email, NISN, atau password yang Anda masukkan salah.',
             ]);
         }
 

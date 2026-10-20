@@ -59,6 +59,7 @@ Route::prefix('v1')->group(function () {
             // Akademik
             Route::get('/schedules', [StudentAcademicController::class, 'schedules']);
             Route::get('/attendances', [StudentAcademicController::class, 'attendances']);
+            Route::post('/attendances/check-in', [StudentAcademicController::class, 'checkIn']);
         });
 
         // --- 5. Guru Pembimbing PKL (Mentor) Area ---

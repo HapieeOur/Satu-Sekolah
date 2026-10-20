@@ -31,6 +31,10 @@ class DashboardController extends Controller
             return redirect()->route('teacher.dashboard');
         }
 
+        if ($user->hasRole('siswa')) {
+            return redirect()->route('student.dashboard');
+        }
+
         Auth::logout();
 
         return redirect()->route('login')->withErrors([

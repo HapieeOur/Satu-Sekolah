@@ -16,7 +16,6 @@ use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
-use App\Http\Controllers\Auth\OAuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Homeroom\HomeroomAttendanceController;
 use App\Http\Controllers\Homeroom\HomeroomDashboardController;
@@ -30,6 +29,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Public\PublicPageController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\Student\StudentDashboardController;
 use App\Http\Controllers\Teacher\TeacherAttendanceController;
 use App\Http\Controllers\Teacher\TeacherDashboardController;
 use App\Http\Controllers\Teacher\TeacherScheduleController;
@@ -55,10 +55,6 @@ Route::get('/acara/{slug}', [PublicPageController::class, 'eventShow'])->name('p
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
-
-    // Google OAuth SSO
-    Route::get('/auth/google', [OAuthController::class, 'redirectToGoogle'])->name('oauth.google');
-    Route::get('/auth/google/callback', [OAuthController::class, 'handleGoogleCallback'])->name('oauth.google.callback');
 
     // Lupa Kata Sandi dengan OTP
     Route::get('/forgot-password', [ForgotPasswordController::class, 'showForgotPasswordForm'])->name('password.request');
@@ -132,6 +128,7 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/dashboard', [TeacherDashboardController::class, 'index'])->name('dashboard');
         Route::get('/schedules', [TeacherScheduleController::class, 'index'])->name('schedules.index');
         Route::get('/attendances', [TeacherAttendanceController::class, 'index'])->name('attendances.index');
+        Route::post('/attendances', [TeacherAttendanceController::class, 'store'])->name('attendances.store');
     });
 
     // Wali Kelas Area
@@ -163,5 +160,13 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::post('/tasks', [MentorTaskController::class, 'store'])->name('tasks.store');
         Route::get('/tasks/{task}', [MentorTaskController::class, 'show'])->name('tasks.show');
         Route::post('/tasks/submissions/{submission}/grade', [MentorTaskController::class, 'grade'])->name('tasks.submissions.grade');
+    });
+
+    // Siswa Area
+    Route::prefix('student')->name('student.')->middleware('role:siswa')->group(function () {
+        Route::get('/dashboard', [StudentDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/schedules', [StudentDashboardController::class, 'schedules'])->name('schedules.index');
+        Route::get('/attendances', [StudentDashboardController::class, 'attendances'])->name('attendances.index');
+        Route::get('/internship', [StudentDashboardController::class, 'internship'])->name('internship.index');
     });
 });

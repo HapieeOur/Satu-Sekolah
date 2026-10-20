@@ -57,7 +57,7 @@
                             value="{{ old('email') }}" 
                             required 
                             placeholder="nama@satusekolah.sch.id"
-                            class="w-full px-4 py-2.5 text-xs rounded-xl border @error('email') border-rose-400 bg-rose-50/30 @else border-slate-200 bg-slate-50/50 @enderror focus:bg-white focus:ring-2 focus:ring-brand/20 focus:border-brand text-slate-800 transition"
+                            class="w-full px-4 py-2.5 text-xs rounded-xl border @error('email') border-rose-400 bg-rose-50/30 @else border-slate-200 bg-slate-50/50 @enderror focus:bg-white focus:ring-2 focus:ring-[#233DFF]/20 focus:border-[#233DFF] text-slate-800 transition"
                         >
                         @error('email')
                             <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
@@ -74,11 +74,60 @@
                             name="phone" 
                             value="{{ old('phone') }}" 
                             placeholder="081234567890"
-                            class="w-full px-4 py-2.5 text-xs rounded-xl border @error('phone') border-rose-400 bg-rose-50/30 @else border-slate-200 bg-slate-50/50 @enderror focus:bg-white focus:ring-2 focus:ring-brand/20 focus:border-brand text-slate-800 transition font-mono"
+                            class="w-full px-4 py-2.5 text-xs rounded-xl border @error('phone') border-rose-400 bg-rose-50/30 @else border-slate-200 bg-slate-50/50 @enderror focus:bg-white focus:ring-2 focus:ring-[#233DFF]/20 focus:border-[#233DFF] text-slate-800 transition font-mono"
                         >
                         @error('phone')
                             <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
                         @enderror
+                    </div>
+                </div>
+
+                <!-- Identitas Khusus Siswa (NISN & NIS) -->
+                <div class="p-4 rounded-2xl bg-blue-50/50 border border-blue-200/70 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="block text-xs font-bold text-slate-900">Identitas Siswa (NISN & NIS)</span>
+                            <p class="text-[11px] text-slate-500">Khusus untuk akun siswa. Siswa dapat menggunakan NISN atau NIS untuk login ke portal.</p>
+                        </div>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#233DFF]/10 text-[#233DFF] border border-[#233DFF]/20">
+                            Login Siswa
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                        <div>
+                            <label for="nisn" class="block font-bold uppercase tracking-wider text-slate-700 mb-1.5 text-[11px]">
+                                NISN (Nomor Induk Siswa Nasional)
+                            </label>
+                            <input 
+                                type="text" 
+                                id="nisn" 
+                                name="nisn" 
+                                value="{{ old('nisn') }}" 
+                                placeholder="Contoh: 0071234567 (10 digit)"
+                                class="w-full px-4 py-2.5 text-xs rounded-xl border @error('nisn') border-rose-400 bg-rose-50/30 @else border-slate-200 bg-white @enderror focus:bg-white focus:ring-2 focus:ring-[#233DFF]/20 focus:border-[#233DFF] text-slate-800 transition font-mono"
+                            >
+                            @error('nisn')
+                                <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="nis" class="block font-bold uppercase tracking-wider text-slate-700 mb-1.5 text-[11px]">
+                                NIS (Nomor Induk Siswa)
+                            </label>
+                            <input 
+                                type="text" 
+                                id="nis" 
+                                name="nis" 
+                                value="{{ old('nis') }}" 
+                                placeholder="Contoh: 20261101"
+                                class="w-full px-4 py-2.5 text-xs rounded-xl border @error('nis') border-rose-400 bg-rose-50/30 @else border-slate-200 bg-white @enderror focus:bg-white focus:ring-2 focus:ring-[#233DFF]/20 focus:border-[#233DFF] text-slate-800 transition font-mono"
+                            >
+                            @error('nis')
+                                <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
                 </div>
 
@@ -94,7 +143,7 @@
                             name="password" 
                             required 
                             placeholder="Minimal 8 karakter"
-                            class="w-full px-4 py-2.5 text-xs rounded-xl border @error('password') border-rose-400 bg-rose-50/30 @else border-slate-200 bg-slate-50/50 @enderror focus:bg-white focus:ring-2 focus:ring-brand/20 focus:border-brand text-slate-800 transition"
+                            class="w-full px-4 py-2.5 text-xs rounded-xl border @error('password') border-rose-400 bg-rose-50/30 @else border-slate-200 bg-slate-50/50 @enderror focus:bg-white focus:ring-2 focus:ring-[#233DFF]/20 focus:border-[#233DFF] text-slate-800 transition"
                         >
                         @error('password')
                             <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
@@ -111,7 +160,7 @@
                             name="password_confirmation" 
                             required 
                             placeholder="Ulangi password sama"
-                            class="w-full px-4 py-2.5 text-xs rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-brand/20 focus:border-brand text-slate-800 transition"
+                            class="w-full px-4 py-2.5 text-xs rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-[#233DFF]/20 focus:border-[#233DFF] text-slate-800 transition"
                         >
                     </div>
                 </div>
@@ -140,6 +189,7 @@
                                         @elseif ($role->name === 'guru') Akses jadwal mengajar & presensi sesi
                                         @elseif ($role->name === 'wali_kelas') Rekap presensi & monitoring kelas
                                         @elseif ($role->name === 'guru_pembimbing_pkl') Verifikasi jurnal & tugas PKL
+                                        @elseif ($role->name === 'siswa') Akses jadwal kelas, presensi & jurnal PKL (login via NISN)
                                         @endif
                                     </span>
                                 </div>

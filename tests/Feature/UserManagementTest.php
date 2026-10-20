@@ -51,6 +51,47 @@ class UserManagementTest extends TestCase
         $filterResponse->assertSee('Siti Rahmawati');
     }
 
+    public function test_admin_can_search_user_by_nis_or_nisn(): void
+    {
+        $response = $this->actingAs($this->admin)
+            ->get(route('admin.users.index', ['search' => '0071234567']));
+
+        $response->assertStatus(200);
+        $response->assertSee('Aditya Pratama');
+        $response->assertSee('NISN: 0071234567');
+    }
+
+    public function test_admin_can_create_student_user_with_nis_and_nisn(): void
+    {
+        $studentData = [
+            'name' => 'Siswa Baru Berbakat',
+            'email' => 'siswabaru@oneschool.sch.id',
+            'phone' => '087711223344',
+            'nis' => '20261999',
+            'nisn' => '0079998888',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+            'roles' => ['siswa'],
+            'is_active' => '1',
+        ];
+
+        $response = $this->actingAs($this->admin)
+            ->post(route('admin.users.store'), $studentData);
+
+        $response->assertRedirect(route('admin.users.index'));
+        $this->assertDatabaseHas('users', [
+            'email' => 'siswabaru@oneschool.sch.id',
+            'nis' => '20261999',
+            'nisn' => '0079998888',
+        ]);
+
+        $this->assertDatabaseHas('students', [
+            'nis' => '20261999',
+            'nisn' => '0079998888',
+            'name' => 'Siswa Baru Berbakat',
+        ]);
+    }
+
     public function test_admin_can_create_new_user(): void
     {
         $userData = [
