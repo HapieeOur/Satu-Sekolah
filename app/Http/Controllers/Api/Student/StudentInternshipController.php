@@ -109,6 +109,11 @@ class StudentInternshipController extends ApiController
             return $this->respondWithError('Presensi masuk PKL belum dibuka (dibuka mulai pukul '.substr($minCheckIn, 0, 5).' WIB).', 422);
         }
 
+        $maxDayTime = config('attendance.check_out_max_time', '17:00:00');
+        if ($currentTime > $maxDayTime) {
+            return $this->respondWithError('Presensi masuk PKL hari ini sudah ditutup (batas maksimal pukul '.substr($maxDayTime, 0, 5).' WIB).', 422);
+        }
+
         $status = ($currentTime <= $maxCheckIn)
             ? InternshipAttendanceStatus::Hadir
             : InternshipAttendanceStatus::Terlambat;
@@ -178,15 +183,18 @@ class StudentInternshipController extends ApiController
 
         // Cek jeda minimal 4 jam dari waktu presensi masuk
         $checkInCarbon = Carbon::parse($attendance->check_in_time);
-        if (Carbon::now()->diffInMinutes($checkInCarbon) < 240) {
-            $canCheckOutAt = $checkInCarbon->copy()->addHours(4)->format('H:i');
-
-            return $this->respondWithError('Belum dapat melakukan presensi pulang PKL. Harus menunggu jeda minimal 4 jam setelah presensi masuk (tersedia mulai pukul '.$canCheckOutAt.' WIB).', 422);
+        $canCheckOutAt = $checkInCarbon->copy()->addHours(4);
+        if (Carbon::now()->lt($canCheckOutAt)) {
+            return $this->respondWithError('Belum dapat melakukan presensi pulang PKL. Harus menunggu jeda minimal 4 jam setelah presensi masuk (tersedia mulai pukul '.$canCheckOutAt->format('H:i').' WIB).', 422);
         }
 
         // Presensi pulang dibuka mulai pukul 15:00 WIB
         if ($currentTime < $minCheckOut) {
             return $this->respondWithError('Presensi pulang PKL belum dibuka (dibuka mulai pukul '.substr($minCheckOut, 0, 5).' WIB).', 422);
+        }
+
+        if ($currentTime > $maxCheckOut) {
+            return $this->respondWithError('Presensi pulang PKL sudah ditutup (batas maksimal pukul '.substr($maxCheckOut, 0, 5).' WIB).', 422);
         }
 
         if ($attendance->check_out_time) {

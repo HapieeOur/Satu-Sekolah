@@ -3,7 +3,7 @@
         Edit Mitra Industri
     </x-slot>
 
-    <div class="max-w-3xl mx-auto space-y-6">
+    <div class="max-w-4xl mx-auto space-y-6">
         <!-- Back Navigation -->
         <div class="flex items-center justify-between">
             <a href="{{ route('admin.internship-companies.index') }}" class="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 hover:text-indigo-600 transition group">
@@ -109,66 +109,8 @@
                     </div>
                 </div>
 
-                <!-- Geofencing & GPS -->
-                <div class="p-5 rounded-2xl border border-indigo-100 bg-indigo-50/40 space-y-4">
-                    <div class="flex items-center gap-2">
-                        <span class="w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                        </span>
-                        <div>
-                            <h3 class="font-bold text-slate-900 text-xs">Pengaturan Geofencing & Titik Koordinat GPS</h3>
-                            <p class="text-[11px] text-slate-500">Digunakan untuk validasi jarak saat siswa melakukan presensi PKL dari smartphone.</p>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div>
-                            <label for="latitude" class="block font-bold uppercase tracking-wider text-slate-700 mb-1">Latitude</label>
-                            <input 
-                                type="number" 
-                                step="any" 
-                                id="latitude" 
-                                name="latitude" 
-                                value="{{ old('latitude', $internshipCompany->latitude) }}" 
-                                class="w-full px-4 py-2.5 text-xs rounded-xl border @error('latitude') border-rose-400 bg-rose-50/30 @else border-slate-200 bg-white @enderror focus:ring-2 focus:ring-brand/20 focus:border-brand font-mono text-slate-800 transition"
-                            >
-                            @error('latitude')
-                                <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div>
-                            <label for="longitude" class="block font-bold uppercase tracking-wider text-slate-700 mb-1">Longitude</label>
-                            <input 
-                                type="number" 
-                                step="any" 
-                                id="longitude" 
-                                name="longitude" 
-                                value="{{ old('longitude', $internshipCompany->longitude) }}" 
-                                class="w-full px-4 py-2.5 text-xs rounded-xl border @error('longitude') border-rose-400 bg-rose-50/30 @else border-slate-200 bg-white @enderror focus:ring-2 focus:ring-brand/20 focus:border-brand font-mono text-slate-800 transition"
-                            >
-                            @error('longitude')
-                                <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div>
-                            <label for="radius_meters" class="block font-bold uppercase tracking-wider text-slate-700 mb-1">Radius Presensi (Meter)</label>
-                            <input 
-                                type="number" 
-                                id="radius_meters" 
-                                name="radius_meters" 
-                                value="{{ old('radius_meters', $internshipCompany->radius_meters) }}" 
-                                min="10" 
-                                max="5000" 
-                                class="w-full px-4 py-2.5 text-xs rounded-xl border @error('radius_meters') border-rose-400 bg-rose-50/30 @else border-slate-200 bg-white @enderror focus:ring-2 focus:ring-brand/20 focus:border-brand font-mono text-slate-800 transition"
-                            >
-                            @error('radius_meters')
-                                <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
+                <!-- Geofencing & GPS Map Picker -->
+                @include('admin.internship-companies._map-picker')
 
                 <div class="pt-6 border-t border-slate-100 flex items-center justify-end gap-3">
                     <a href="{{ route('admin.internship-companies.index') }}" class="px-5 py-2.5 border border-slate-200 text-slate-600 hover:bg-slate-50 font-semibold rounded-xl transition">

@@ -9,6 +9,7 @@ use Database\Seeders\DataMasterSeeder;
 use Database\Seeders\InternshipSeeder;
 use Database\Seeders\RoleAndPermissionSeeder;
 use Database\Seeders\UserSeeder;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -37,6 +38,14 @@ class StudentInternshipApiTest extends TestCase
         $this->student = Student::where('nis', '20261201')->first();
         $this->studentUser = $this->student->user;
         $this->token = $this->studentUser->createToken('test')->plainTextToken;
+
+        Carbon::setTestNow(Carbon::parse('2026-10-20 07:30:00', 'Asia/Jakarta'));
+    }
+
+    protected function tearDown(): void
+    {
+        Carbon::setTestNow();
+        parent::tearDown();
     }
 
     public function test_student_can_get_active_placement(): void
@@ -119,6 +128,8 @@ class StudentInternshipApiTest extends TestCase
 
     public function test_student_can_check_out(): void
     {
+        Carbon::setTestNow(Carbon::parse('2026-10-20 08:00:00', 'Asia/Jakarta'));
+
         $placement = InternshipPlacement::where('student_id', $this->student->id)->first();
         $placement->attendances()->whereDate('date', now()->toDateString())->delete();
 
@@ -132,7 +143,9 @@ class StudentInternshipApiTest extends TestCase
                 'photo' => $file,
             ])->assertStatus(201);
 
-        // Then check out
+        // Then check out at 16:00 WIB (after 4h pause and after 15:00)
+        Carbon::setTestNow(Carbon::parse('2026-10-20 16:00:00', 'Asia/Jakarta'));
+
         $response = $this->withHeader('Authorization', 'Bearer '.$this->token)
             ->postJson('/api/v1/student/internship/attendance/check-out', [
                 'latitude' => $placement->company->latitude,
@@ -143,6 +156,8 @@ class StudentInternshipApiTest extends TestCase
             ->assertJsonPath('success', true);
 
         $this->assertNotNull($response->json('data.check_out_time'));
+
+        Carbon::setTestNow();
     }
 
     public function test_student_can_submit_daily_journal(): void

@@ -74,6 +74,7 @@
             background: rgba(148, 163, 184, 0.4);
         }
     </style>
+    @stack('styles')
 </head>
 <body class="h-full font-sans antialiased text-slate-800 flex overflow-hidden bg-[#F4F6FB] selection:bg-brand selection:text-white">
 
@@ -779,5 +780,6 @@
             });
         }
     </script>
+    @stack('scripts')
 </body>
 </html>
