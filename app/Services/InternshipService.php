@@ -47,12 +47,30 @@ class InternshipService implements InternshipServiceInterface
 
     public function createPlacement(array $data): InternshipPlacement
     {
-        return $this->placementRepository->create($data);
+        $placement = $this->placementRepository->create($data);
+        $this->ensureTeacherHasMentorRole($placement->teacher_id);
+
+        return $placement;
     }
 
     public function updatePlacement(int $id, array $data): InternshipPlacement
     {
-        return $this->placementRepository->update($id, $data);
+        $placement = $this->placementRepository->update($id, $data);
+        $this->ensureTeacherHasMentorRole($placement->teacher_id);
+
+        return $placement;
+    }
+
+    protected function ensureTeacherHasMentorRole(?int $teacherId): void
+    {
+        if (! $teacherId) {
+            return;
+        }
+
+        $teacher = Teacher::with('user')->find($teacherId);
+        if ($teacher?->user && ! $teacher->user->hasRole('guru_pembimbing_pkl')) {
+            $teacher->user->assignRole('guru_pembimbing_pkl');
+        }
     }
 
     public function deletePlacement(int $id): bool
@@ -68,8 +86,8 @@ class InternshipService implements InternshipServiceInterface
         $students = $this->placementRepository->getAvailableStudentsForPlacement($academicYearId, $exceptStudentId);
         $companies = InternshipCompany::orderBy('name')->get();
         $teachers = Teacher::with('user')
-            ->whereHas('user.roles', function ($q) {
-                $q->where('name', 'guru_pembimbing_pkl');
+            ->whereHas('user', function ($q) {
+                $q->where('is_active', true);
             })
             ->get();
         $academicYears = AcademicYear::latest('start_date')->get();

@@ -26,8 +26,8 @@ class InternshipPlacementController extends Controller
 
         $companies = InternshipCompany::orderBy('name')->get();
         $teachers = Teacher::with('user')
-            ->whereHas('user.roles', function ($q) {
-                $q->where('name', 'guru_pembimbing_pkl');
+            ->whereHas('user', function ($q) {
+                $q->where('is_active', true);
             })
             ->get();
         $statuses = InternshipPlacementStatus::cases();
