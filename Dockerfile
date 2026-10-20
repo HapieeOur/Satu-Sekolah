@@ -8,11 +8,12 @@ RUN npm run build
 FROM composer:2 AS composer_builder
 WORKDIR /app
 COPY composer.json composer.lock* ./
-RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts --ignore-platform-reqs
+RUN composer config platform-check false && \
+    composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts --ignore-platform-reqs
 COPY . .
-RUN composer dump-autoload --optimize --no-dev
+RUN composer dump-autoload --optimize --no-dev --ignore-platform-reqs
 
-FROM php:8.3-fpm-alpine AS runner
+FROM php:8.4-fpm-alpine AS runner
 
 # Install system dependencies & PHP extensions
 RUN apk add --no-cache \
