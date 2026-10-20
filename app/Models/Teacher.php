@@ -60,6 +60,14 @@ class Teacher extends Model
     }
 
     /**
+     * Academic tasks created by this teacher.
+     */
+    public function academicTasks(): HasMany
+    {
+        return $this->hasMany(AcademicTask::class);
+    }
+
+    /**
      * Internship placements mentored by this teacher.
      */
     public function internshipPlacements(): HasMany

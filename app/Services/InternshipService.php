@@ -274,6 +274,14 @@ class InternshipService implements InternshipServiceInterface
         $teacher = $this->getTeacherByUserId($userId);
         $data['teacher_id'] = $teacher->id;
 
+        if (isset($data['due_date'])) {
+            $parsedDate = Carbon::parse($data['due_date']);
+            if (is_string($data['due_date']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', trim($data['due_date']))) {
+                $parsedDate = $parsedDate->endOfDay();
+            }
+            $data['due_date'] = $parsedDate->format('Y-m-d H:i:s');
+        }
+
         return $this->monitoringRepository->createTask($data);
     }
 

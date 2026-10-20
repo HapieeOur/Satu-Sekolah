@@ -33,6 +33,10 @@
 
         @if($classroom)
             <div class="flex items-center gap-2.5">
+                <a href="{{ route('homeroom.students.index') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 shadow-2xs transition-all">
+                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    <span>Daftar Siswa Binaan</span>
+                </a>
                 <a href="{{ route('homeroom.attendances.index') }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-[#233DFF] hover:bg-[#1a30d8] shadow-md shadow-[#233DFF]/25 hover:-translate-y-0.5 transition-all">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
                     <span>Kelola Presensi Kelas</span>
@@ -232,6 +236,19 @@
                 <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs">
                     <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Tindakan Cepat</h4>
                     <div class="space-y-2">
+                        <a href="{{ route('homeroom.students.index') }}" class="flex items-center justify-between p-3 rounded-xl bg-[#F4F6FB] hover:bg-[#E5ECFF] border border-slate-200/50 hover:border-[#233DFF]/30 transition group">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-[#233DFF] text-white flex items-center justify-center font-bold text-xs shadow-xs">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-900 group-hover:text-[#233DFF]">Daftar Siswa Kelas</p>
+                                    <p class="text-[10px] text-slate-400">Data identitas &amp; profil siswa binaan</p>
+                                </div>
+                            </div>
+                            <svg class="w-4 h-4 text-slate-400 group-hover:text-[#233DFF] group-hover:translate-x-0.5 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </a>
+
                         <a href="{{ route('homeroom.attendances.index') }}" class="flex items-center justify-between p-3 rounded-xl bg-[#F4F6FB] hover:bg-[#E5ECFF] border border-slate-200/50 hover:border-[#233DFF]/30 transition group">
                             <div class="flex items-center gap-3">
                                 <div class="w-8 h-8 rounded-lg bg-[#233DFF] text-white flex items-center justify-center font-bold text-xs shadow-xs">
@@ -256,6 +273,19 @@
                                 </div>
                             </div>
                             <svg class="w-4 h-4 text-slate-400 group-hover:text-[#171B61] group-hover:translate-x-0.5 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </a>
+
+                        <a href="{{ route('homeroom.grades.index') }}" class="flex items-center justify-between p-3 rounded-xl bg-[#F4F6FB] hover:bg-emerald-50 border border-slate-200/50 hover:border-emerald-300 transition group">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-900 group-hover:text-emerald-700">Buku Nilai Kelas</p>
+                                    <p class="text-[10px] text-slate-400">Rekapitulasi nilai siswa binaan</p>
+                                </div>
+                            </div>
+                            <svg class="w-4 h-4 text-slate-400 group-hover:text-emerald-700 group-hover:translate-x-0.5 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         </a>
                     </div>
                 </div>

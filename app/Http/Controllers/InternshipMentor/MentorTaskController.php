@@ -36,7 +36,7 @@ class MentorTaskController extends Controller
 
         $this->internshipService->createMentorTask(Auth::id(), $validated);
 
-        return redirect()->route('mentor.tasks.index')->with('success', 'Tugas PKL baru berhasil diterbitkan.');
+        return redirect()->route('internship-mentor.tasks.index')->with('success', 'Tugas PKL baru berhasil diterbitkan.');
     }
 
     public function show(int $id): View

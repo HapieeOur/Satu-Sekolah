@@ -19,6 +19,7 @@ use App\Models\InternshipLeaveRequest;
 use App\Models\InternshipPlacement;
 use App\Models\InternshipTask;
 use App\Models\InternshipTaskSubmission;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -271,12 +272,17 @@ class MentorInternshipController extends ApiController
             $attachmentPath = $request->file('attachment')->store('internship_tasks', 'public');
         }
 
+        $dueDate = Carbon::parse($validated['due_date']);
+        if (is_string($validated['due_date']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', trim($validated['due_date']))) {
+            $dueDate = $dueDate->endOfDay();
+        }
+
         $task = InternshipTask::create([
             'teacher_id' => $teacher->id,
             'internship_company_id' => $validated['internship_company_id'],
             'title' => $validated['title'],
             'description' => $validated['description'],
-            'due_date' => $validated['due_date'],
+            'due_date' => $dueDate->format('Y-m-d H:i:s'),
             'attachment_path' => $attachmentPath,
         ]);
 

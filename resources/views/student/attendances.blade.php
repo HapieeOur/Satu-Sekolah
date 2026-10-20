@@ -100,6 +100,7 @@
                                 <th class="py-3 px-6">Mata Pelajaran</th>
                                 <th class="py-3 px-6">Guru Pengajar</th>
                                 <th class="py-3 px-6">Waktu Masuk</th>
+                                <th class="py-3 px-6">Waktu Pulang</th>
                                 <th class="py-3 px-6">Status Kehadiran</th>
                                 <th class="py-3 px-6">Catatan</th>
                             </tr>
@@ -118,6 +119,9 @@
                                     </td>
                                     <td class="py-4 px-6 font-mono font-semibold text-slate-600">
                                         {{ $att->check_in_time ? substr((string) $att->check_in_time, 0, 5) : '-' }}
+                                    </td>
+                                    <td class="py-4 px-6 font-mono font-semibold text-slate-600">
+                                        {{ $att->check_out_time ? substr((string) $att->check_out_time, 0, 5) : '-' }}
                                     </td>
                                     <td class="py-4 px-6">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold border {{ $att->status->badgeClass() }}">

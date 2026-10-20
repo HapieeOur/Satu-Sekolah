@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\Teacher;
 
 use App\Enums\AttendanceStatus;
 use App\Http\Controllers\Api\ApiController;
+use App\Models\AcademicTask;
+use App\Models\AcademicTaskSubmission;
 use App\Models\AcademicYear;
 use App\Models\Attendance;
 use App\Models\Schedule;
@@ -147,5 +149,110 @@ class TeacherMobileController extends ApiController
             'date' => $dateFormatted,
             'schedule_id' => $schedule->id,
         ], 'Presensi kelas berhasil disimpan.');
+    }
+
+    /**
+     * Get tasks created by authenticated teacher.
+     */
+    public function tasks(Request $request): JsonResponse
+    {
+        $teacher = $this->getTeacher($request);
+        if (! $teacher) {
+            return $this->respondWithError('Profil guru tidak ditemukan.', 403);
+        }
+
+        $tasks = AcademicTask::with(['classroom', 'subject', 'submissions'])
+            ->where('teacher_id', $teacher->id)
+            ->latest('due_date')
+            ->paginate(15);
+
+        return $this->respondWithPagination($tasks, null, 'Daftar tugas mata pelajaran.');
+    }
+
+    /**
+     * Store new task.
+     */
+    public function storeTask(Request $request): JsonResponse
+    {
+        $teacher = $this->getTeacher($request);
+        if (! $teacher) {
+            return $this->respondWithError('Profil guru tidak ditemukan.', 403);
+        }
+
+        $validated = $request->validate([
+            'classroom_id' => ['required', 'exists:classrooms,id'],
+            'subject_id' => ['required', 'exists:subjects,id'],
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'due_date' => ['required', 'date'],
+            'attachment' => ['nullable', 'file', 'mimes:pdf,doc,docx,zip,rar,xls,xlsx,ppt,pptx,jpg,png', 'max:10240'],
+        ]);
+
+        $dueDate = Carbon::parse($validated['due_date']);
+        if (is_string($validated['due_date']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', trim($validated['due_date']))) {
+            $dueDate = $dueDate->endOfDay();
+        }
+
+        $attachmentPath = null;
+        if ($request->hasFile('attachment')) {
+            $attachmentPath = $request->file('attachment')->store('academic_tasks', 'public');
+        }
+
+        $academicYear = AcademicYear::where('is_active', true)->first();
+
+        $task = AcademicTask::create([
+            'teacher_id' => $teacher->id,
+            'classroom_id' => $validated['classroom_id'],
+            'subject_id' => $validated['subject_id'],
+            'academic_year_id' => $academicYear?->id,
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'due_date' => $dueDate->format('Y-m-d H:i:s'),
+            'attachment_path' => $attachmentPath,
+        ]);
+
+        $task->load(['classroom', 'subject']);
+
+        return $this->respondWithSuccess([
+            'id' => $task->id,
+            'title' => $task->title,
+            'description' => $task->description,
+            'due_date' => $task->due_date->format('Y-m-d H:i:s'),
+            'due_date_formatted' => $task->due_date->translatedFormat('d M Y, H:i').' WIB',
+            'classroom' => $task->classroom?->name,
+            'subject' => $task->subject?->name,
+            'attachment_url' => $task->attachment_path ? asset('storage/'.$task->attachment_path) : null,
+        ], 'Tugas mata pelajaran berhasil diterbitkan.', 201);
+    }
+
+    /**
+     * Grade student submission.
+     */
+    public function gradeTaskSubmission(Request $request, AcademicTaskSubmission $submission): JsonResponse
+    {
+        $teacher = $this->getTeacher($request);
+        if (! $teacher || $submission->task->teacher_id !== $teacher->id) {
+            return $this->respondWithError('Anda tidak berwenang menilai tugas guru lain.', 403);
+        }
+
+        $validated = $request->validate([
+            'grade' => ['required', 'integer', 'min:0', 'max:100'],
+            'feedback' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        $submission->update([
+            'grade' => $validated['grade'],
+            'teacher_feedback' => $validated['feedback'] ?? null,
+            'graded_at' => now(),
+            'status' => 'graded',
+        ]);
+
+        return $this->respondWithSuccess([
+            'id' => $submission->id,
+            'grade' => $submission->grade,
+            'teacher_feedback' => $submission->teacher_feedback,
+            'graded_at' => $submission->graded_at->format('Y-m-d H:i:s'),
+            'status' => $submission->status,
+        ], 'Penilaian tugas berhasil disimpan.');
     }
 }

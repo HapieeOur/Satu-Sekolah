@@ -101,6 +101,23 @@ class StudentInternshipController extends ApiController
 
         $photoPath = $request->file('photo')->store('internship_attendances', 'public');
 
+        $currentTime = Carbon::now()->format('H:i:s');
+        $minCheckIn = '06:00:00';
+        $maxCheckIn = config('attendance.check_in_max_time', '08:00:00');
+
+        if ($currentTime < $minCheckIn) {
+            return $this->respondWithError('Presensi masuk PKL belum dibuka (dibuka mulai pukul '.substr($minCheckIn, 0, 5).' WIB).', 422);
+        }
+
+        $status = ($currentTime <= $maxCheckIn)
+            ? InternshipAttendanceStatus::Hadir
+            : InternshipAttendanceStatus::Terlambat;
+
+        $notes = $validated['notes'] ?? null;
+        if ($status === InternshipAttendanceStatus::Terlambat && empty($notes)) {
+            $notes = 'Terlambat presensi PKL (pukul '.substr($currentTime, 0, 5).' WIB, batas maks '.substr($maxCheckIn, 0, 5).' WIB)';
+        }
+
         $isWithin = $geofence['is_within_radius'];
         $verificationStatus = $isWithin ? InternshipVerificationStatus::Verified : InternshipVerificationStatus::Pending;
 
@@ -110,21 +127,22 @@ class StudentInternshipController extends ApiController
                 'date' => $today,
             ],
             [
-                'status' => InternshipAttendanceStatus::Hadir,
-                'check_in_time' => now()->format('H:i:s'),
+                'status' => $status,
+                'check_in_time' => $currentTime,
                 'check_in_latitude' => $validated['latitude'],
                 'check_in_longitude' => $validated['longitude'],
                 'check_in_photo_path' => $photoPath,
                 'check_in_distance_meters' => $geofence['distance_meters'],
                 'check_in_within_radius' => $isWithin,
                 'verification_status' => $verificationStatus,
-                'notes' => $validated['notes'] ?? null,
+                'notes' => $notes,
             ]
         );
 
+        $statusLabel = $status === InternshipAttendanceStatus::Terlambat ? ' [Terlambat]' : '';
         $message = $isWithin
-            ? 'Presensi masuk berhasil direkam dalam radius kantor ('.round($geofence['distance_meters']).'m).'
-            : 'Presensi masuk berhasil direkam di luar radius kantor ('.round($geofence['distance_meters']).'m) dan menunggu verifikasi pembimbing.';
+            ? 'Presensi masuk'.$statusLabel.' berhasil direkam dalam radius kantor ('.round($geofence['distance_meters']).'m).'
+            : 'Presensi masuk'.$statusLabel.' berhasil direkam di luar radius kantor ('.round($geofence['distance_meters']).'m) dan menunggu verifikasi pembimbing.';
 
         return $this->respondWithSuccess(new InternshipAttendanceResource($attendance), $message, 201);
     }
@@ -146,6 +164,9 @@ class StudentInternshipController extends ApiController
         ]);
 
         $today = Carbon::today()->toDateString();
+        $currentTime = Carbon::now()->format('H:i:s');
+        $minCheckOut = '15:00:00';
+        $maxCheckOut = config('attendance.check_out_max_time', '17:00:00');
 
         $attendance = InternshipAttendance::where('internship_placement_id', $placement->id)
             ->whereDate('date', $today)
@@ -153,6 +174,19 @@ class StudentInternshipController extends ApiController
 
         if (! $attendance || ! $attendance->check_in_time) {
             return $this->respondWithError('Anda belum melakukan presensi masuk hari ini.', 422);
+        }
+
+        // Cek jeda minimal 4 jam dari waktu presensi masuk
+        $checkInCarbon = Carbon::parse($attendance->check_in_time);
+        if (Carbon::now()->diffInMinutes($checkInCarbon) < 240) {
+            $canCheckOutAt = $checkInCarbon->copy()->addHours(4)->format('H:i');
+
+            return $this->respondWithError('Belum dapat melakukan presensi pulang PKL. Harus menunggu jeda minimal 4 jam setelah presensi masuk (tersedia mulai pukul '.$canCheckOutAt.' WIB).', 422);
+        }
+
+        // Presensi pulang dibuka mulai pukul 15:00 WIB
+        if ($currentTime < $minCheckOut) {
+            return $this->respondWithError('Presensi pulang PKL belum dibuka (dibuka mulai pukul '.substr($minCheckOut, 0, 5).' WIB).', 422);
         }
 
         if ($attendance->check_out_time) {
@@ -175,16 +209,28 @@ class StudentInternshipController extends ApiController
             $photoPath = $request->file('photo')->store('internship_attendances', 'public');
         }
 
+        $notes = $attendance->notes;
+        $isLateCheckOut = $currentTime > $maxCheckOut;
+        if ($isLateCheckOut) {
+            $lateNote = 'Terlambat pulang PKL (pukul '.substr($currentTime, 0, 5).' WIB, batas maks '.substr($maxCheckOut, 0, 5).' WIB)';
+            $notes = ! empty($notes) ? $notes.' | '.$lateNote : $lateNote;
+        }
+
         $attendance->update([
-            'check_out_time' => now()->format('H:i:s'),
+            'check_out_time' => $currentTime,
             'check_out_latitude' => $validated['latitude'],
             'check_out_longitude' => $validated['longitude'],
             'check_out_photo_path' => $photoPath ?? $attendance->check_out_photo_path,
             'check_out_distance_meters' => $geofence['distance_meters'],
             'check_out_within_radius' => $geofence['is_within_radius'],
+            'notes' => $notes,
         ]);
 
-        return $this->respondWithSuccess(new InternshipAttendanceResource($attendance), 'Presensi pulang berhasil direkam.');
+        $message = $isLateCheckOut
+            ? 'Presensi pulang PKL berhasil direkam [Terlambat].'
+            : 'Presensi pulang PKL berhasil direkam.';
+
+        return $this->respondWithSuccess(new InternshipAttendanceResource($attendance), $message);
     }
 
     /**

@@ -60,6 +60,12 @@ Route::prefix('v1')->group(function () {
             Route::get('/schedules', [StudentAcademicController::class, 'schedules']);
             Route::get('/attendances', [StudentAcademicController::class, 'attendances']);
             Route::post('/attendances/check-in', [StudentAcademicController::class, 'checkIn']);
+            Route::post('/attendances/check-out', [StudentAcademicController::class, 'checkOut']);
+
+            // Tugas Mata Pelajaran Kelas
+            Route::get('/tasks', [StudentAcademicController::class, 'tasks']);
+            Route::get('/tasks/{task}', [StudentAcademicController::class, 'showTask']);
+            Route::post('/tasks/{task}/submit', [StudentAcademicController::class, 'submitTask']);
         });
 
         // --- 5. Guru Pembimbing PKL (Mentor) Area ---
@@ -84,6 +90,11 @@ Route::prefix('v1')->group(function () {
             Route::get('/schedules', [TeacherMobileController::class, 'schedules']);
             Route::get('/classrooms/{classroom}/students', [TeacherMobileController::class, 'studentsByClassroom']);
             Route::post('/attendances', [TeacherMobileController::class, 'storeAttendance']);
+
+            // Tugas & Penugasan Siswa
+            Route::get('/tasks', [TeacherMobileController::class, 'tasks']);
+            Route::post('/tasks', [TeacherMobileController::class, 'storeTask']);
+            Route::post('/tasks/submissions/{submission}/grade', [TeacherMobileController::class, 'gradeTaskSubmission']);
         });
     });
 });

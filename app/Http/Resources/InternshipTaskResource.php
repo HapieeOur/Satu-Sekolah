@@ -27,7 +27,8 @@ class InternshipTaskResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
-            'due_date' => $this->due_date?->format('Y-m-d'),
+            'due_date' => $this->due_date?->format('Y-m-d H:i:s'),
+            'due_date_formatted' => $this->due_date ? $this->due_date->translatedFormat('d M Y, H:i').' WIB' : null,
             'attachment_url' => $this->attachment_path ? asset('storage/'.$this->attachment_path) : null,
             'company' => $this->company ? [
                 'id' => $this->company->id,

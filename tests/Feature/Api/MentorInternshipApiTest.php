@@ -191,4 +191,29 @@ class MentorInternshipApiTest extends TestCase
             ->assertJsonPath('data.grade', 95)
             ->assertJsonPath('data.status', 'graded');
     }
+
+    public function test_mentor_can_create_task_with_datetime_deadline_via_api(): void
+    {
+        $company = InternshipCompany::first();
+        $targetDate = now()->addDays(5)->setTime(15, 0, 0);
+
+        $response = $this->withHeader('Authorization', 'Bearer '.$this->token)
+            ->postJson('/api/v1/mentor/tasks', [
+                'internship_company_id' => $company->id,
+                'title' => 'Tugas Review Keamanan API',
+                'description' => 'Lakukan penetration testing sederhana dan buat rangkumannya.',
+                'due_date' => $targetDate->format('Y-m-d H:i:s'),
+            ]);
+
+        $response->assertStatus(201)
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('data.title', 'Tugas Review Keamanan API')
+            ->assertJsonPath('data.due_date', $targetDate->format('Y-m-d H:i:s'))
+            ->assertJsonPath('data.due_date_formatted', $targetDate->translatedFormat('d M Y, H:i').' WIB');
+
+        $this->assertDatabaseHas('internship_tasks', [
+            'title' => 'Tugas Review Keamanan API',
+            'due_date' => $targetDate->format('Y-m-d H:i:00'),
+        ]);
+    }
 }

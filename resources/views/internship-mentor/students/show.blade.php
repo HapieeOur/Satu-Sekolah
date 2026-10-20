@@ -364,7 +364,7 @@
                                     <p class="font-bold text-slate-900">{{ $sub->task->title }}</p>
                                 </td>
                                 <td class="py-3.5 px-4 font-mono text-slate-600 whitespace-nowrap">
-                                    {{ $sub->task->due_date ? $sub->task->due_date->format('d/m/Y') : '-' }}
+                                    {{ $sub->task->due_date ? $sub->task->due_date->format('d/m/Y H:i') : '-' }}
                                 </td>
                                 <td class="py-3.5 px-4 font-mono text-slate-600 whitespace-nowrap">
                                     {{ $sub->submitted_at ? $sub->submitted_at->format('d/m/Y H:i') : '-' }}

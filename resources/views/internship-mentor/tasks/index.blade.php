@@ -59,8 +59,9 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label for="due_date" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">Batas Waktu Pengumpulan (Deadline) <span class="text-rose-500">*</span></label>
-                        <input type="date" name="due_date" id="due_date" required value="{{ now()->addDays(7)->toDateString() }}"
+                        <input type="datetime-local" name="due_date" id="due_date" required value="{{ now()->addDays(7)->setTime(23, 59)->format('Y-m-d\TH:i') }}" min="{{ now()->format('Y-m-d\TH:i') }}"
                                class="w-full text-xs rounded-xl border border-slate-200 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 bg-white text-slate-800 p-3 transition">
+                        <p class="text-[11px] text-slate-400 mt-1">Tentukan tanggal dan batas jam & menit penyerahan (WIB).</p>
                     </div>
 
                     <div>
@@ -143,7 +144,7 @@
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                         </div>
                                         <div>
-                                            <span class="font-bold text-slate-800 block">{{ $tsk->due_date->format('d M Y') }}</span>
+                                            <span class="font-bold text-slate-800 block">{{ $tsk->due_date->translatedFormat('d M Y, H:i') }} WIB</span>
                                             <span class="text-[11px] text-slate-400 font-mono">{{ $tsk->due_date->diffForHumans() }}</span>
                                         </div>
                                     </div>

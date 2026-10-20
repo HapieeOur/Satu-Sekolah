@@ -196,7 +196,7 @@ class InternshipSeeder extends Seeder
             [
                 'internship_company_id' => null, // Seluruh siswa binaan
                 'description' => "Susun laporan rangkuman mingguan yang memuat:\n1. Deskripsi divisi dan tanggung jawab peran Anda.\n2. Alur koordinasi dan tools manajemen tugas yang digunakan oleh tim.\n3. Kendala teknis yang dihadapi dan solusi penyelesaian yang telah diterapkan.",
-                'due_date' => Carbon::now()->addDays(5)->toDateString(),
+                'due_date' => Carbon::now()->addDays(5)->setHour(23)->setMinute(59)->setSecond(0),
             ]
         );
 

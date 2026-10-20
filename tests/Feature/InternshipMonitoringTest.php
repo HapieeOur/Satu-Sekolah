@@ -285,6 +285,27 @@ class InternshipMonitoringTest extends TestCase
         $this->assertEquals($this->pembimbingUser->id, $submission->graded_by);
     }
 
+    public function test_mentor_can_store_task_with_exact_datetime_deadline(): void
+    {
+        $deadline = Carbon::now()->addDays(3)->setTime(16, 30, 0);
+
+        $response = $this->actingAs($this->pembimbingUser)->post(route('internship-mentor.tasks.store'), [
+            'title' => 'Tugas Analisis Endpoint REST API',
+            'description' => 'Susun dokumentasi OpenAPI dan uji endpoint menggunakan Postman.',
+            'due_date' => $deadline->format('Y-m-d\TH:i'),
+            'internship_company_id' => $this->companyCyber->id,
+        ]);
+
+        $response->assertRedirect(route('internship-mentor.tasks.index'));
+        $response->assertSessionHas('success');
+
+        $this->assertDatabaseHas('internship_tasks', [
+            'teacher_id' => $this->teacherFauzi->id,
+            'title' => 'Tugas Analisis Endpoint REST API',
+            'due_date' => $deadline->format('Y-m-d H:i:00'),
+        ]);
+    }
+
     public function test_unauthorized_user_cannot_access_mentor_portal(): void
     {
         // Guru biasa (without role guru_pembimbing_pkl) is blocked with 403

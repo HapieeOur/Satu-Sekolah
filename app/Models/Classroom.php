@@ -71,4 +71,12 @@ class Classroom extends Model
     {
         return $this->hasMany(Attendance::class);
     }
+
+    /**
+     * Academic tasks assigned to this classroom.
+     */
+    public function academicTasks(): HasMany
+    {
+        return $this->hasMany(AcademicTask::class);
+    }
 }

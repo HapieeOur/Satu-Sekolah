@@ -56,6 +56,14 @@ class Student extends Model
     }
 
     /**
+     * Academic task submissions of this student.
+     */
+    public function academicSubmissions(): HasMany
+    {
+        return $this->hasMany(AcademicTaskSubmission::class);
+    }
+
+    /**
      * Internship placements of this student.
      */
     public function internshipPlacements(): HasMany

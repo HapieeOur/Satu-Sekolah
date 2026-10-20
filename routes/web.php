@@ -19,6 +19,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Homeroom\HomeroomAttendanceController;
 use App\Http\Controllers\Homeroom\HomeroomDashboardController;
+use App\Http\Controllers\Homeroom\HomeroomStudentController;
 use App\Http\Controllers\InternshipMentor\MentorAttendanceController;
 use App\Http\Controllers\InternshipMentor\MentorDashboardController;
 use App\Http\Controllers\InternshipMentor\MentorJournalController;
@@ -30,9 +31,14 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Public\PublicPageController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Student\StudentDashboardController;
+use App\Http\Controllers\Student\StudentExamController;
+use App\Http\Controllers\Student\StudentTaskController;
 use App\Http\Controllers\Teacher\TeacherAttendanceController;
 use App\Http\Controllers\Teacher\TeacherDashboardController;
+use App\Http\Controllers\Teacher\TeacherExamController;
+use App\Http\Controllers\Teacher\TeacherGradeController;
 use App\Http\Controllers\Teacher\TeacherScheduleController;
+use App\Http\Controllers\Teacher\TeacherTaskController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -129,12 +135,35 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/schedules', [TeacherScheduleController::class, 'index'])->name('schedules.index');
         Route::get('/attendances', [TeacherAttendanceController::class, 'index'])->name('attendances.index');
         Route::post('/attendances', [TeacherAttendanceController::class, 'store'])->name('attendances.store');
+
+        // Penugasan Siswa / Tugas Mapel
+        Route::get('/tasks', [TeacherTaskController::class, 'index'])->name('tasks.index');
+        Route::post('/tasks', [TeacherTaskController::class, 'store'])->name('tasks.store');
+        Route::get('/tasks/{task}', [TeacherTaskController::class, 'show'])->name('tasks.show');
+        Route::put('/tasks/{task}', [TeacherTaskController::class, 'update'])->name('tasks.update');
+        Route::delete('/tasks/{task}', [TeacherTaskController::class, 'destroy'])->name('tasks.destroy');
+        Route::post('/tasks/submissions/{submission}/grade', [TeacherTaskController::class, 'grade'])->name('tasks.submissions.grade');
+
+        // Ujian Harian & Evaluasi
+        Route::get('/exams', [TeacherExamController::class, 'index'])->name('exams.index');
+        Route::post('/exams', [TeacherExamController::class, 'store'])->name('exams.store');
+        Route::get('/exams/{exam}', [TeacherExamController::class, 'show'])->name('exams.show');
+        Route::post('/exams/{exam}/scores', [TeacherExamController::class, 'saveScores'])->name('exams.scores.store');
+        Route::delete('/exams/{exam}', [TeacherExamController::class, 'destroy'])->name('exams.destroy');
+
+        // Input & Rekap Nilai Siswa
+        Route::get('/grades', [TeacherGradeController::class, 'index'])->name('grades.index');
+        Route::post('/grades', [TeacherGradeController::class, 'store'])->name('grades.store');
     });
 
     // Wali Kelas Area
     Route::prefix('homeroom')->name('homeroom.')->middleware('role:wali_kelas')->group(function () {
         Route::get('/dashboard', [HomeroomDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/students', [HomeroomStudentController::class, 'index'])->name('students.index');
+        Route::get('/students/{student}', [HomeroomStudentController::class, 'show'])->name('students.show');
         Route::get('/attendances', [HomeroomAttendanceController::class, 'index'])->name('attendances.index');
+        Route::get('/grades', [TeacherGradeController::class, 'index'])->name('grades.index');
+        Route::post('/grades', [TeacherGradeController::class, 'store'])->name('grades.store');
     });
 
     // Guru Pembimbing PKL Area
@@ -168,5 +197,13 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/schedules', [StudentDashboardController::class, 'schedules'])->name('schedules.index');
         Route::get('/attendances', [StudentDashboardController::class, 'attendances'])->name('attendances.index');
         Route::get('/internship', [StudentDashboardController::class, 'internship'])->name('internship.index');
+
+        // Tugas Kelas & Mapel Siswa
+        Route::get('/tasks', [StudentTaskController::class, 'index'])->name('tasks.index');
+        Route::get('/tasks/{task}', [StudentTaskController::class, 'show'])->name('tasks.show');
+        Route::post('/tasks/{task}/submit', [StudentTaskController::class, 'submit'])->name('tasks.submit');
+
+        // Ujian Harian & Nilai Siswa
+        Route::get('/exams', [StudentExamController::class, 'index'])->name('exams.index');
     });
 });

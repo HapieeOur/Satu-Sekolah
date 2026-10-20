@@ -20,7 +20,7 @@
                         <div class="flex flex-wrap items-center gap-2">
                             <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                                <span>Batas: {{ $task->due_date->format('d M Y') }}</span>
+                                <span>Batas: {{ $task->due_date->translatedFormat('d M Y, H:i') }} WIB</span>
                             </span>
                             <span class="text-xs text-slate-300 bg-white/10 px-2.5 py-0.5 rounded-full border border-white/10">
                                 Target: {{ $task->company?->name ?: 'Seluruh Siswa Binaan' }}
@@ -98,6 +98,17 @@
                                 <td class="py-4 px-4 font-mono text-slate-600 whitespace-nowrap">
                                     <span class="font-bold text-slate-800 block">{{ $sub->submitted_at->format('d/m/Y') }}</span>
                                     <span class="text-[11px] text-slate-400">{{ $sub->submitted_at->format('H:i') }} WIB</span>
+                                    @if ($task->due_date)
+                                        @if ($sub->submitted_at->gt($task->due_date))
+                                            <span class="inline-flex items-center gap-1 text-[10px] font-bold text-rose-600 mt-0.5 block">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Terlambat
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600 mt-0.5 block">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Tepat Waktu
+                                            </span>
+                                        @endif
+                                    @endif
                                 </td>
                                 <td class="py-4 px-4 max-w-xs text-slate-600">
                                     {{ $sub->student_notes ?: '-' }}
