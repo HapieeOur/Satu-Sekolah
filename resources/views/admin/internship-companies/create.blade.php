@@ -60,17 +60,47 @@
                     @enderror
                 </div>
 
+                <!-- Guru Pembimbing PKL Sekolah (Wajib) -->
+                <div>
+                    <div class="flex items-center justify-between mb-1.5">
+                        <label for="teacher_id" class="block font-bold uppercase tracking-wider text-slate-700">
+                            Guru Pembimbing PKL (Sekolah) <span class="text-rose-500">*</span>
+                        </label>
+                        <span class="text-[10px] font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-100">Wajib Dipilih</span>
+                    </div>
+                    <select 
+                        id="teacher_id" 
+                        name="teacher_id" 
+                        required
+                        class="w-full px-4 py-2.5 text-xs rounded-xl border @error('teacher_id') border-rose-400 bg-rose-50/30 @else border-slate-200 bg-slate-50/50 @enderror focus:bg-white focus:ring-2 focus:ring-brand/20 focus:border-brand text-slate-800 transition"
+                    >
+                        <option value="">-- Pilih Guru Pembimbing dari Sekolah --</option>
+                        @foreach ($teachers as $tch)
+                            <option value="{{ $tch->id }}" {{ old('teacher_id') == $tch->id ? 'selected' : '' }}>
+                                {{ $tch->user->name }} (NIP: {{ $tch->nip }})
+                            </option>
+                        @endforeach
+                    </select>
+                    <p class="text-[11px] text-slate-500 mt-1">Guru ini yang akan bertanggung jawab memantau presensi GPS, merevisi jurnal, dan menilai siswa magang di mitra ini.</p>
+                    @error('teacher_id')
+                        <p class="text-rose-600 text-[11px] mt-1.5">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
                     <div>
-                        <label for="contact_person" class="block font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                            Nama Penanggung Jawab (PIC)
-                        </label>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label for="contact_person" class="block font-bold uppercase tracking-wider text-slate-700">
+                                Pembimbing DUDI / PIC
+                            </label>
+                            <span class="text-[10px] text-slate-400 font-semibold">Opsional</span>
+                        </div>
                         <input 
                             type="text" 
                             id="contact_person" 
                             name="contact_person" 
                             value="{{ old('contact_person') }}" 
-                            placeholder="Contoh: Bpk. Haryono" 
+                            placeholder="Contoh: Bpk. Haryono (Mentor Lapangan)" 
                             class="w-full px-4 py-2.5 text-xs rounded-xl border @error('contact_person') border-rose-400 bg-rose-50/30 @else border-slate-200 bg-slate-50/50 @enderror focus:bg-white focus:ring-2 focus:ring-brand/20 focus:border-brand text-slate-800 transition"
                         >
                         @error('contact_person')
@@ -80,7 +110,7 @@
 
                     <div>
                         <label for="phone" class="block font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                            No. Telepon / WhatsApp
+                            No. Telepon / WhatsApp DUDI
                         </label>
                         <input 
                             type="text" 
@@ -97,7 +127,7 @@
 
                     <div>
                         <label for="email" class="block font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                            Email Resmi
+                            Email Resmi Perusahaan
                         </label>
                         <input 
                             type="email" 

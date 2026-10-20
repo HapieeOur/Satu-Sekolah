@@ -87,8 +87,8 @@
                         <select name="internship_company_id" id="internship_company_id" required class="w-full px-4 py-2.5 text-xs rounded-xl border border-slate-200 focus:bg-white focus:ring-2 focus:ring-brand/20 focus:border-brand bg-slate-50/50 text-slate-800 transition">
                             <option value="">-- Pilih Perusahaan Mitra --</option>
                             @foreach ($companies as $comp)
-                                <option value="{{ $comp->id }}" {{ old('internship_company_id') == $comp->id ? 'selected' : '' }}>
-                                    {{ $comp->name }} (Radius {{ $comp->radius_meters }}m)
+                                <option value="{{ $comp->id }}" data-teacher-id="{{ $comp->teacher_id }}" {{ old('internship_company_id') == $comp->id ? 'selected' : '' }}>
+                                    {{ $comp->name }} {{ $comp->teacher ? '(Pembimbing: ' . $comp->teacher->user->name . ')' : '' }}
                                 </option>
                             @endforeach
                         </select>
@@ -176,4 +176,25 @@
             </form>
         </div>
     </div>
+
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const companySelect = document.getElementById('internship_company_id');
+                const teacherSelect = document.getElementById('teacher_id');
+
+                if (companySelect && teacherSelect) {
+                    companySelect.addEventListener('change', function() {
+                        const selectedOption = this.options[this.selectedIndex];
+                        const teacherId = selectedOption?.getAttribute('data-teacher-id');
+                        if (teacherId && !teacherSelect.value) {
+                            teacherSelect.value = teacherId;
+                        } else if (teacherId) {
+                            teacherSelect.value = teacherId;
+                        }
+                    });
+                }
+            });
+        </script>
+    @endpush
 </x-app-layout>

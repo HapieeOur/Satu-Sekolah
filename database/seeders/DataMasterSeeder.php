@@ -199,9 +199,12 @@ class DataMasterSeeder extends Seeder
         }
 
         // 8. Mitra DUDI PKL (Internship Companies)
+        $defaultMentorId = $teacherFauzi?->id ?? Teacher::first()?->id;
+
         InternshipCompany::firstOrCreate(
             ['name' => 'PT Inovasi Teknologi Nusantara'],
             [
+                'teacher_id' => $defaultMentorId,
                 'address' => 'Gedung Cyber 2 Lantai 15, Jl. H.R. Rasuna Said, Jakarta Selatan',
                 'contact_person' => 'Irfan Hakim (HR Director)',
                 'phone' => '0215551234',
@@ -215,6 +218,7 @@ class DataMasterSeeder extends Seeder
         InternshipCompany::firstOrCreate(
             ['name' => 'PT Solusi Cloud Indonesia'],
             [
+                'teacher_id' => $defaultMentorId,
                 'address' => 'Jl. Dago Asri No. 88, Coblong, Kota Bandung',
                 'contact_person' => 'Rina Kartika (People Operations)',
                 'phone' => '0227775678',
@@ -228,6 +232,7 @@ class DataMasterSeeder extends Seeder
         InternshipCompany::firstOrCreate(
             ['name' => 'CV Digital Kreatif Media'],
             [
+                'teacher_id' => $defaultMentorId,
                 'address' => 'Jl. Pemuda No. 45, Embong Kaliasin, Surabaya',
                 'contact_person' => 'Eko Prasetyo (Studio Lead)',
                 'phone' => '0318889900',

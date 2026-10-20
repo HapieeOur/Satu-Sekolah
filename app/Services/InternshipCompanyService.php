@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Contracts\Repositories\InternshipCompanyRepositoryInterface;
 use App\Contracts\Services\InternshipCompanyServiceInterface;
 use App\Models\InternshipCompany;
+use App\Models\Teacher;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -26,7 +27,8 @@ class InternshipCompanyService implements InternshipCompanyServiceInterface
 
     public function create(array $data): InternshipCompany
     {
-        return $this->internshipCompanyRepository->create([
+        $company = $this->internshipCompanyRepository->create([
+            'teacher_id' => $data['teacher_id'] ?? null,
             'name' => $data['name'],
             'address' => $data['address'],
             'contact_person' => $data['contact_person'] ?? null,
@@ -36,11 +38,18 @@ class InternshipCompanyService implements InternshipCompanyServiceInterface
             'longitude' => $data['longitude'] ?? null,
             'radius_meters' => $data['radius_meters'] ?? 100,
         ]);
+
+        if (! empty($data['teacher_id'])) {
+            $this->ensureTeacherHasMentorRole((int) $data['teacher_id']);
+        }
+
+        return $company;
     }
 
     public function update(InternshipCompany $internshipCompany, array $data): InternshipCompany
     {
-        return $this->internshipCompanyRepository->update($internshipCompany, [
+        $company = $this->internshipCompanyRepository->update($internshipCompany, [
+            'teacher_id' => $data['teacher_id'] ?? null,
             'name' => $data['name'],
             'address' => $data['address'],
             'contact_person' => $data['contact_person'] ?? null,
@@ -50,6 +59,20 @@ class InternshipCompanyService implements InternshipCompanyServiceInterface
             'longitude' => $data['longitude'] ?? null,
             'radius_meters' => $data['radius_meters'] ?? 100,
         ]);
+
+        if (! empty($data['teacher_id'])) {
+            $this->ensureTeacherHasMentorRole((int) $data['teacher_id']);
+        }
+
+        return $company;
+    }
+
+    protected function ensureTeacherHasMentorRole(int $teacherId): void
+    {
+        $teacher = Teacher::with('user')->find($teacherId);
+        if ($teacher?->user && ! $teacher->user->hasRole('guru_pembimbing_pkl')) {
+            $teacher->user->assignRole('guru_pembimbing_pkl');
+        }
     }
 
     public function delete(InternshipCompany $internshipCompany): bool

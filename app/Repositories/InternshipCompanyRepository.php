@@ -11,7 +11,7 @@ class InternshipCompanyRepository implements InternshipCompanyRepositoryInterfac
 {
     public function getPaginated(int $perPage = 15, ?string $search = null): LengthAwarePaginator
     {
-        $query = InternshipCompany::latest();
+        $query = InternshipCompany::with('teacher.user')->latest();
 
         if ($search) {
             $query->where(function ($q) use ($search) {
@@ -28,7 +28,7 @@ class InternshipCompanyRepository implements InternshipCompanyRepositoryInterfac
 
     public function getAll(): Collection
     {
-        return InternshipCompany::orderBy('name')->get();
+        return InternshipCompany::with('teacher.user')->orderBy('name')->get();
     }
 
     public function findById(int $id): ?InternshipCompany

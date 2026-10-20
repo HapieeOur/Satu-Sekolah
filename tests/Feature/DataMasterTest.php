@@ -277,9 +277,12 @@ class DataMasterTest extends TestCase
 
     public function test_admin_can_create_and_update_internship_company(): void
     {
+        $teacher = Teacher::first();
+
         $companyData = [
             'name' => 'PT Google Cloud Indonesia',
             'address' => 'Gedung Pacific Century Place Lt. 45, SCBD Jakarta',
+            'teacher_id' => $teacher->id,
             'contact_person' => 'Dewi Lestari',
             'phone' => '02155667788',
             'email' => 'id-careers@google.com',

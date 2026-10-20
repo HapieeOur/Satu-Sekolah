@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class InternshipCompany extends Model
@@ -16,6 +17,7 @@ class InternshipCompany extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'teacher_id',
         'name',
         'address',
         'contact_person',
@@ -38,6 +40,11 @@ class InternshipCompany extends Model
             'longitude' => 'decimal:7',
             'radius_meters' => 'integer',
         ];
+    }
+
+    public function teacher(): BelongsTo
+    {
+        return $this->belongsTo(Teacher::class);
     }
 
     public function placements(): HasMany

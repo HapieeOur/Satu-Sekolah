@@ -16,6 +16,7 @@ class UpdateInternshipCompanyRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'address' => ['required', 'string'],
+            'teacher_id' => ['required', 'exists:teachers,id'],
             'contact_person' => ['nullable', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:20'],
             'email' => ['nullable', 'email', 'max:255'],
@@ -30,6 +31,8 @@ class UpdateInternshipCompanyRequest extends FormRequest
         return [
             'name.required' => 'Nama mitra/perusahaan PKL wajib diisi.',
             'address.required' => 'Alamat mitra/perusahaan wajib diisi.',
+            'teacher_id.required' => 'Guru pembimbing PKL dari sekolah wajib dipilih.',
+            'teacher_id.exists' => 'Guru pembimbing PKL yang dipilih tidak valid.',
             'email.email' => 'Format email tidak valid.',
             'latitude.between' => 'Latitude harus berada dalam rentang -90 hingga 90.',
             'longitude.between' => 'Longitude harus berada dalam rentang -180 hingga 180.',

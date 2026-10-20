@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreInternshipCompanyRequest;
 use App\Http\Requests\Admin\UpdateInternshipCompanyRequest;
 use App\Models\InternshipCompany;
+use App\Models\Teacher;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -27,7 +28,11 @@ class InternshipCompanyController extends Controller
 
     public function create(): View
     {
-        return view('admin.internship-companies.create');
+        $teachers = Teacher::with('user')
+            ->whereHas('user', fn($q) => $q->where('is_active', true))
+            ->get();
+
+        return view('admin.internship-companies.create', compact('teachers'));
     }
 
     public function store(StoreInternshipCompanyRequest $request): RedirectResponse
@@ -40,7 +45,11 @@ class InternshipCompanyController extends Controller
 
     public function edit(InternshipCompany $internshipCompany): View
     {
-        return view('admin.internship-companies.edit', compact('internshipCompany'));
+        $teachers = Teacher::with('user')
+            ->whereHas('user', fn($q) => $q->where('is_active', true))
+            ->get();
+
+        return view('admin.internship-companies.edit', compact('internshipCompany', 'teachers'));
     }
 
     public function update(UpdateInternshipCompanyRequest $request, InternshipCompany $internshipCompany): RedirectResponse

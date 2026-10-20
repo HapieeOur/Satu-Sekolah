@@ -13,6 +13,16 @@ class StoreInternshipPlacementRequest extends FormRequest
         return $this->user()->can('internships.manage');
     }
 
+    protected function prepareForValidation(): void
+    {
+        if (empty($this->teacher_id) && ! empty($this->internship_company_id)) {
+            $company = \App\Models\InternshipCompany::find($this->internship_company_id);
+            if ($company?->teacher_id) {
+                $this->merge(['teacher_id' => $company->teacher_id]);
+            }
+        }
+    }
+
     public function rules(): array
     {
         return [

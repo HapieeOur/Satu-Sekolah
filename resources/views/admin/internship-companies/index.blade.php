@@ -81,8 +81,8 @@
                     <thead>
                         <tr class="bg-slate-50/75 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-600">
                             <th class="py-3.5 px-5">Nama Mitra Industri</th>
+                            <th class="py-3.5 px-4">Pembimbing PKL & DUDI</th>
                             <th class="py-3.5 px-4">Alamat Fisik</th>
-                            <th class="py-3.5 px-4">Kontak PIC & Telepon</th>
                             <th class="py-3.5 px-4">Titik Geofence (GPS)</th>
                             <th class="py-3.5 px-4">Radius Presensi</th>
                             <th class="py-3.5 px-5 text-right">Aksi</th>
@@ -102,15 +102,33 @@
                                         </div>
                                     </div>
                                 </td>
+                                <td class="py-4 px-4">
+                                    @if ($company->teacher)
+                                        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 font-bold text-xs">
+                                            <svg class="w-3.5 h-3.5 text-indigo-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                                            <span class="truncate max-w-[140px]">{{ $company->teacher->user->name }}</span>
+                                        </div>
+                                        <div class="text-[10px] text-slate-400 mt-0.5">Sekolah (NIP: {{ $company->teacher->nip }})</div>
+                                    @else
+                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] text-amber-700 bg-amber-50 border border-amber-200">
+                                            Belum diset
+                                        </span>
+                                    @endif
+
+                                    @if ($company->contact_person)
+                                        <div class="mt-1.5 pt-1.5 border-t border-slate-100 text-[11px] text-slate-600">
+                                            <span class="font-semibold text-slate-700">DUDI:</span> {{ $company->contact_person }}
+                                            @if ($company->phone)
+                                                <div class="text-slate-400 font-mono text-[10px]">{{ $company->phone }}</div>
+                                            @endif
+                                        </div>
+                                    @endif
+                                </td>
                                 <td class="py-4 px-4 text-slate-600 max-w-xs">
                                     <div class="flex items-start gap-1.5" title="{{ $company->address }}">
                                         <svg class="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                         <p class="truncate">{{ $company->address }}</p>
                                     </div>
-                                </td>
-                                <td class="py-4 px-4">
-                                    <div class="font-semibold text-slate-800">{{ $company->contact_person ?: '-' }}</div>
-                                    <div class="text-[11px] font-mono text-slate-500">{{ $company->phone ?: '-' }}</div>
                                 </td>
                                 <td class="py-4 px-4 font-mono text-[11px]">
                                     @if ($company->latitude && $company->longitude)
