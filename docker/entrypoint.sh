@@ -30,6 +30,12 @@ php artisan config:cache || true
 php artisan route:cache || true
 php artisan view:cache || true
 
+# Configure Nginx port dynamically for Railway / Cloud PORT env
+TARGET_PORT="${PORT:-80}"
+echo "==> Configuring Nginx on port ${TARGET_PORT}..."
+sed -i "s/listen 80;/listen ${TARGET_PORT};/g" /etc/nginx/http.d/default.conf || true
+sed -i "s/listen \[::\]:80;/listen [::]:${TARGET_PORT};/g" /etc/nginx/http.d/default.conf || true
+
 echo "==> Starting PHP-FPM and Nginx..."
 php-fpm -D
 exec nginx -g "daemon off;"

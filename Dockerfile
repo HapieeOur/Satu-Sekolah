@@ -1,14 +1,14 @@
 FROM node:20-alpine AS node_builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --ignore-scripts
+RUN npm install --ignore-scripts
 COPY . .
 RUN npm run build
 
 FROM composer:2 AS composer_builder
 WORKDIR /app
-COPY composer*.json ./
-RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts
+COPY composer.json composer.lock* ./
+RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts --ignore-platform-reqs
 COPY . .
 RUN composer dump-autoload --optimize --no-dev
 
