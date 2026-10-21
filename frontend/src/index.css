@@ -4,12 +4,12 @@
 
 @layer base {
   body {
-    @apply antialiased text-slate-800 bg-slate-50 selection:bg-brand-500 selection:text-white;
+    @apply antialiased text-slate-800 bg-[#F4F6FB] selection:bg-[#233DFF] selection:text-white font-sans;
   }
 }
 
-/* Custom smooth transitions */
-* {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.glass-nav {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
