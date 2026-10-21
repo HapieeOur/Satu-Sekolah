@@ -66,7 +66,7 @@
                         <label for="teacher_id" class="block font-bold uppercase tracking-wider text-slate-700">
                             Guru Pembimbing PKL (Sekolah) <span class="text-rose-500">*</span>
                         </label>
-                        <span class="text-[10px] font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-100">Wajib Dipilih</span>
+                        <span class="text-[10px] font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-100">Khusus Peran: Pembimbing PKL</span>
                     </div>
                     <select 
                         id="teacher_id" 
@@ -75,13 +75,15 @@
                         class="w-full px-4 py-2.5 text-xs rounded-xl border @error('teacher_id') border-rose-400 bg-rose-50/30 @else border-slate-200 bg-slate-50/50 @enderror focus:bg-white focus:ring-2 focus:ring-brand/20 focus:border-brand text-slate-800 transition"
                     >
                         <option value="">-- Pilih Guru Pembimbing dari Sekolah --</option>
-                        @foreach ($teachers as $tch)
+                        @forelse ($teachers as $tch)
                             <option value="{{ $tch->id }}" {{ old('teacher_id') == $tch->id ? 'selected' : '' }}>
                                 {{ $tch->user->name }} {{ $tch->nip ? '(NIP: ' . $tch->nip . ')' : '(' . $tch->user->email . ')' }}
                             </option>
-                        @endforeach
+                        @empty
+                            <option value="" disabled>Belum ada akun guru dengan peran Guru Pembimbing PKL</option>
+                        @endforelse
                     </select>
-                    <p class="text-[11px] text-slate-500 mt-1">Guru ini yang akan bertanggung jawab memantau presensi GPS, merevisi jurnal, dan menilai siswa magang di mitra ini.</p>
+                    <p class="text-[11px] text-slate-500 mt-1">Daftar di atas hanya menampilkan guru yang memiliki peran <strong>Guru Pembimbing PKL</strong> (dikelola melalui menu Manajemen Pengguna).</p>
                     @error('teacher_id')
                         <p class="text-rose-600 text-[11px] mt-1.5">{{ $message }}</p>
                     @enderror

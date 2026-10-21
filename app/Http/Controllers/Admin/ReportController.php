@@ -12,6 +12,7 @@ use App\Models\Classroom;
 use App\Models\InternshipCompany;
 use App\Models\InternshipPlacement;
 use App\Models\Teacher;
+use App\Services\UserService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -121,7 +122,20 @@ class ReportController extends Controller
         $status = $request->input('status');
 
         $companies = InternshipCompany::orderBy('name')->get();
-        $teachers = Teacher::with('user')->get();
+
+        UserService::ensureTeacherProfilesExist();
+
+        $teachers = Teacher::with('user')
+            ->where(function ($q) use ($teacherId) {
+                $q->whereHas('user', function ($u) {
+                    $u->where('is_active', true)
+                      ->whereHas('roles', fn($r) => $r->where('name', 'guru_pembimbing_pkl'));
+                });
+                if ($teacherId) {
+                    $q->orWhere('id', $teacherId);
+                }
+            })
+            ->get();
         $statuses = InternshipPlacementStatus::cases();
 
         $query = InternshipPlacement::with([

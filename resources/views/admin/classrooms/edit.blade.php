@@ -104,21 +104,27 @@
                     </div>
 
                     <div>
-                        <label for="teacher_id" class="block font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                            Wali Kelas (Opsional)
-                        </label>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label for="teacher_id" class="block font-bold uppercase tracking-wider text-slate-700">
+                                Wali Kelas
+                            </label>
+                            <span class="text-[10px] text-indigo-600 font-semibold bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-100">Khusus Peran: Wali Kelas</span>
+                        </div>
                         <select 
                             id="teacher_id" 
                             name="teacher_id" 
                             class="w-full px-4 py-2.5 text-xs rounded-xl border @error('teacher_id') border-rose-400 bg-rose-50/30 @else border-slate-200 bg-slate-50/50 @enderror focus:bg-white focus:ring-2 focus:ring-brand/20 focus:border-brand text-slate-800 transition"
                         >
-                            <option value="">-- Belum Ditentukan --</option>
-                            @foreach ($teachers as $teacher)
+                            <option value="">-- Belum Ditentukan (Opsional) --</option>
+                            @forelse ($teachers as $teacher)
                                 <option value="{{ $teacher->id }}" {{ old('teacher_id', $classroom->teacher_id) == $teacher->id ? 'selected' : '' }}>
-                                    {{ $teacher->user->name ?? 'Guru #'.$teacher->id }} (NIP: {{ $teacher->nip ?? '-' }})
+                                    {{ $teacher->user->name ?? 'Guru #'.$teacher->id }} {{ $teacher->nip ? '(NIP: ' . $teacher->nip . ')' : '(' . ($teacher->user->email ?? '') . ')' }}
                                 </option>
-                            @endforeach
+                            @empty
+                                <option value="" disabled>Belum ada guru dengan peran Wali Kelas</option>
+                            @endforelse
                         </select>
+                        <p class="text-[11px] text-slate-500 mt-1">Daftar di atas hanya menampilkan guru yang memiliki peran <strong>Wali Kelas</strong>.</p>
                         @error('teacher_id')
                             <p class="text-rose-600 text-[11px] mt-1.5">{{ $message }}</p>
                         @enderror

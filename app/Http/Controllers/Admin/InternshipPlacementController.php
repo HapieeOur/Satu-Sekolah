@@ -9,6 +9,7 @@ use App\Http\Requests\Admin\StoreInternshipPlacementRequest;
 use App\Http\Requests\Admin\UpdateInternshipPlacementRequest;
 use App\Models\InternshipCompany;
 use App\Models\Teacher;
+use App\Services\UserService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -24,10 +25,13 @@ class InternshipPlacementController extends Controller
         $filters = $request->only(['search', 'company_id', 'teacher_id', 'status', 'academic_year_id']);
         $placements = $this->internshipService->getPlacements($filters);
 
+        UserService::ensureTeacherProfilesExist();
+
         $companies = InternshipCompany::orderBy('name')->get();
         $teachers = Teacher::with('user')
             ->whereHas('user', function ($q) {
-                $q->where('is_active', true);
+                $q->where('is_active', true)
+                  ->whereHas('roles', fn($r) => $r->where('name', 'guru_pembimbing_pkl'));
             })
             ->get();
         $statuses = InternshipPlacementStatus::cases();

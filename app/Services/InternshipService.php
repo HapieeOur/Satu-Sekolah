@@ -89,7 +89,8 @@ class InternshipService implements InternshipServiceInterface
         $companies = InternshipCompany::orderBy('name')->get();
         $teachers = Teacher::with('user')
             ->whereHas('user', function ($q) {
-                $q->where('is_active', true);
+                $q->where('is_active', true)
+                  ->whereHas('roles', fn($r) => $r->where('name', 'guru_pembimbing_pkl'));
             })
             ->get();
         $academicYears = AcademicYear::latest('start_date')->get();

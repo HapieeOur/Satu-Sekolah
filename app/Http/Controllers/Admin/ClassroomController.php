@@ -9,6 +9,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreClassroomRequest;
 use App\Http\Requests\Admin\UpdateClassroomRequest;
 use App\Models\Classroom;
+use App\Models\Teacher;
+use App\Services\UserService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -34,8 +36,15 @@ class ClassroomController extends Controller
 
     public function create(): View
     {
+        UserService::ensureTeacherProfilesExist();
+
         $academicYears = $this->academicYearService->getAll();
-        $teachers = $this->teacherService->getAll();
+        $teachers = Teacher::with('user')
+            ->whereHas('user', function ($q) {
+                $q->where('is_active', true)
+                  ->whereHas('roles', fn($r) => $r->where('name', 'wali_kelas'));
+            })
+            ->get();
 
         return view('admin.classrooms.create', compact('academicYears', 'teachers'));
     }
@@ -50,8 +59,20 @@ class ClassroomController extends Controller
 
     public function edit(Classroom $classroom): View
     {
+        UserService::ensureTeacherProfilesExist();
+
         $academicYears = $this->academicYearService->getAll();
-        $teachers = $this->teacherService->getAll();
+        $teachers = Teacher::with('user')
+            ->whereHas('user', function ($q) use ($classroom) {
+                $q->where('is_active', true)
+                  ->where(function ($sub) use ($classroom) {
+                      $sub->whereHas('roles', fn($r) => $r->where('name', 'wali_kelas'));
+                      if ($classroom->teacher_id) {
+                          $sub->orWhere('id', $classroom->teacher?->user_id);
+                      }
+                  });
+            })
+            ->get();
 
         return view('admin.classrooms.edit', compact('classroom', 'academicYears', 'teachers'));
     }

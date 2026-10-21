@@ -32,7 +32,10 @@ class InternshipCompanyController extends Controller
         UserService::ensureTeacherProfilesExist();
 
         $teachers = Teacher::with('user')
-            ->whereHas('user', fn($q) => $q->where('is_active', true))
+            ->whereHas('user', function ($q) {
+                $q->where('is_active', true)
+                  ->whereHas('roles', fn($r) => $r->where('name', 'guru_pembimbing_pkl'));
+            })
             ->get();
 
         return view('admin.internship-companies.create', compact('teachers'));
@@ -51,7 +54,15 @@ class InternshipCompanyController extends Controller
         UserService::ensureTeacherProfilesExist();
 
         $teachers = Teacher::with('user')
-            ->whereHas('user', fn($q) => $q->where('is_active', true))
+            ->whereHas('user', function ($q) use ($internshipCompany) {
+                $q->where('is_active', true)
+                  ->where(function ($sub) use ($internshipCompany) {
+                      $sub->whereHas('roles', fn($r) => $r->where('name', 'guru_pembimbing_pkl'));
+                      if ($internshipCompany->teacher_id) {
+                          $sub->orWhere('id', $internshipCompany->teacher?->user_id);
+                      }
+                  });
+            })
             ->get();
 
         return view('admin.internship-companies.edit', compact('internshipCompany', 'teachers'));

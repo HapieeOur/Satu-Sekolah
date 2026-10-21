@@ -115,16 +115,23 @@
 
                 <!-- Guru Pembimbing PKL -->
                 <div>
-                    <label for="teacher_id" class="block font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                        Guru Pembimbing PKL <span class="text-rose-500">*</span>
-                    </label>
+                    <div class="flex items-center justify-between mb-1.5">
+                        <label for="teacher_id" class="block font-bold uppercase tracking-wider text-slate-700">
+                            Guru Pembimbing PKL <span class="text-rose-500">*</span>
+                        </label>
+                        <span class="text-[10px] font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-100">Khusus Peran: Pembimbing PKL</span>
+                    </div>
                     <select name="teacher_id" id="teacher_id" required class="w-full px-4 py-2.5 text-xs rounded-xl border border-slate-200 focus:bg-white focus:ring-2 focus:ring-brand/20 focus:border-brand bg-slate-50/50 text-slate-800 transition">
-                        @foreach ($teachers as $tch)
+                        <option value="">-- Pilih Guru Pembimbing --</option>
+                        @forelse ($teachers as $tch)
                             <option value="{{ $tch->id }}" {{ old('teacher_id', $placement->teacher_id) == $tch->id ? 'selected' : '' }}>
                                 {{ $tch->user->name }} {{ $tch->nip ? '(NIP: ' . $tch->nip . ')' : '(' . $tch->user->email . ')' }}
                             </option>
-                        @endforeach
+                        @empty
+                            <option value="" disabled>Belum ada akun guru dengan peran Guru Pembimbing PKL</option>
+                        @endforelse
                     </select>
+                    <p class="text-[11px] text-slate-500 mt-1">Daftar di atas hanya menampilkan guru yang memiliki peran <strong>Guru Pembimbing PKL</strong>.</p>
                     @error('teacher_id')
                         <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
                     @enderror
