@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Heart,
   Activity,
-  Smile,
   Mail,
   Plus,
   Search,
   ChevronDown,
   CheckCircle2,
-  MoreHorizontal
+  MoreHorizontal,
+  BookOpen,
+  GraduationCap,
+  Clock,
+  MapPin
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { AdminPortal } from './portals/AdminPortal';
@@ -28,6 +30,13 @@ export const DashboardPage: React.FC = () => {
   }, []);
 
   if (!user) return null;
+
+  const stats = profile?.statistics || {
+    total_students: 850,
+    total_teachers: 48,
+    total_classrooms: 18,
+    total_companies: 35,
+  };
 
   const userRole = (() => {
     if (user.roles.includes('admin')) return 'admin';
@@ -116,69 +125,122 @@ export const DashboardPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Top Academic Year & Status Bar */}
-      <div className="flex items-center justify-between pb-1">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1">
         <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-xs font-bold text-slate-600">
-            Status Sistem: Operasional Normal
+          <h2 className="text-base font-black text-[#171B61] tracking-tight">
+            Ringkasan Operasional Sekolah
+          </h2>
+          <span className="text-xs font-semibold text-slate-400">
+            T.A. {profile?.academic_year?.name ?? '2026/2027'} ({profile?.academic_year?.semester ?? 'Ganjil'})
           </span>
         </div>
-        <div className="text-right">
-          <span className="text-xs font-bold text-slate-400">
-            T.A. {profile?.academic_year?.name ?? '2026/2027'} ({profile?.academic_year?.semester ?? 'Ganjil'})
+        <div className="flex items-center gap-2">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#E5ECFF] text-[#233DFF]">
+            <span className="w-2 h-2 rounded-full bg-[#233DFF] animate-pulse" />
+            Status Sistem: Operasional Normal
           </span>
         </div>
       </div>
 
-      {/* Row 1: 3 Soft Tinted Stat Cards (Matching Reference UI Top Cards) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        {/* Card 1: Soft Rose Tint */}
-        <div className="bg-[#FCF1F3] border border-[#F9DEE3] rounded-3xl p-5 flex items-center gap-4 transition-all hover:shadow-xs">
-          <div className="w-12 h-12 rounded-2xl bg-white shadow-xs flex items-center justify-center shrink-0 text-rose-500">
-            <Heart className="w-5 h-5 fill-rose-500" />
-          </div>
-          <div className="min-w-0">
-            <span className="text-[11px] font-bold text-slate-500 block truncate">
-              Presensi Hari Ini
-            </span>
-            <div className="flex items-baseline gap-1 mt-0.5">
-              <span className="text-2xl font-black text-slate-900">
-                {profile?.statistics.total_students ? `${profile.statistics.total_students - 4}/${profile.statistics.total_students}` : '32/32'}
+      {/* Row 1: 4 Deep Indigo Ringkasan Operasional Cards matching Blade */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Card 1: Total Siswa */}
+        <div className="rounded-3xl p-5 bg-[#2F3DB6] hover:bg-[#2532A6] text-white shadow-md shadow-indigo-950/10 flex flex-col justify-between transition-all duration-200 group">
+          <div className="space-y-3">
+            <div className="flex items-start justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-indigo-200">
+                Total Siswa
               </span>
-              <span className="text-xs font-bold text-slate-500">siswa hadir</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-400" />
             </div>
+            <h3 className="text-3xl font-black tracking-tight group-hover:scale-105 transition-transform">
+              {stats.total_students}
+            </h3>
+            <div className="flex items-center gap-3 text-xs text-indigo-100 font-medium">
+              <div className="flex items-center gap-1">
+                <BookOpen className="w-3.5 h-3.5 text-amber-300" />
+                <span>{stats.total_classrooms} Rombel Aktif</span>
+              </div>
+            </div>
+          </div>
+          <div className="pt-4 mt-3 border-t border-white/15 flex items-center justify-between text-xs">
+            <span className="text-[11px] text-indigo-200 font-semibold">Peserta Didik Aktif</span>
+            <span className="text-amber-300 font-bold">100% Terdaftar</span>
           </div>
         </div>
 
-        {/* Card 2: Soft Blue Tint */}
-        <div className="bg-[#EDF3FF] border border-[#DBE7FF] rounded-3xl p-5 flex items-center gap-4 transition-all hover:shadow-xs">
-          <div className="w-12 h-12 rounded-2xl bg-white shadow-xs flex items-center justify-center shrink-0 text-[#233DFF]">
-            <Activity className="w-5 h-5" />
-          </div>
-          <div className="min-w-0">
-            <span className="text-[11px] font-bold text-slate-500 block truncate">
-              Penempatan PKL &amp; Geofence
-            </span>
-            <div className="flex items-baseline gap-1 mt-0.5">
-              <span className="text-2xl font-black text-slate-900">120/120</span>
-              <span className="text-xs font-bold text-slate-500">siswa magang</span>
+        {/* Card 2: Tenaga Pendidik */}
+        <div className="rounded-3xl p-5 bg-[#2F3DB6] hover:bg-[#2532A6] text-white shadow-md shadow-indigo-950/10 flex flex-col justify-between transition-all duration-200 group">
+          <div className="space-y-3">
+            <div className="flex items-start justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-indigo-200">
+                Tenaga Pendidik
+              </span>
+              <span className="w-2 h-2 rounded-full bg-emerald-400" />
             </div>
+            <h3 className="text-3xl font-black tracking-tight group-hover:scale-105 transition-transform">
+              {stats.total_teachers}
+            </h3>
+            <div className="flex items-center gap-3 text-xs text-indigo-100 font-medium">
+              <div className="flex items-center gap-1">
+                <GraduationCap className="w-3.5 h-3.5 text-blue-200" />
+                <span>Guru &amp; Mentor PKL</span>
+              </div>
+            </div>
+          </div>
+          <div className="pt-4 mt-3 border-t border-white/15 flex items-center justify-between text-xs">
+            <span className="text-[11px] text-indigo-200 font-semibold">Profil Guru Sinkron</span>
+            <span className="text-emerald-300 font-bold">Aktif Mengajar</span>
           </div>
         </div>
 
-        {/* Card 3: Soft Lavender Tint */}
-        <div className="bg-[#F3EFFB] border border-[#E5DEF7] rounded-3xl p-5 flex items-center gap-4 transition-all hover:shadow-xs">
-          <div className="w-12 h-12 rounded-2xl bg-white shadow-xs flex items-center justify-center shrink-0 text-indigo-600">
-            <Smile className="w-5 h-5" />
-          </div>
-          <div className="min-w-0">
-            <span className="text-[11px] font-bold text-slate-500 block truncate">
-              Capaian Jurnal &amp; Tugas
-            </span>
-            <div className="flex items-baseline gap-1 mt-0.5">
-              <span className="text-2xl font-black text-slate-900">9.5/10</span>
-              <span className="text-xs font-bold text-slate-500">skor rata-rata</span>
+        {/* Card 3: Rombongan Belajar */}
+        <div className="rounded-3xl p-5 bg-[#2F3DB6] hover:bg-[#2532A6] text-white shadow-md shadow-indigo-950/10 flex flex-col justify-between transition-all duration-200 group">
+          <div className="space-y-3">
+            <div className="flex items-start justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-indigo-200">
+                Rombongan Belajar
+              </span>
+              <span className="w-2 h-2 rounded-full bg-emerald-400" />
             </div>
+            <h3 className="text-3xl font-black tracking-tight group-hover:scale-105 transition-transform">
+              {stats.total_classrooms}
+            </h3>
+            <div className="flex items-center gap-3 text-xs text-indigo-100 font-medium">
+              <div className="flex items-center gap-1">
+                <Clock className="w-3.5 h-3.5 text-amber-300" />
+                <span>Kelas X, XI, XII</span>
+              </div>
+            </div>
+          </div>
+          <div className="pt-4 mt-3 border-t border-white/15 flex items-center justify-between text-xs">
+            <span className="text-[11px] text-indigo-200 font-semibold">Wali Kelas Ditetapkan</span>
+            <span className="text-amber-300 font-bold">Lengkap</span>
+          </div>
+        </div>
+
+        {/* Card 4: Mitra Industri DUDI */}
+        <div className="rounded-3xl p-5 bg-[#2F3DB6] hover:bg-[#2532A6] text-white shadow-md shadow-indigo-950/10 flex flex-col justify-between transition-all duration-200 group">
+          <div className="space-y-3">
+            <div className="flex items-start justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-indigo-200">
+                Mitra Industri DUDI
+              </span>
+              <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            </div>
+            <h3 className="text-3xl font-black tracking-tight group-hover:scale-105 transition-transform">
+              {stats.total_companies}
+            </h3>
+            <div className="flex items-center gap-3 text-xs text-indigo-100 font-medium">
+              <div className="flex items-center gap-1">
+                <MapPin className="w-3.5 h-3.5 text-emerald-300" />
+                <span>Radius Map Geofence</span>
+              </div>
+            </div>
+          </div>
+          <div className="pt-4 mt-3 border-t border-white/15 flex items-center justify-between text-xs">
+            <span className="text-[11px] text-indigo-200 font-semibold">Penempatan Magang</span>
+            <span className="text-emerald-300 font-bold">100% Terfasilitasi</span>
           </div>
         </div>
       </div>
