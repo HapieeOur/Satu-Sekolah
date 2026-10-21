@@ -125,8 +125,19 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
           {
             title: 'Data Master',
             items: [
+              { name: 'Tahun Ajaran', path: '/admin/academic-years', icon: <Calendar className="w-5 h-5 shrink-0" /> },
+              { name: 'Data Guru', path: '/admin/teachers', icon: <Award className="w-5 h-5 shrink-0" /> },
               { name: 'Data Rombel / Kelas', path: '/admin/classrooms', icon: <BookOpen className="w-5 h-5 shrink-0" /> },
-              { name: 'Mitra Industri PKL', path: '/admin/companies', icon: <Building2 className="w-5 h-5 shrink-0" /> }
+              { name: 'Data Siswa', path: '/admin/students', icon: <GraduationCap className="w-5 h-5 shrink-0" /> },
+              { name: 'Mata Pelajaran', path: '/admin/subjects', icon: <BookOpen className="w-5 h-5 shrink-0" /> },
+              { name: 'Ruangan', path: '/admin/rooms', icon: <Building2 className="w-5 h-5 shrink-0" /> },
+              { name: 'Mitra Industri PKL', path: '/admin/companies', icon: <Briefcase className="w-5 h-5 shrink-0" /> }
+            ]
+          },
+          {
+            title: 'Akademik',
+            items: [
+              { name: 'Jadwal Pelajaran', path: '/admin/schedules', icon: <Clock className="w-5 h-5 shrink-0" /> }
             ]
           },
           {
@@ -134,6 +145,12 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
             items: [
               { name: 'Penempatan Siswa', path: '/admin/placements', icon: <Briefcase className="w-5 h-5 shrink-0" /> },
               { name: 'Presensi & Koreksi', path: '/admin/attendances', icon: <Clock className="w-5 h-5 shrink-0" /> }
+            ]
+          },
+          {
+            title: 'Publikasi Informasi',
+            items: [
+              { name: 'Berita & Pengumuman', path: '/admin/posts', icon: <FileText className="w-5 h-5 shrink-0" /> }
             ]
           },
           {
@@ -212,6 +229,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
     {
       title: 'Akun & Bantuan',
       items: [
+        { name: 'Pencarian Global', path: '/search', icon: <Search className="w-5 h-5 shrink-0" /> },
         { name: 'Profil Saya', path: '/profile', icon: <UserIcon className="w-5 h-5 shrink-0" /> },
         { name: 'Pusat Notifikasi', path: '/notifications', icon: <Bell className="w-5 h-5 shrink-0" /> }
       ]
@@ -411,14 +429,21 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
           </div>
 
           {/* Center: Search Bar */}
-          <div className="hidden md:flex items-center relative max-w-xs w-full">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              navigate('/search');
+            }}
+            className="hidden md:flex items-center relative max-w-xs w-full"
+          >
             <Search className="w-4 h-4 text-slate-400 absolute left-3.5 pointer-events-none" />
             <input
               type="text"
-              placeholder="Cari data, rombel, siswa..."
-              className="w-full bg-[#F4F6FB] text-xs font-medium text-slate-700 pl-9 pr-4 py-2 rounded-full border border-transparent focus:border-[#233DFF]/30 focus:bg-white focus:outline-none transition"
+              placeholder="Cari data, rombel, siswa (Enter)..."
+              onClick={() => navigate('/search')}
+              className="w-full bg-[#F4F6FB] text-xs font-medium text-slate-700 pl-9 pr-4 py-2 rounded-full border border-transparent focus:border-[#233DFF]/30 focus:bg-white focus:outline-none transition cursor-pointer"
             />
-          </div>
+          </form>
 
           {/* Right Controls: Notification Dropdown & Profile Dropdown */}
           <div className="flex items-center gap-3">

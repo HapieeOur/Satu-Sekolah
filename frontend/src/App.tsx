@@ -11,12 +11,20 @@ import { SchoolProfilePage } from './pages/SchoolProfilePage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { NotificationsPage } from './pages/NotificationsPage';
+import { SearchPage } from './pages/SearchPage';
 import { UsersPage } from './pages/admin/UsersPage';
 import { ClassroomsPage } from './pages/admin/ClassroomsPage';
 import { CompaniesPage } from './pages/admin/CompaniesPage';
 import { PlacementsPage } from './pages/admin/PlacementsPage';
 import { AttendancesPage } from './pages/admin/AttendancesPage';
 import { ReportsPage } from './pages/admin/ReportsPage';
+import { AcademicYearsPage } from './pages/admin/AcademicYearsPage';
+import { TeachersPage } from './pages/admin/TeachersPage';
+import { StudentsPage } from './pages/admin/StudentsPage';
+import { SubjectsPage } from './pages/admin/SubjectsPage';
+import { RoomsPage } from './pages/admin/RoomsPage';
+import { SchedulesPage } from './pages/admin/SchedulesPage';
+import { PostsPage } from './pages/admin/PostsPage';
 import { TeacherModulePage } from './pages/modules/TeacherModulePage';
 import { HomeroomModulePage } from './pages/modules/HomeroomModulePage';
 import { MentorModulePage } from './pages/modules/MentorModulePage';
@@ -35,7 +43,8 @@ export const App: React.FC = () => {
     location.pathname.startsWith('/internship-mentor') ||
     location.pathname.startsWith('/student') ||
     location.pathname.startsWith('/profile') ||
-    location.pathname.startsWith('/notifications');
+    location.pathname.startsWith('/notifications') ||
+    location.pathname.startsWith('/search');
 
   const isLoginPage = location.pathname === '/login';
 
@@ -64,7 +73,17 @@ export const App: React.FC = () => {
             }
           />
 
-          {/* User Profile & Notifications */}
+          {/* Search, User Profile & Notifications */}
+          <Route
+            path="/search"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <SearchPage />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/profile"
             element={
@@ -98,6 +117,36 @@ export const App: React.FC = () => {
             }
           />
           <Route
+            path="/admin/academic-years"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AppLayout>
+                  <AcademicYearsPage />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/teachers"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AppLayout>
+                  <TeachersPage />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/students"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AppLayout>
+                  <StudentsPage />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/admin/classrooms"
             element={
               <ProtectedRoute allowedRoles={['admin', 'guru']}>
@@ -108,11 +157,41 @@ export const App: React.FC = () => {
             }
           />
           <Route
+            path="/admin/subjects"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AppLayout>
+                  <SubjectsPage />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/rooms"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AppLayout>
+                  <RoomsPage />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/admin/companies"
             element={
               <ProtectedRoute allowedRoles={['admin', 'guru', 'guru_pembimbing_pkl']}>
                 <AppLayout>
                   <CompaniesPage />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/schedules"
+            element={
+              <ProtectedRoute allowedRoles={['admin', 'guru']}>
+                <AppLayout>
+                  <SchedulesPage />
                 </AppLayout>
               </ProtectedRoute>
             }
@@ -133,6 +212,16 @@ export const App: React.FC = () => {
               <ProtectedRoute allowedRoles={['admin', 'guru_pembimbing_pkl', 'pembimbing_dudi']}>
                 <AppLayout>
                   <AttendancesPage />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/posts"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AppLayout>
+                  <PostsPage />
                 </AppLayout>
               </ProtectedRoute>
             }
