@@ -4,6 +4,7 @@ import {
   Plus,
   Search,
   Trash2,
+  Edit2,
   X,
   CheckCircle2,
   Loader2
@@ -16,6 +17,7 @@ export const PostsPage: React.FC = () => {
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingPost, setEditingPost] = useState<PostItem | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -46,11 +48,23 @@ export const PostsPage: React.FC = () => {
   }, [search, selectedCategory]);
 
   const handleOpenModal = () => {
+    setEditingPost(null);
     setTitle('');
     setCategory('berita');
     setExcerpt('');
     setContent('');
     setIsPublished(true);
+    setFormError(null);
+    setIsModalOpen(true);
+  };
+
+  const handleOpenEdit = (p: PostItem) => {
+    setEditingPost(p);
+    setTitle(p.title);
+    setCategory(p.category as 'berita' | 'pengumuman' | 'agenda');
+    setExcerpt(p.excerpt || '');
+    setContent(p.content || '');
+    setIsPublished(p.is_published);
     setFormError(null);
     setIsModalOpen(true);
   };
@@ -65,17 +79,27 @@ export const PostsPage: React.FC = () => {
     setSubmitting(true);
     setFormError(null);
     try {
-      await adminService.createPost({
-        title,
-        category,
-        excerpt: excerpt || undefined,
-        content,
-        is_published: isPublished,
-      });
+      if (editingPost) {
+        await adminService.updatePost(editingPost.id, {
+          title,
+          category,
+          excerpt: excerpt || undefined,
+          content,
+          is_published: isPublished,
+        });
+      } else {
+        await adminService.createPost({
+          title,
+          category,
+          excerpt: excerpt || undefined,
+          content,
+          is_published: isPublished,
+        });
+      }
       setIsModalOpen(false);
       fetchPosts();
     } catch (err: any) {
-      const msg = err.response?.data?.message || err.message || 'Gagal menerbitkan postingan.';
+      const msg = err.response?.data?.message || err.message || 'Gagal menyimpan postingan.';
       setFormError(msg);
     } finally {
       setSubmitting(false);
@@ -228,14 +252,24 @@ export const PostsPage: React.FC = () => {
                       )}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(p.id, p.title)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
-                        title="Hapus Publikasi"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                      <div className="flex items-center justify-end gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => handleOpenEdit(p)}
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-[#233DFF] hover:bg-blue-50 transition cursor-pointer"
+                          title="Edit Publikasi"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(p.id, p.title)}
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
+                          title="Hapus Publikasi"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -251,8 +285,12 @@ export const PostsPage: React.FC = () => {
           <div className="bg-white rounded-3xl max-w-xl w-full shadow-2xl border border-slate-100 overflow-hidden animate-in fade-in zoom-in-95 duration-150 max-h-[90vh] flex flex-col">
             <div className="p-5 border-b border-slate-100 flex items-center justify-between shrink-0">
               <div>
-                <h3 className="font-bold text-slate-900 text-base">Tulis Publikasi Portal Baru</h3>
-                <p className="text-xs text-slate-500">Rilis berita atau pengumuman resmi ke seluruh pengguna.</p>
+                <h3 className="font-bold text-slate-900 text-base">
+                  {editingPost ? 'Edit Publikasi Portal' : 'Tulis Publikasi Portal Baru'}
+                </h3>
+                <p className="text-xs text-slate-500">
+                  {editingPost ? 'Perbarui informasi rilis berita atau pengumuman.' : 'Rilis berita atau pengumuman resmi ke seluruh pengguna.'}
+                </p>
               </div>
               <button
                 type="button"
@@ -346,7 +384,7 @@ export const PostsPage: React.FC = () => {
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-[#233DFF] hover:bg-[#1B30D9] shadow-md shadow-indigo-600/20 disabled:opacity-60 transition cursor-pointer"
                 >
                   {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                  <span>{submitting ? 'Menerbitkan...' : 'Terbitkan Publikasi'}</span>
+                  <span>{submitting ? 'Menyimpan...' : (editingPost ? 'Simpan Perubahan' : 'Terbitkan Publikasi')}</span>
                 </button>
               </div>
             </form>

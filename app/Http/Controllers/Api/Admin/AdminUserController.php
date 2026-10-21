@@ -17,7 +17,7 @@ class AdminUserController extends AdminBaseController
     ) {}
 
     /**
-     * Display a listing of users.
+     * Display a listing of users with stats and filters.
      */
     public function index(Request $request): JsonResponse
     {
@@ -60,15 +60,25 @@ class AdminUserController extends AdminBaseController
                 'nis' => $u->nis,
                 'nisn' => $u->nisn,
                 'is_active' => (bool) $u->is_active,
-                'roles' => $u->roles->pluck('name'),
-                'created_at' => $u->created_at?->format('Y-m-d H:i:s'),
+                'roles' => $u->roles->pluck('name')->values()->all(),
+                'created_at' => $u->created_at?->format('d M Y') ?? '-',
             ];
         });
+
+        // Compute summary stats matching Blade's Hero Bento Cards
+        $totalUsers = User::count();
+        $activeUsers = User::where('is_active', true)->count();
+        $teacherUsers = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['guru', 'wali_kelas', 'guru_pembimbing_pkl']))->count();
 
         return response()->json([
             'success' => true,
             'message' => 'Daftar pengguna berhasil diambil.',
             'data' => $formatted,
+            'stats' => [
+                'total_users' => $totalUsers,
+                'active_users' => $activeUsers,
+                'teacher_users' => $teacherUsers,
+            ],
             'meta' => [
                 'current_page' => $users->currentPage(),
                 'last_page' => $users->lastPage(),
@@ -111,13 +121,13 @@ class AdminUserController extends AdminBaseController
             'nis' => $user->nis,
             'nisn' => $user->nisn,
             'is_active' => (bool) $user->is_active,
-            'roles' => $user->roles->pluck('name'),
-            'created_at' => $user->created_at?->format('Y-m-d H:i:s'),
-        ], 'Pengguna berhasil ditambahkan.', 201);
+            'roles' => $user->roles->pluck('name')->values()->all(),
+            'created_at' => $user->created_at?->format('d M Y') ?? '-',
+        ], "Pengguna {$user->name} berhasil ditambahkan.", 201);
     }
 
     /**
-     * Update user.
+     * Update user details and roles.
      */
     public function update(Request $request, User $user): JsonResponse
     {
@@ -138,10 +148,14 @@ class AdminUserController extends AdminBaseController
         $roles = $validated['roles'];
         unset($validated['roles']);
 
-        // Prevent self disabling
+        // Check self-protection rules
         $currentUserId = Auth::id() ?? $this->currentUser()?->id;
         if ($user->id === $currentUserId && isset($validated['is_active']) && ! $validated['is_active']) {
             return $this->respondWithError('Anda tidak dapat menonaktifkan akun Anda sendiri.', 422);
+        }
+
+        if ($user->id === $currentUserId && ! in_array('admin', $roles, true)) {
+            return $this->respondWithError('Anda tidak dapat mencabut role admin dari akun Anda sendiri.', 422);
         }
 
         $user = $this->userService->updateUser($user, $validated, $roles);
@@ -155,8 +169,30 @@ class AdminUserController extends AdminBaseController
             'nis' => $user->nis,
             'nisn' => $user->nisn,
             'is_active' => (bool) $user->is_active,
-            'roles' => $user->roles->pluck('name'),
-        ], 'Data pengguna berhasil diperbarui.');
+            'roles' => $user->roles->pluck('name')->values()->all(),
+            'created_at' => $user->created_at?->format('d M Y') ?? '-',
+        ], "Data pengguna {$user->name} berhasil diperbarui.");
+    }
+
+    /**
+     * Toggle active status.
+     */
+    public function toggleStatus(User $user): JsonResponse
+    {
+        $this->authorizeAdmin();
+
+        $currentUserId = Auth::id() ?? $this->currentUser()?->id;
+        if ($user->id === $currentUserId) {
+            return $this->respondWithError('Anda tidak dapat mengubah status akun Anda sendiri.', 422);
+        }
+
+        $user->update(['is_active' => ! $user->is_active]);
+        $statusStr = $user->is_active ? 'diaktifkan' : 'dinonaktifkan';
+
+        return $this->respondWithSuccess([
+            'id' => $user->id,
+            'is_active' => (bool) $user->is_active,
+        ], "Akun {$user->name} berhasil {$statusStr}.");
     }
 
     /**

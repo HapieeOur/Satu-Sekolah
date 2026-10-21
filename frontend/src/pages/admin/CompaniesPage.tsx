@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Plus, MapPin, Building2, Trash2, X, Phone, Mail, Loader2 } from 'lucide-react';
+import { Search, Plus, MapPin, Building2, Trash2, Edit2, X, Phone, Mail, Loader2 } from 'lucide-react';
 import { adminService, CompanyItem, TeacherItem } from '../../api/adminService';
 
 export const CompaniesPage: React.FC = () => {
@@ -8,6 +8,7 @@ export const CompaniesPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingCompany, setEditingCompany] = useState<CompanyItem | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -41,6 +42,7 @@ export const CompaniesPage: React.FC = () => {
   }, [search]);
 
   const handleOpenModal = () => {
+    setEditingCompany(null);
     setName('');
     setAddress('');
     setContactPerson('');
@@ -48,6 +50,19 @@ export const CompaniesPage: React.FC = () => {
     setEmail('');
     setTeacherId('');
     setRadiusMeters(100);
+    setFormError(null);
+    setIsModalOpen(true);
+  };
+
+  const handleOpenEdit = (c: CompanyItem) => {
+    setEditingCompany(c);
+    setName(c.name);
+    setAddress(c.address);
+    setContactPerson(c.contact_person === '-' ? '' : c.contact_person);
+    setPhone(c.phone === '-' ? '' : c.phone);
+    setEmail(c.email === '-' ? '' : c.email);
+    setTeacherId(c.teacher_id ? String(c.teacher_id) : '');
+    setRadiusMeters(c.radius_meters || 100);
     setFormError(null);
     setIsModalOpen(true);
   };
@@ -62,19 +77,31 @@ export const CompaniesPage: React.FC = () => {
     setSubmitting(true);
     setFormError(null);
     try {
-      await adminService.createCompany({
-        name,
-        address,
-        contact_person: contactPerson || undefined,
-        phone: phone || undefined,
-        email: email || undefined,
-        teacher_id: teacherId ? parseInt(teacherId) : null,
-        radius_meters: radiusMeters,
-      });
+      if (editingCompany) {
+        await adminService.updateCompany(editingCompany.id, {
+          name,
+          address,
+          contact_person: contactPerson || undefined,
+          phone: phone || undefined,
+          email: email || undefined,
+          teacher_id: teacherId ? parseInt(teacherId) : null,
+          radius_meters: radiusMeters,
+        });
+      } else {
+        await adminService.createCompany({
+          name,
+          address,
+          contact_person: contactPerson || undefined,
+          phone: phone || undefined,
+          email: email || undefined,
+          teacher_id: teacherId ? parseInt(teacherId) : null,
+          radius_meters: radiusMeters,
+        });
+      }
       setIsModalOpen(false);
       fetchData();
     } catch (err: any) {
-      const msg = err.response?.data?.message || err.message || 'Gagal menambahkan mitra DUDI.';
+      const msg = err.response?.data?.message || err.message || 'Gagal menyimpan mitra DUDI.';
       setFormError(msg);
     } finally {
       setSubmitting(false);
@@ -214,14 +241,24 @@ export const CompaniesPage: React.FC = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(c.id, c.name)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
-                        title="Hapus Mitra"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                      <div className="flex items-center justify-end gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => handleOpenEdit(c)}
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-[#233DFF] hover:bg-blue-50 transition cursor-pointer"
+                          title="Edit Mitra"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(c.id, c.name)}
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
+                          title="Hapus Mitra"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -237,8 +274,12 @@ export const CompaniesPage: React.FC = () => {
           <div className="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden animate-in fade-in zoom-in-95 duration-150 max-h-[90vh] flex flex-col">
             <div className="p-5 border-b border-slate-100 flex items-center justify-between shrink-0">
               <div>
-                <h3 className="font-bold text-slate-900 text-base">Tambah Mitra Industri (DUDI)</h3>
-                <p className="text-xs text-slate-500">Daftarkan perusahaan tempat magang siswa.</p>
+                <h3 className="font-bold text-slate-900 text-base">
+                  {editingCompany ? 'Edit Data Mitra Industri' : 'Tambah Mitra Industri (DUDI)'}
+                </h3>
+                <p className="text-xs text-slate-500">
+                  {editingCompany ? 'Perbarui informasi instansi dan guru pembimbing PKL.' : 'Daftarkan perusahaan tempat magang siswa.'}
+                </p>
               </div>
               <button
                 type="button"
@@ -356,7 +397,7 @@ export const CompaniesPage: React.FC = () => {
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-[#233DFF] hover:bg-[#1B30D9] shadow-md shadow-indigo-600/20 disabled:opacity-60 transition cursor-pointer"
                 >
                   {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                  <span>{submitting ? 'Menyimpan...' : 'Simpan Mitra DUDI'}</span>
+                  <span>{submitting ? 'Menyimpan...' : (editingCompany ? 'Simpan Perubahan' : 'Simpan Mitra DUDI')}</span>
                 </button>
               </div>
             </form>

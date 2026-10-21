@@ -69,6 +69,37 @@ class AdminCompanyController extends AdminBaseController
     }
 
     /**
+     * Update company.
+     */
+    public function update(Request $request, InternshipCompany $company): JsonResponse
+    {
+        $this->authorizeAdmin();
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'address' => ['required', 'string'],
+            'contact_person' => ['nullable', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:25'],
+            'email' => ['nullable', 'string', 'email', 'max:255'],
+            'teacher_id' => ['nullable', 'exists:teachers,id'],
+            'latitude' => ['nullable', 'numeric'],
+            'longitude' => ['nullable', 'numeric'],
+            'radius_meters' => ['nullable', 'integer', 'min:10'],
+        ]);
+
+        $company->update($validated);
+        $company->load('teacher.user');
+
+        return $this->respondWithSuccess([
+            'id' => $company->id,
+            'name' => $company->name,
+            'address' => $company->address,
+            'contact_person' => $company->contact_person,
+            'mentor_name' => $company->teacher?->user?->name ?? 'Belum Ditentukan',
+        ], 'Mitra DUDI / Industri berhasil diperbarui.');
+    }
+
+    /**
      * Delete company.
      */
     public function destroy(InternshipCompany $company): JsonResponse

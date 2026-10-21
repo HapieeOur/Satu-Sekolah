@@ -15,5 +15,7 @@ storage/framework/cache/*
 .vscode
 Dockerfile*
 docker-compose*
+frontend/node_modules
+frontend/dist
 README.md
 AGENTS.md

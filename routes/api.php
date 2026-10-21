@@ -117,48 +117,57 @@ Route::prefix('v1')->group(function () {
             Route::get('/users', [AdminUserController::class, 'index']);
             Route::post('/users', [AdminUserController::class, 'store']);
             Route::put('/users/{user}', [AdminUserController::class, 'update']);
+            Route::post('/users/{user}/toggle-status', [AdminUserController::class, 'toggleStatus']);
             Route::delete('/users/{user}', [AdminUserController::class, 'destroy']);
 
             // Teacher Management
             Route::get('/teachers/available-users', [AdminTeacherController::class, 'availableUsers']);
             Route::get('/teachers', [AdminTeacherController::class, 'index']);
             Route::post('/teachers', [AdminTeacherController::class, 'store']);
+            Route::put('/teachers/{teacher}', [AdminTeacherController::class, 'update']);
             Route::delete('/teachers/{teacher}', [AdminTeacherController::class, 'destroy']);
 
             // Student Management
             Route::get('/students', [AdminStudentController::class, 'index']);
             Route::post('/students', [AdminStudentController::class, 'store']);
+            Route::put('/students/{student}', [AdminStudentController::class, 'update']);
             Route::delete('/students/{student}', [AdminStudentController::class, 'destroy']);
 
             // Classroom Management
             Route::get('/classrooms', [AdminClassroomController::class, 'index']);
             Route::post('/classrooms', [AdminClassroomController::class, 'store']);
+            Route::put('/classrooms/{classroom}', [AdminClassroomController::class, 'update']);
             Route::delete('/classrooms/{classroom}', [AdminClassroomController::class, 'destroy']);
 
             // Academic Year Management
             Route::get('/academic-years', [AdminAcademicYearController::class, 'index']);
             Route::post('/academic-years', [AdminAcademicYearController::class, 'store']);
+            Route::put('/academic-years/{academicYear}', [AdminAcademicYearController::class, 'update']);
             Route::post('/academic-years/{academicYear}/set-active', [AdminAcademicYearController::class, 'setActive']);
             Route::delete('/academic-years/{academicYear}', [AdminAcademicYearController::class, 'destroy']);
 
             // Subject Management
             Route::get('/subjects', [AdminSubjectController::class, 'index']);
             Route::post('/subjects', [AdminSubjectController::class, 'store']);
+            Route::put('/subjects/{subject}', [AdminSubjectController::class, 'update']);
             Route::delete('/subjects/{subject}', [AdminSubjectController::class, 'destroy']);
 
             // Room Management
             Route::get('/rooms', [AdminRoomController::class, 'index']);
             Route::post('/rooms', [AdminRoomController::class, 'store']);
+            Route::put('/rooms/{room}', [AdminRoomController::class, 'update']);
             Route::delete('/rooms/{room}', [AdminRoomController::class, 'destroy']);
 
             // Company (Mitra DUDI) Management
             Route::get('/companies', [AdminCompanyController::class, 'index']);
             Route::post('/companies', [AdminCompanyController::class, 'store']);
+            Route::put('/companies/{company}', [AdminCompanyController::class, 'update']);
             Route::delete('/companies/{company}', [AdminCompanyController::class, 'destroy']);
 
             // Post (News & Announcements) Management
             Route::get('/posts', [AdminPostController::class, 'index']);
             Route::post('/posts', [AdminPostController::class, 'store']);
+            Route::put('/posts/{post}', [AdminPostController::class, 'update']);
             Route::delete('/posts/{post}', [AdminPostController::class, 'destroy']);
         });
     });

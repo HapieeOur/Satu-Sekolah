@@ -6,7 +6,8 @@ import {
   X,
   Phone,
   Mail,
-  Loader2
+  Loader2,
+  Edit2
 } from 'lucide-react';
 import { adminService, TeacherItem, SubjectItem } from '../../api/adminService';
 
@@ -16,6 +17,8 @@ export const TeachersPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [editingTeacher, setEditingTeacher] = useState<TeacherItem | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -100,6 +103,55 @@ export const TeachersPage: React.FC = () => {
       fetchTeachers();
     } catch (err: any) {
       const msg = err.response?.data?.message || err.message || 'Gagal menambahkan data guru.';
+      setFormError(msg);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleOpenEdit = (t: TeacherItem) => {
+    setEditingTeacher(t);
+    setName(t.name);
+    setEmail(t.email);
+    setNip(t.nip && t.nip !== '-' ? t.nip : '');
+    setNuptk(t.nuptk && t.nuptk !== '-' ? t.nuptk : '');
+    setGender((t.gender as 'L' | 'P') || 'L');
+    setPhone(t.phone && t.phone !== '-' ? t.phone : '');
+    setAddress(t.address && t.address !== '-' ? t.address : '');
+    setSelectedSubjectIds(t.subjects ? t.subjects.map((s) => s.id) : []);
+    setIsWalas(t.is_walas);
+    setIsMentor(t.is_mentor);
+    setFormError(null);
+    setIsEditOpen(true);
+  };
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingTeacher) return;
+    if (!name.trim() || !email.trim()) {
+      setFormError('Nama lengkap dan email wajib diisi.');
+      return;
+    }
+
+    setSubmitting(true);
+    setFormError(null);
+    try {
+      await adminService.updateTeacher(editingTeacher.id, {
+        name,
+        email,
+        nip: nip || undefined,
+        nuptk: nuptk || undefined,
+        gender,
+        phone: phone || undefined,
+        address: address || undefined,
+        subject_ids: selectedSubjectIds,
+        is_walas: isWalas,
+        is_mentor: isMentor,
+      });
+      setIsEditOpen(false);
+      fetchTeachers();
+    } catch (err: any) {
+      const msg = err.response?.data?.message || err.message || 'Gagal memperbarui data guru.';
       setFormError(msg);
     } finally {
       setSubmitting(false);
@@ -254,14 +306,24 @@ export const TeachersPage: React.FC = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(t.id, t.name)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
-                        title="Hapus Guru"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                      <div className="inline-flex items-center gap-1.5 justify-end">
+                        <button
+                          type="button"
+                          onClick={() => handleOpenEdit(t)}
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition cursor-pointer"
+                          title="Edit Guru"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(t.id, t.name)}
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
+                          title="Hapus Guru"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -431,6 +493,168 @@ export const TeachersPage: React.FC = () => {
                 >
                   {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                   <span>{submitting ? 'Menyimpan...' : 'Simpan Guru'}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Edit Guru */}
+      {isEditOpen && editingTeacher && (
+        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden animate-in fade-in zoom-in-95 duration-150 max-h-[90vh] flex flex-col">
+            <div className="p-5 border-b border-slate-100 flex items-center justify-between shrink-0">
+              <div>
+                <h3 className="font-bold text-slate-900 text-base">Edit Data Guru: {editingTeacher.name}</h3>
+                <p className="text-xs text-slate-500">Perbarui data profil guru, nomor identitas, atau peran.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsEditOpen(false)}
+                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleEditSubmit} className="p-6 space-y-4 overflow-y-auto">
+              {formError && (
+                <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold">
+                  {formError}
+                </div>
+              )}
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Nama Lengkap Guru (dengan Gelar) *</label>
+                <input
+                  type="text"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-[#233DFF]/20 focus:border-[#233DFF] outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Email Sekolah *</label>
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-[#233DFF]/20 focus:border-[#233DFF] outline-none"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">NIP (Nomor Induk Pegawai)</label>
+                  <input
+                    type="text"
+                    value={nip}
+                    onChange={(e) => setNip(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-[#233DFF]/20 focus:border-[#233DFF] outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Jenis Kelamin</label>
+                  <select
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value as 'L' | 'P')}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs bg-white outline-none focus:border-[#233DFF]"
+                  >
+                    <option value="L">Laki-laki (L)</option>
+                    <option value="P">Perempuan (P)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">No. WhatsApp / HP</label>
+                  <input
+                    type="text"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-[#233DFF]/20 focus:border-[#233DFF] outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">NUPTK</label>
+                  <input
+                    type="text"
+                    value={nuptk}
+                    onChange={(e) => setNuptk(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-[#233DFF]/20 focus:border-[#233DFF] outline-none"
+                  />
+                </div>
+              </div>
+
+              {subjects.length > 0 && (
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1.5">Mata Pelajaran yang Diampu</label>
+                  <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto p-2 bg-slate-50 rounded-xl border border-slate-200">
+                    {subjects.map((sub) => {
+                      const isChecked = selectedSubjectIds.includes(sub.id);
+                      return (
+                        <button
+                          key={sub.id}
+                          type="button"
+                          onClick={() => handleSubjectToggle(sub.id)}
+                          className={`px-2.5 py-1 rounded-lg text-[11px] font-bold border transition cursor-pointer ${
+                            isChecked
+                              ? 'bg-[#233DFF] text-white border-[#233DFF]'
+                              : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300'
+                          }`}
+                        >
+                          {sub.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              <div className="pt-2 border-t border-slate-100 space-y-2">
+                <label className="block text-xs font-bold text-slate-700">Penugasan Tambahan</label>
+                <div className="flex flex-col gap-2">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={isWalas}
+                      onChange={(e) => setIsWalas(e.target.checked)}
+                      className="w-4 h-4 text-[#233DFF] rounded-md border-slate-300 focus:ring-[#233DFF]"
+                    />
+                    <span className="text-xs text-slate-700 font-semibold">Tugaskan sebagai Wali Kelas</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={isMentor}
+                      onChange={(e) => setIsMentor(e.target.checked)}
+                      className="w-4 h-4 text-[#233DFF] rounded-md border-slate-300 focus:ring-[#233DFF]"
+                    />
+                    <span className="text-xs text-slate-700 font-semibold">Tugaskan sebagai Guru Pembimbing PKL</span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setIsEditOpen(false)}
+                  className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition cursor-pointer"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-[#233DFF] hover:bg-[#1B30D9] shadow-md shadow-indigo-600/20 disabled:opacity-60 transition cursor-pointer"
+                >
+                  {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                  <span>{submitting ? 'Memperbarui...' : 'Simpan Perubahan'}</span>
                 </button>
               </div>
             </form>

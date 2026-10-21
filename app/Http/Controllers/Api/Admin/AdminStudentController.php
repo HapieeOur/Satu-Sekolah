@@ -149,6 +149,53 @@ class AdminStudentController extends AdminBaseController
     }
 
     /**
+     * Update student.
+     */
+    public function update(Request $request, Student $student): JsonResponse
+    {
+        $this->authorizeAdmin();
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'nis' => ['required', 'string', 'max:30', 'unique:students,nis,'.$student->id],
+            'nisn' => ['nullable', 'string', 'max:30', 'unique:students,nisn,'.$student->id],
+            'gender' => ['required', 'in:L,P'],
+            'classroom_id' => ['nullable', 'exists:classrooms,id'],
+            'phone' => ['nullable', 'string', 'max:25'],
+            'address' => ['nullable', 'string'],
+            'parent_name' => ['nullable', 'string', 'max:255'],
+            'parent_phone' => ['nullable', 'string', 'max:25'],
+            'status' => ['nullable', 'string', 'in:aktif,nonaktif,lulus,pindah'],
+        ]);
+
+        return DB::transaction(function () use ($validated, $student) {
+            $student->update([
+                'name' => $validated['name'],
+                'nis' => $validated['nis'],
+                'nisn' => $validated['nisn'] ?? null,
+                'gender' => $validated['gender'],
+                'classroom_id' => $validated['classroom_id'] ?? null,
+                'phone' => $validated['phone'] ?? null,
+                'address' => $validated['address'] ?? null,
+                'parent_name' => $validated['parent_name'] ?? null,
+                'parent_phone' => $validated['parent_phone'] ?? null,
+                'status' => $validated['status'] ?? 'aktif',
+            ]);
+
+            if ($student->user) {
+                $student->user->update([
+                    'name' => $validated['name'],
+                    'nis' => $validated['nis'],
+                    'nisn' => $validated['nisn'] ?? null,
+                    'phone' => $validated['phone'] ?? $student->user->phone,
+                ]);
+            }
+
+            return $this->respondWithSuccess(null, 'Data siswa berhasil diperbarui.');
+        });
+    }
+
+    /**
      * Delete student.
      */
     public function destroy(Student $student): JsonResponse

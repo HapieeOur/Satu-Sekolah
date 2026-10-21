@@ -4,6 +4,7 @@ import {
   Plus,
   DoorOpen,
   Trash2,
+  Edit2,
   X,
   Users,
   Loader2
@@ -15,6 +16,7 @@ export const RoomsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingRoom, setEditingRoom] = useState<RoomItem | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -41,10 +43,21 @@ export const RoomsPage: React.FC = () => {
   }, []);
 
   const handleOpenModal = () => {
+    setEditingRoom(null);
     setCode('');
     setName('');
     setCapacity(36);
     setDescription('');
+    setFormError(null);
+    setIsModalOpen(true);
+  };
+
+  const handleOpenEdit = (r: RoomItem) => {
+    setEditingRoom(r);
+    setCode(r.code);
+    setName(r.name);
+    setCapacity(r.capacity);
+    setDescription(r.description === '-' ? '' : r.description);
     setFormError(null);
     setIsModalOpen(true);
   };
@@ -59,16 +72,25 @@ export const RoomsPage: React.FC = () => {
     setSubmitting(true);
     setFormError(null);
     try {
-      await adminService.createRoom({
-        code,
-        name,
-        capacity,
-        description: description || undefined,
-      });
+      if (editingRoom) {
+        await adminService.updateRoom(editingRoom.id, {
+          code,
+          name,
+          capacity,
+          description: description || undefined,
+        });
+      } else {
+        await adminService.createRoom({
+          code,
+          name,
+          capacity,
+          description: description || undefined,
+        });
+      }
       setIsModalOpen(false);
       fetchRooms();
     } catch (err: any) {
-      const msg = err.response?.data?.message || err.message || 'Gagal menambahkan ruangan.';
+      const msg = err.response?.data?.message || err.message || 'Gagal menyimpan ruangan.';
       setFormError(msg);
     } finally {
       setSubmitting(false);
@@ -190,14 +212,24 @@ export const RoomsPage: React.FC = () => {
                       {r.description || '-'}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(r.id, r.name)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
-                        title="Hapus Ruangan"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                      <div className="flex items-center justify-end gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => handleOpenEdit(r)}
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-[#233DFF] hover:bg-blue-50 transition cursor-pointer"
+                          title="Edit Ruangan"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(r.id, r.name)}
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
+                          title="Hapus Ruangan"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -213,8 +245,12 @@ export const RoomsPage: React.FC = () => {
           <div className="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
             <div className="p-5 border-b border-slate-100 flex items-center justify-between">
               <div>
-                <h3 className="font-bold text-slate-900 text-base">Tambah Ruangan Baru</h3>
-                <p className="text-xs text-slate-500">Daftarkan ruang kelas atau laboratorium baru.</p>
+                <h3 className="font-bold text-slate-900 text-base">
+                  {editingRoom ? 'Edit Data Ruangan' : 'Tambah Ruangan Baru'}
+                </h3>
+                <p className="text-xs text-slate-500">
+                  {editingRoom ? 'Perbarui informasi dan kapasitas ruangan.' : 'Daftarkan ruang kelas atau laboratorium baru.'}
+                </p>
               </div>
               <button
                 type="button"
@@ -294,7 +330,7 @@ export const RoomsPage: React.FC = () => {
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-[#233DFF] hover:bg-[#1B30D9] shadow-md shadow-indigo-600/20 disabled:opacity-60 transition cursor-pointer"
                 >
                   {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                  <span>{submitting ? 'Menyimpan...' : 'Simpan Ruangan'}</span>
+                  <span>{submitting ? 'Menyimpan...' : (editingRoom ? 'Simpan Perubahan' : 'Simpan Ruangan')}</span>
                 </button>
               </div>
             </form>

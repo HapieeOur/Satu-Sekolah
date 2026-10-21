@@ -73,6 +73,41 @@ class AdminSubjectController extends AdminBaseController
     }
 
     /**
+     * Update subject.
+     */
+    public function update(Request $request, Subject $subject): JsonResponse
+    {
+        $this->authorizeAdmin();
+
+        $validated = $request->validate([
+            'code' => ['required', 'string', 'max:20', 'unique:subjects,code,' . $subject->id],
+            'name' => ['required', 'string', 'max:100'],
+            'description' => ['nullable', 'string'],
+            'teacher_ids' => ['nullable', 'array'],
+            'teacher_ids.*' => ['exists:teachers,id'],
+        ]);
+
+        return DB::transaction(function () use ($validated, $subject) {
+            $subject->update([
+                'code' => $validated['code'],
+                'name' => $validated['name'],
+                'description' => $validated['description'] ?? null,
+            ]);
+
+            if (isset($validated['teacher_ids'])) {
+                $subject->teachers()->sync($validated['teacher_ids']);
+            }
+
+            return $this->respondWithSuccess([
+                'id' => $subject->id,
+                'code' => $subject->code,
+                'name' => $subject->name,
+                'description' => $subject->description,
+            ], 'Mata pelajaran berhasil diperbarui.');
+        });
+    }
+
+    /**
      * Delete subject.
      */
     public function destroy(Subject $subject): JsonResponse

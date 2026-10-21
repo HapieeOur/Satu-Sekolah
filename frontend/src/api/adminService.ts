@@ -126,9 +126,12 @@ export const adminService = {
   },
 
   // Users
-  getUsers: async (params?: { search?: string; role?: string; status?: string }): Promise<UserItem[]> => {
+  getUsers: async (params?: { search?: string; role?: string; status?: string }): Promise<{ users: UserItem[]; stats?: { total_users: number; active_users: number; teacher_users: number } }> => {
     const res = await api.get('/admin/users', { params });
-    return res.data.data;
+    return {
+      users: res.data.data,
+      stats: res.data.stats,
+    };
   },
   getRoles: async (): Promise<string[]> => {
     const res = await api.get('/admin/roles');
@@ -145,6 +148,23 @@ export const adminService = {
     is_active?: boolean;
   }): Promise<UserItem> => {
     const res = await api.post('/admin/users', payload);
+    return res.data.data;
+  },
+  updateUser: async (id: number, payload: {
+    name: string;
+    email: string;
+    password?: string;
+    phone?: string;
+    nis?: string;
+    nisn?: string;
+    roles: string[];
+    is_active?: boolean;
+  }): Promise<UserItem> => {
+    const res = await api.put(`/admin/users/${id}`, payload);
+    return res.data.data;
+  },
+  toggleUserStatus: async (id: number): Promise<{ id: number; is_active: boolean }> => {
+    const res = await api.post(`/admin/users/${id}/toggle-status`);
     return res.data.data;
   },
   deleteUser: async (id: number): Promise<void> => {
@@ -170,6 +190,21 @@ export const adminService = {
     is_mentor?: boolean;
   }): Promise<any> => {
     const res = await api.post('/admin/teachers', payload);
+    return res.data.data;
+  },
+  updateTeacher: async (id: number, payload: {
+    name?: string;
+    email?: string;
+    nip?: string;
+    nuptk?: string;
+    gender?: string;
+    phone?: string;
+    address?: string;
+    subject_ids?: number[];
+    is_walas?: boolean;
+    is_mentor?: boolean;
+  }): Promise<any> => {
+    const res = await api.put(`/admin/teachers/${id}`, payload);
     return res.data.data;
   },
   deleteTeacher: async (id: number): Promise<void> => {
@@ -198,6 +233,21 @@ export const adminService = {
     const res = await api.post('/admin/students', payload);
     return res.data.data;
   },
+  updateStudent: async (id: number, payload: {
+    name: string;
+    nis: string;
+    nisn?: string;
+    gender: 'L' | 'P';
+    classroom_id?: number | null;
+    phone?: string;
+    address?: string;
+    parent_name?: string;
+    parent_phone?: string;
+    status?: string;
+  }): Promise<any> => {
+    const res = await api.put(`/admin/students/${id}`, payload);
+    return res.data.data;
+  },
   deleteStudent: async (id: number): Promise<void> => {
     await api.delete(`/admin/students/${id}`);
   },
@@ -215,6 +265,16 @@ export const adminService = {
     teacher_id?: number | null;
   }): Promise<ClassroomItem> => {
     const res = await api.post('/admin/classrooms', payload);
+    return res.data.data;
+  },
+  updateClassroom: async (id: number, payload: {
+    name: string;
+    grade_level: number;
+    major: string;
+    academic_year_id?: number | null;
+    teacher_id?: number | null;
+  }): Promise<any> => {
+    const res = await api.put(`/admin/classrooms/${id}`, payload);
     return res.data.data;
   },
   deleteClassroom: async (id: number): Promise<void> => {
@@ -239,6 +299,19 @@ export const adminService = {
   setActiveAcademicYear: async (id: number): Promise<void> => {
     await api.post(`/admin/academic-years/${id}/set-active`);
   },
+  updateAcademicYear: async (
+    id: number,
+    payload: {
+      name: string;
+      semester: 'ganjil' | 'genap';
+      start_date: string;
+      end_date: string;
+      is_active?: boolean;
+    }
+  ): Promise<AcademicYearItem> => {
+    const res = await api.put(`/admin/academic-years/${id}`, payload);
+    return res.data.data;
+  },
   deleteAcademicYear: async (id: number): Promise<void> => {
     await api.delete(`/admin/academic-years/${id}`);
   },
@@ -257,6 +330,18 @@ export const adminService = {
     const res = await api.post('/admin/subjects', payload);
     return res.data.data;
   },
+  updateSubject: async (
+    id: number,
+    payload: {
+      code: string;
+      name: string;
+      description?: string;
+      teacher_ids?: number[];
+    }
+  ): Promise<SubjectItem> => {
+    const res = await api.put(`/admin/subjects/${id}`, payload);
+    return res.data.data;
+  },
   deleteSubject: async (id: number): Promise<void> => {
     await api.delete(`/admin/subjects/${id}`);
   },
@@ -273,6 +358,18 @@ export const adminService = {
     description?: string;
   }): Promise<RoomItem> => {
     const res = await api.post('/admin/rooms', payload);
+    return res.data.data;
+  },
+  updateRoom: async (
+    id: number,
+    payload: {
+      code: string;
+      name: string;
+      capacity: number;
+      description?: string;
+    }
+  ): Promise<RoomItem> => {
+    const res = await api.put(`/admin/rooms/${id}`, payload);
     return res.data.data;
   },
   deleteRoom: async (id: number): Promise<void> => {
@@ -296,6 +393,21 @@ export const adminService = {
     const res = await api.post('/admin/companies', payload);
     return res.data.data;
   },
+  updateCompany: async (
+    id: number,
+    payload: {
+      name: string;
+      address: string;
+      contact_person?: string;
+      phone?: string;
+      email?: string;
+      teacher_id?: number | null;
+      radius_meters?: number;
+    }
+  ): Promise<any> => {
+    const res = await api.put(`/admin/companies/${id}`, payload);
+    return res.data.data;
+  },
   deleteCompany: async (id: number): Promise<void> => {
     await api.delete(`/admin/companies/${id}`);
   },
@@ -316,6 +428,22 @@ export const adminService = {
     event_location?: string;
   }): Promise<any> => {
     const res = await api.post('/admin/posts', payload);
+    return res.data.data;
+  },
+  updatePost: async (
+    id: number,
+    payload: {
+      title: string;
+      category: 'berita' | 'pengumuman' | 'agenda';
+      excerpt?: string;
+      content: string;
+      is_published?: boolean;
+      event_date?: string;
+      event_time?: string;
+      event_location?: string;
+    }
+  ): Promise<any> => {
+    const res = await api.put(`/admin/posts/${id}`, payload);
     return res.data.data;
   },
   deletePost: async (id: number): Promise<void> => {

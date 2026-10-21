@@ -59,6 +59,31 @@ class AdminRoomController extends AdminBaseController
     }
 
     /**
+     * Update room.
+     */
+    public function update(Request $request, Room $room): JsonResponse
+    {
+        $this->authorizeAdmin();
+
+        $validated = $request->validate([
+            'code' => ['required', 'string', 'max:20', 'unique:rooms,code,' . $room->id],
+            'name' => ['required', 'string', 'max:100'],
+            'capacity' => ['required', 'integer', 'min:1'],
+            'description' => ['nullable', 'string'],
+        ]);
+
+        $room->update($validated);
+
+        return $this->respondWithSuccess([
+            'id' => $room->id,
+            'code' => $room->code,
+            'name' => $room->name,
+            'capacity' => $room->capacity,
+            'description' => $room->description,
+        ], 'Ruangan berhasil diperbarui.');
+    }
+
+    /**
      * Delete room.
      */
     public function destroy(Room $room): JsonResponse

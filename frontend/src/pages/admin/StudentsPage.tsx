@@ -5,7 +5,8 @@ import {
   Trash2,
   X,
   Phone,
-  Loader2
+  Loader2,
+  Edit2
 } from 'lucide-react';
 import { adminService, StudentItem, ClassroomItem } from '../../api/adminService';
 
@@ -16,6 +17,8 @@ export const StudentsPage: React.FC = () => {
   const [search, setSearch] = useState('');
   const [selectedClassroomId, setSelectedClassroomId] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [editingStudent, setEditingStudent] = useState<StudentItem | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -93,6 +96,53 @@ export const StudentsPage: React.FC = () => {
       fetchStudents();
     } catch (err: any) {
       const msg = err.response?.data?.message || err.message || 'Gagal menambahkan data siswa.';
+      setFormError(msg);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleOpenEdit = (s: StudentItem) => {
+    setEditingStudent(s);
+    setName(s.name);
+    setNis(s.nis);
+    setNisn(s.nisn && s.nisn !== '-' ? s.nisn : '');
+    setGender(s.gender);
+    setClassroomId(s.classroom_id ? s.classroom_id.toString() : '');
+    setPhone(s.phone && s.phone !== '-' ? s.phone : '');
+    setAddress(s.address && s.address !== '-' ? s.address : '');
+    setParentName(s.parent_name && s.parent_name !== '-' ? s.parent_name : '');
+    setParentPhone(s.parent_phone && s.parent_phone !== '-' ? s.parent_phone : '');
+    setFormError(null);
+    setIsEditOpen(true);
+  };
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingStudent) return;
+    if (!name.trim() || !nis.trim()) {
+      setFormError('Nama siswa dan NIS wajib diisi.');
+      return;
+    }
+
+    setSubmitting(true);
+    setFormError(null);
+    try {
+      await adminService.updateStudent(editingStudent.id, {
+        name,
+        nis,
+        nisn: nisn || undefined,
+        gender,
+        classroom_id: classroomId ? parseInt(classroomId) : null,
+        phone: phone || undefined,
+        address: address || undefined,
+        parent_name: parentName || undefined,
+        parent_phone: parentPhone || undefined,
+      });
+      setIsEditOpen(false);
+      fetchStudents();
+    } catch (err: any) {
+      const msg = err.response?.data?.message || err.message || 'Gagal memperbarui data siswa.';
       setFormError(msg);
     } finally {
       setSubmitting(false);
@@ -253,14 +303,24 @@ export const StudentsPage: React.FC = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(s.id, s.name)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
-                        title="Hapus Siswa"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                      <div className="inline-flex items-center gap-1.5 justify-end">
+                        <button
+                          type="button"
+                          onClick={() => handleOpenEdit(s)}
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition cursor-pointer"
+                          title="Edit Siswa"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(s.id, s.name)}
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
+                          title="Hapus Siswa"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -409,6 +469,146 @@ export const StudentsPage: React.FC = () => {
                 >
                   {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                   <span>{submitting ? 'Menyimpan...' : 'Simpan Siswa'}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Edit Siswa */}
+      {isEditOpen && editingStudent && (
+        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden animate-in fade-in zoom-in-95 duration-150 max-h-[90vh] flex flex-col">
+            <div className="p-5 border-b border-slate-100 flex items-center justify-between shrink-0">
+              <div>
+                <h3 className="font-bold text-slate-900 text-base">Edit Data Siswa: {editingStudent.name}</h3>
+                <p className="text-xs text-slate-500">Perbarui identitas siswa, kelas rombel, dan kontak wali.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsEditOpen(false)}
+                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleEditSubmit} className="p-6 space-y-4 overflow-y-auto">
+              {formError && (
+                <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold">
+                  {formError}
+                </div>
+              )}
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Nama Lengkap Siswa *</label>
+                <input
+                  type="text"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-[#233DFF]/20 focus:border-[#233DFF] outline-none"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">NIS *</label>
+                  <input
+                    type="text"
+                    required
+                    value={nis}
+                    onChange={(e) => setNis(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-[#233DFF]/20 focus:border-[#233DFF] outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">NISN</label>
+                  <input
+                    type="text"
+                    value={nisn}
+                    onChange={(e) => setNisn(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-[#233DFF]/20 focus:border-[#233DFF] outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Jenis Kelamin</label>
+                  <select
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value as 'L' | 'P')}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs bg-white outline-none focus:border-[#233DFF]"
+                  >
+                    <option value="L">Laki-laki (L)</option>
+                    <option value="P">Perempuan (P)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Kelas (Rombel)</label>
+                  <select
+                    value={classroomId}
+                    onChange={(e) => setClassroomId(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs bg-white outline-none focus:border-[#233DFF]"
+                  >
+                    <option value="">Pilih Rombongan Belajar</option>
+                    {classrooms.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Nama Orang Tua / Wali</label>
+                  <input
+                    type="text"
+                    value={parentName}
+                    onChange={(e) => setParentName(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-[#233DFF]/20 focus:border-[#233DFF] outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">No. HP Orang Tua / Wali</label>
+                  <input
+                    type="text"
+                    value={parentPhone}
+                    onChange={(e) => setParentPhone(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-[#233DFF]/20 focus:border-[#233DFF] outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">No. HP Siswa</label>
+                <input
+                  type="text"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-[#233DFF]/20 focus:border-[#233DFF] outline-none"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setIsEditOpen(false)}
+                  className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition cursor-pointer"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-[#233DFF] hover:bg-[#1B30D9] shadow-md shadow-indigo-600/20 disabled:opacity-60 transition cursor-pointer"
+                >
+                  {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                  <span>{submitting ? 'Memperbarui...' : 'Simpan Perubahan'}</span>
                 </button>
               </div>
             </form>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Plus, Trash2, X, Loader2 } from 'lucide-react';
+import { Search, Plus, Trash2, X, Loader2, Edit2 } from 'lucide-react';
 import { adminService, ClassroomItem, TeacherItem, AcademicYearItem } from '../../api/adminService';
 
 export const ClassroomsPage: React.FC = () => {
@@ -9,6 +9,8 @@ export const ClassroomsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [editingClassroom, setEditingClassroom] = useState<ClassroomItem | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -73,6 +75,45 @@ export const ClassroomsPage: React.FC = () => {
       fetchData();
     } catch (err: any) {
       const msg = err.response?.data?.message || err.message || 'Gagal menambahkan rombel.';
+      setFormError(msg);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleOpenEdit = (c: ClassroomItem) => {
+    setEditingClassroom(c);
+    setName(c.name);
+    setGradeLevel(c.grade_level);
+    setMajor(c.major);
+    setAcademicYearId(c.academic_year_id ? c.academic_year_id.toString() : '');
+    setTeacherId(c.teacher_id ? c.teacher_id.toString() : '');
+    setFormError(null);
+    setIsEditOpen(true);
+  };
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingClassroom) return;
+    if (!name.trim() || !major.trim()) {
+      setFormError('Nama kelas dan jurusan wajib diisi.');
+      return;
+    }
+
+    setSubmitting(true);
+    setFormError(null);
+    try {
+      await adminService.updateClassroom(editingClassroom.id, {
+        name,
+        grade_level: gradeLevel,
+        major,
+        academic_year_id: academicYearId ? parseInt(academicYearId) : null,
+        teacher_id: teacherId ? parseInt(teacherId) : null,
+      });
+      setIsEditOpen(false);
+      fetchData();
+    } catch (err: any) {
+      const msg = err.response?.data?.message || err.message || 'Gagal memperbarui rombel.';
       setFormError(msg);
     } finally {
       setSubmitting(false);
@@ -199,14 +240,24 @@ export const ClassroomsPage: React.FC = () => {
                       <span className="font-bold text-slate-900">{c.students_count} Siswa</span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(c.id, c.name)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
-                        title="Hapus Rombel"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                      <div className="inline-flex items-center gap-1.5 justify-end">
+                        <button
+                          type="button"
+                          onClick={() => handleOpenEdit(c)}
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition cursor-pointer"
+                          title="Edit Rombel"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(c.id, c.name)}
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
+                          title="Hapus Rombel"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -326,6 +377,121 @@ export const ClassroomsPage: React.FC = () => {
                 >
                   {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                   <span>{submitting ? 'Menyimpan...' : 'Simpan Rombel'}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Edit Rombel */}
+      {isEditOpen && editingClassroom && (
+        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+            <div className="p-5 border-b border-slate-100 flex items-center justify-between">
+              <div>
+                <h3 className="font-bold text-slate-900 text-base">Edit Rombel: {editingClassroom.name}</h3>
+                <p className="text-xs text-slate-500">Perbarui identitas kelas atau wali kelas.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsEditOpen(false)}
+                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleEditSubmit} className="p-6 space-y-4">
+              {formError && (
+                <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold">
+                  {formError}
+                </div>
+              )}
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Nama Rombel / Kelas *</label>
+                <input
+                  type="text"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-[#233DFF]/20 focus:border-[#233DFF] outline-none"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Tingkat Kelas</label>
+                  <select
+                    value={gradeLevel}
+                    onChange={(e) => setGradeLevel(parseInt(e.target.value))}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs bg-white outline-none focus:border-[#233DFF]"
+                  >
+                    <option value={10}>Kelas 10 (Fase E)</option>
+                    <option value={11}>Kelas 11 (Fase F)</option>
+                    <option value={12}>Kelas 12 (Fase F)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Kompetensi Keahlian (Jurusan) *</label>
+                  <input
+                    type="text"
+                    required
+                    value={major}
+                    onChange={(e) => setMajor(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-[#233DFF]/20 focus:border-[#233DFF] outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Tahun Ajaran</label>
+                <select
+                  value={academicYearId}
+                  onChange={(e) => setAcademicYearId(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs bg-white outline-none focus:border-[#233DFF]"
+                >
+                  <option value="">Tahun Ajaran Aktif (Otomatis)</option>
+                  {academicYears.map((y) => (
+                    <option key={y.id} value={y.id}>
+                      {y.name} ({y.semester}) {y.is_active ? '• [Aktif]' : ''}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Wali Kelas</label>
+                <select
+                  value={teacherId}
+                  onChange={(e) => setTeacherId(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs bg-white outline-none focus:border-[#233DFF]"
+                >
+                  <option value="">Pilih Wali Kelas (Opsional)</option>
+                  {teachers.map((t) => (
+                    <option key={t.id} value={t.id}>
+                      {t.name} {t.nip ? `(NIP: ${t.nip})` : ''}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setIsEditOpen(false)}
+                  className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition cursor-pointer"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-[#233DFF] hover:bg-[#1B30D9] shadow-md shadow-indigo-600/20 disabled:opacity-60 transition cursor-pointer"
+                >
+                  {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                  <span>{submitting ? 'Memperbarui...' : 'Simpan Perubahan'}</span>
                 </button>
               </div>
             </form>

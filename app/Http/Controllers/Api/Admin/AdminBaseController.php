@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Api\ApiController;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 abstract class AdminBaseController extends ApiController
 {
@@ -13,18 +14,19 @@ abstract class AdminBaseController extends ApiController
     {
         $user = $this->currentUser();
         if (! $user) {
-            abort(response()->json([
-                'success' => false,
-                'message' => 'Unauthenticated.',
-            ], 401));
+            throw new HttpResponseException(
+                $this->respondWithError('Unauthenticated. Silakan login kembali.', 401)
+            );
         }
 
-        // Allow users with admin role or admin permissions
-        if (! $user->hasRole('admin') && ! $user->can('admin.dashboard')) {
-            abort(response()->json([
-                'success' => false,
-                'message' => 'Akses ditolak: Hanya administrator yang memiliki izin.',
-            ], 403));
+        // Check if user has 'admin' in their assigned roles
+        $userRoles = $user->roles ? $user->roles->pluck('name')->toArray() : [];
+        $isAdmin = in_array('admin', $userRoles, true) || $user->hasRole('admin');
+
+        if (! $isAdmin) {
+            throw new HttpResponseException(
+                $this->respondWithError('Akses ditolak: Hanya administrator yang memiliki izin.', 403)
+            );
         }
     }
 }

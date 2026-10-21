@@ -88,6 +88,26 @@ class AdminClassroomController extends AdminBaseController
     }
 
     /**
+     * Update classroom.
+     */
+    public function update(Request $request, Classroom $classroom): JsonResponse
+    {
+        $this->authorizeAdmin();
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:50'],
+            'grade_level' => ['required', 'integer', 'between:10,12'],
+            'major' => ['required', 'string', 'max:50'],
+            'academic_year_id' => ['nullable', 'exists:academic_years,id'],
+            'teacher_id' => ['nullable', 'exists:teachers,id'],
+        ]);
+
+        $classroom->update($validated);
+
+        return $this->respondWithSuccess(null, 'Data rombongan belajar berhasil diperbarui.');
+    }
+
+    /**
      * Delete classroom.
      */
     public function destroy(Classroom $classroom): JsonResponse

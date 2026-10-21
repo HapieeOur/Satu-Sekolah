@@ -163,6 +163,76 @@ class AdminTeacherController extends AdminBaseController
     }
 
     /**
+     * Update teacher.
+     */
+    public function update(Request $request, Teacher $teacher): JsonResponse
+    {
+        $this->authorizeAdmin();
+
+        $validated = $request->validate([
+            'name' => ['nullable', 'string', 'max:255'],
+            'email' => ['nullable', 'string', 'email', 'max:255', 'unique:users,email,'.$teacher->user_id],
+            'nip' => ['nullable', 'string', 'max:30', 'unique:teachers,nip,'.$teacher->id],
+            'nuptk' => ['nullable', 'string', 'max:30'],
+            'gender' => ['nullable', 'in:L,P'],
+            'phone' => ['nullable', 'string', 'max:25'],
+            'address' => ['nullable', 'string'],
+            'subject_ids' => ['nullable', 'array'],
+            'subject_ids.*' => ['exists:subjects,id'],
+            'is_walas' => ['nullable', 'boolean'],
+            'is_mentor' => ['nullable', 'boolean'],
+        ]);
+
+        return DB::transaction(function () use ($validated, $teacher) {
+            if ($teacher->user) {
+                $userUpdate = [];
+                if (! empty($validated['name'])) {
+                    $userUpdate['name'] = $validated['name'];
+                }
+                if (! empty($validated['email'])) {
+                    $userUpdate['email'] = $validated['email'];
+                }
+                if (! empty($validated['phone'])) {
+                    $userUpdate['phone'] = $validated['phone'];
+                }
+                if (! empty($userUpdate)) {
+                    $teacher->user->update($userUpdate);
+                }
+
+                if (isset($validated['is_walas'])) {
+                    if ($validated['is_walas']) {
+                        $teacher->user->assignRole('wali_kelas');
+                    } else {
+                        $teacher->user->removeRole('wali_kelas');
+                    }
+                }
+
+                if (isset($validated['is_mentor'])) {
+                    if ($validated['is_mentor']) {
+                        $teacher->user->assignRole('guru_pembimbing_pkl');
+                    } else {
+                        $teacher->user->removeRole('guru_pembimbing_pkl');
+                    }
+                }
+            }
+
+            $teacher->update([
+                'nip' => $validated['nip'] ?? $teacher->nip,
+                'nuptk' => $validated['nuptk'] ?? $teacher->nuptk,
+                'gender' => $validated['gender'] ?? $teacher->gender,
+                'phone' => $validated['phone'] ?? $teacher->phone,
+                'address' => $validated['address'] ?? $teacher->address,
+            ]);
+
+            if (isset($validated['subject_ids'])) {
+                $teacher->subjects()->sync($validated['subject_ids']);
+            }
+
+            return $this->respondWithSuccess(null, 'Data guru berhasil diperbarui.');
+        });
+    }
+
+    /**
      * Delete teacher.
      */
     public function destroy(Teacher $teacher): JsonResponse

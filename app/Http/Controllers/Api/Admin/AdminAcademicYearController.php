@@ -74,6 +74,43 @@ class AdminAcademicYearController extends AdminBaseController
     }
 
     /**
+     * Update academic year.
+     */
+    public function update(Request $request, AcademicYear $academicYear): JsonResponse
+    {
+        $this->authorizeAdmin();
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:50'],
+            'semester' => ['required', 'in:ganjil,genap'],
+            'start_date' => ['required', 'date'],
+            'end_date' => ['required', 'date', 'after:start_date'],
+            'is_active' => ['nullable', 'boolean'],
+        ]);
+
+        return DB::transaction(function () use ($validated, $academicYear) {
+            if (! empty($validated['is_active'])) {
+                AcademicYear::where('id', '!=', $academicYear->id)->update(['is_active' => false]);
+            }
+
+            $academicYear->update([
+                'name' => $validated['name'],
+                'semester' => $validated['semester'],
+                'start_date' => $validated['start_date'],
+                'end_date' => $validated['end_date'],
+                'is_active' => ! empty($validated['is_active']),
+            ]);
+
+            return $this->respondWithSuccess([
+                'id' => $academicYear->id,
+                'name' => $academicYear->name,
+                'semester' => $academicYear->semester,
+                'is_active' => (bool) $academicYear->is_active,
+            ], 'Tahun ajaran berhasil diperbarui.');
+        });
+    }
+
+    /**
      * Set active academic year.
      */
     public function setActive(AcademicYear $academicYear): JsonResponse

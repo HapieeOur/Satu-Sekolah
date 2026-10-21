@@ -4,6 +4,7 @@ import {
   Plus,
   BookOpen,
   Trash2,
+  Edit2,
   X,
   Loader2
 } from 'lucide-react';
@@ -15,6 +16,7 @@ export const SubjectsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingSubject, setEditingSubject] = useState<SubjectItem | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -45,10 +47,21 @@ export const SubjectsPage: React.FC = () => {
   }, []);
 
   const handleOpenModal = () => {
+    setEditingSubject(null);
     setCode('');
     setName('');
     setDescription('');
     setSelectedTeacherIds([]);
+    setFormError(null);
+    setIsModalOpen(true);
+  };
+
+  const handleOpenEdit = (s: SubjectItem) => {
+    setEditingSubject(s);
+    setCode(s.code);
+    setName(s.name);
+    setDescription(s.description === '-' ? '' : s.description);
+    setSelectedTeacherIds(s.teachers.map((t) => t.id));
     setFormError(null);
     setIsModalOpen(true);
   };
@@ -71,16 +84,25 @@ export const SubjectsPage: React.FC = () => {
     setSubmitting(true);
     setFormError(null);
     try {
-      await adminService.createSubject({
-        code,
-        name,
-        description: description || undefined,
-        teacher_ids: selectedTeacherIds,
-      });
+      if (editingSubject) {
+        await adminService.updateSubject(editingSubject.id, {
+          code,
+          name,
+          description: description || undefined,
+          teacher_ids: selectedTeacherIds,
+        });
+      } else {
+        await adminService.createSubject({
+          code,
+          name,
+          description: description || undefined,
+          teacher_ids: selectedTeacherIds,
+        });
+      }
       setIsModalOpen(false);
       fetchData();
     } catch (err: any) {
-      const msg = err.response?.data?.message || err.message || 'Gagal menambahkan mata pelajaran.';
+      const msg = err.response?.data?.message || err.message || 'Gagal menyimpan mata pelajaran.';
       setFormError(msg);
     } finally {
       setSubmitting(false);
@@ -212,14 +234,24 @@ export const SubjectsPage: React.FC = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(s.id, s.name)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
-                        title="Hapus Mapel"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                      <div className="flex items-center justify-end gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => handleOpenEdit(s)}
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-[#233DFF] hover:bg-blue-50 transition cursor-pointer"
+                          title="Edit Mapel"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(s.id, s.name)}
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
+                          title="Hapus Mapel"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -235,8 +267,12 @@ export const SubjectsPage: React.FC = () => {
           <div className="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden animate-in fade-in zoom-in-95 duration-150 max-h-[90vh] flex flex-col">
             <div className="p-5 border-b border-slate-100 flex items-center justify-between shrink-0">
               <div>
-                <h3 className="font-bold text-slate-900 text-base">Tambah Mata Pelajaran</h3>
-                <p className="text-xs text-slate-500">Daftarkan kurikulum mata pelajaran baru.</p>
+                <h3 className="font-bold text-slate-900 text-base">
+                  {editingSubject ? 'Edit Mata Pelajaran' : 'Tambah Mata Pelajaran'}
+                </h3>
+                <p className="text-xs text-slate-500">
+                  {editingSubject ? 'Perbarui data mata pelajaran yang dipilih.' : 'Daftarkan kurikulum mata pelajaran baru.'}
+                </p>
               </div>
               <button
                 type="button"
@@ -329,7 +365,7 @@ export const SubjectsPage: React.FC = () => {
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-[#233DFF] hover:bg-[#1B30D9] shadow-md shadow-indigo-600/20 disabled:opacity-60 transition cursor-pointer"
                 >
                   {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                  <span>{submitting ? 'Menyimpan...' : 'Simpan Mapel'}</span>
+                  <span>{submitting ? 'Menyimpan...' : (editingSubject ? 'Simpan Perubahan' : 'Simpan Mapel')}</span>
                 </button>
               </div>
             </form>

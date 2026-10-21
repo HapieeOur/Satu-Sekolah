@@ -111,6 +111,43 @@ class AdminPostController extends AdminBaseController
     }
 
     /**
+     * Update post.
+     */
+    public function update(Request $request, Post $post): JsonResponse
+    {
+        $this->authorizeAdmin();
+
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'category' => ['required', 'in:berita,pengumuman,agenda'],
+            'excerpt' => ['nullable', 'string', 'max:500'],
+            'content' => ['required', 'string'],
+            'is_published' => ['nullable', 'boolean'],
+            'event_date' => ['nullable', 'date'],
+            'event_time' => ['nullable', 'string'],
+            'event_location' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $post->update([
+            'title' => $validated['title'],
+            'category' => $validated['category'],
+            'excerpt' => $validated['excerpt'] ?? null,
+            'content' => $validated['content'],
+            'is_published' => $validated['is_published'] ?? $post->is_published,
+            'event_date' => $validated['event_date'] ?? null,
+            'event_time' => $validated['event_time'] ?? null,
+            'event_location' => $validated['event_location'] ?? null,
+        ]);
+
+        return $this->respondWithSuccess([
+            'id' => $post->id,
+            'title' => $post->title,
+            'slug' => $post->slug,
+            'category' => $post->category,
+        ], 'Publikasi berhasil diperbarui.');
+    }
+
+    /**
      * Delete post.
      */
     public function destroy(Post $post): JsonResponse

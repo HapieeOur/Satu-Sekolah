@@ -4,6 +4,7 @@ import {
   Plus,
   CheckCircle2,
   Trash2,
+  Edit2,
   X,
   Search,
   Check,
@@ -16,6 +17,7 @@ export const AcademicYearsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingYear, setEditingYear] = useState<AcademicYearItem | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -43,11 +45,23 @@ export const AcademicYearsPage: React.FC = () => {
   }, []);
 
   const handleOpenModal = () => {
+    setEditingYear(null);
     setName('');
     setSemester('ganjil');
     setStartDate('');
     setEndDate('');
     setIsActive(false);
+    setFormError(null);
+    setIsModalOpen(true);
+  };
+
+  const handleOpenEdit = (y: AcademicYearItem) => {
+    setEditingYear(y);
+    setName(y.name);
+    setSemester(y.semester as 'ganjil' | 'genap');
+    setStartDate(y.start_date || '');
+    setEndDate(y.end_date || '');
+    setIsActive(y.is_active);
     setFormError(null);
     setIsModalOpen(true);
   };
@@ -62,17 +76,27 @@ export const AcademicYearsPage: React.FC = () => {
     setSubmitting(true);
     setFormError(null);
     try {
-      await adminService.createAcademicYear({
-        name,
-        semester,
-        start_date: startDate,
-        end_date: endDate,
-        is_active: isActive,
-      });
+      if (editingYear) {
+        await adminService.updateAcademicYear(editingYear.id, {
+          name,
+          semester,
+          start_date: startDate,
+          end_date: endDate,
+          is_active: isActive,
+        });
+      } else {
+        await adminService.createAcademicYear({
+          name,
+          semester,
+          start_date: startDate,
+          end_date: endDate,
+          is_active: isActive,
+        });
+      }
       setIsModalOpen(false);
       fetchYears();
     } catch (err: any) {
-      const msg = err.response?.data?.message || err.message || 'Gagal menambahkan tahun ajaran.';
+      const msg = err.response?.data?.message || err.message || 'Gagal menyimpan tahun ajaran.';
       setFormError(msg);
     } finally {
       setSubmitting(false);
@@ -213,25 +237,35 @@ export const AcademicYearsPage: React.FC = () => {
                         </span>
                       )}
                     </td>
-                    <td className="px-6 py-4 text-right space-x-2">
-                      {!y.is_active && (
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex items-center justify-end gap-1.5">
+                        {!y.is_active && (
+                          <button
+                            type="button"
+                            onClick={() => handleSetActive(y.id, y.name)}
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition cursor-pointer"
+                          >
+                            <Check className="w-3.5 h-3.5" />
+                            <span>Aktifkan</span>
+                          </button>
+                        )}
                         <button
                           type="button"
-                          onClick={() => handleSetActive(y.id, y.name)}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition cursor-pointer"
+                          onClick={() => handleOpenEdit(y)}
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-[#233DFF] hover:bg-blue-50 transition cursor-pointer"
+                          title="Edit Tahun Ajaran"
                         >
-                          <Check className="w-3.5 h-3.5" />
-                          <span>Aktifkan</span>
+                          <Edit2 className="w-4 h-4" />
                         </button>
-                      )}
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(y.id, y.name)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
-                        title="Hapus"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(y.id, y.name)}
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
+                          title="Hapus"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -247,8 +281,12 @@ export const AcademicYearsPage: React.FC = () => {
           <div className="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
             <div className="p-5 border-b border-slate-100 flex items-center justify-between">
               <div>
-                <h3 className="font-bold text-slate-900 text-base">Tambah Tahun Ajaran Baru</h3>
-                <p className="text-xs text-slate-500">Tentukan periode kalender akademik sekolah.</p>
+                <h3 className="font-bold text-slate-900 text-base">
+                  {editingYear ? 'Edit Tahun Ajaran' : 'Tambah Tahun Ajaran Baru'}
+                </h3>
+                <p className="text-xs text-slate-500">
+                  {editingYear ? 'Perbarui informasi dan rentang kalender akademik.' : 'Tentukan periode kalender akademik sekolah.'}
+                </p>
               </div>
               <button
                 type="button"
@@ -341,7 +379,7 @@ export const AcademicYearsPage: React.FC = () => {
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-[#233DFF] hover:bg-[#1B30D9] shadow-md shadow-indigo-600/20 disabled:opacity-60 transition cursor-pointer"
                 >
                   {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                  <span>{submitting ? 'Menyimpan...' : 'Simpan Tahun Ajaran'}</span>
+                  <span>{submitting ? 'Menyimpan...' : (editingYear ? 'Simpan Perubahan' : 'Simpan Tahun Ajaran')}</span>
                 </button>
               </div>
             </form>
