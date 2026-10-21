@@ -157,24 +157,21 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
   ];
 
   return (
-    <div className="min-h-screen bg-[#F0F2F8] p-2 sm:p-4 lg:p-6 flex items-center justify-center font-sans antialiased text-slate-800">
-      {/* Outer Window Container matching Reference UI */}
-      <div className="w-full max-w-[1600px] h-[96vh] bg-white rounded-[32px] sm:rounded-[38px] shadow-[0_20px_60px_-15px_rgba(23,27,97,0.07)] border border-slate-200/70 flex overflow-hidden relative">
-        
-        {/* Mobile Sidebar Overlay */}
-        {sidebarOpen && (
-          <div
-            onClick={() => setSidebarOpen(false)}
-            className="fixed inset-0 z-40 bg-slate-950/40 backdrop-blur-xs lg:hidden transition-opacity"
-          />
-        )}
+    <div className="h-screen flex overflow-hidden bg-[#F4F6FB] font-sans antialiased text-slate-800">
+      {/* Mobile Sidebar Overlay */}
+      {sidebarOpen && (
+        <div
+          onClick={() => setSidebarOpen(false)}
+          className="fixed inset-0 z-40 bg-slate-950/40 backdrop-blur-xs lg:hidden transition-opacity"
+        />
+      )}
 
-        {/* Left Sidebar (Reference UI Light/Clean Sidebar) */}
-        <aside
-          className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#F8FAFD] border-r border-slate-200/80 flex flex-col justify-between transition-transform duration-300 ease-in-out lg:static lg:inset-auto lg:z-auto ${
-            sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-          }`}
-        >
+      {/* Left Sidebar (Docked to full height) */}
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#F8FAFD] border-r border-slate-200/80 flex flex-col justify-between transition-transform duration-300 ease-in-out lg:static lg:inset-auto lg:z-auto shrink-0 ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        }`}
+      >
           {/* Top Brand Header */}
           <div className="p-6 pb-4">
             <div className="flex items-center justify-between">
@@ -471,11 +468,10 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
           </header>
 
           {/* Main Scrollable View */}
-          <main className="flex-1 overflow-y-auto p-5 sm:p-6 lg:p-8 bg-white">
-            <div className="max-w-[1400px] mx-auto space-y-6">{children}</div>
+          <main className="flex-1 overflow-y-auto p-5 sm:p-6 lg:p-8 bg-[#F4F6FB]">
+            <div className="max-w-[1600px] mx-auto space-y-6">{children}</div>
           </main>
         </div>
       </div>
-    </div>
   );
 };
