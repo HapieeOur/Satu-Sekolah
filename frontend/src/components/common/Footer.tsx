@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { GraduationCap, MapPin, Mail, ArrowRight } from 'lucide-react';
+import { MapPin, Mail, ArrowRight } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 export const Footer: React.FC = () => {
@@ -17,7 +17,7 @@ export const Footer: React.FC = () => {
           <div className="space-y-4 md:col-span-5">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-2xl bg-white p-1.5 flex items-center justify-center shadow-md shadow-indigo-950/20">
-                <GraduationCap className="w-6 h-6 text-[#233DFF]" />
+                <img src="/images/logo/icon.png" alt="oneSchool" className="w-full h-full object-contain" />
               </div>
               <div>
                 <span className="font-extrabold text-white text-lg tracking-tight block">oneSchool</span>

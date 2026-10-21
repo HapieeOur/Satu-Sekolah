@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { GraduationCap, LogOut, ArrowRight, LayoutDashboard } from 'lucide-react';
+import { LogOut, ArrowRight, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 export const Navbar: React.FC = () => {
@@ -23,7 +23,7 @@ export const Navbar: React.FC = () => {
           {/* Brand / Logo */}
           <Link to="/" className="flex items-center gap-3 group cursor-pointer py-1">
             <div className="w-10 h-10 rounded-2xl bg-white p-1.5 flex items-center justify-center shadow-md shadow-indigo-950/20 group-hover:scale-105 transition-transform duration-200 border border-slate-100">
-              <GraduationCap className="w-6 h-6 text-[#233DFF]" />
+              <img src="/images/logo/icon.png" alt="oneSchool" className="w-full h-full object-contain" />
             </div>
             <div>
               <span className="font-black text-xl tracking-tight text-[#171B61] group-hover:text-[#233DFF] transition-colors">

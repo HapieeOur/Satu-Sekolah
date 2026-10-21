@@ -51,15 +51,14 @@ export const LoginPage: React.FC = () => {
       <div className="bg-white rounded-[32px] sm:rounded-[36px] border border-slate-200/90 shadow-2xl shadow-slate-900/10 p-4 sm:p-6 lg:p-7 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         {/* Left Column: Authentication Form */}
         <div className="lg:col-span-6 flex flex-col justify-between py-2 sm:py-4 px-2 sm:px-6">
-          {/* Logo Section */}
-          <div className="w-full max-w-md mx-auto pt-2 pb-5 flex items-center justify-start select-none">
-            <Link to="/" className="flex items-center gap-2.5 group">
-              <span className="font-black text-2xl tracking-tight text-[#171B61] group-hover:text-[#233DFF] transition-colors">
-                SATU<span className="text-[#233DFF]">SEKOLAH</span><span className="text-[#F4CF52]">.</span>
-              </span>
-              <span className="text-[10px] font-semibold text-slate-400 tracking-wider uppercase border-l pl-2 border-slate-300">
-                Portal Masuk
-              </span>
+          {/* Logo Section matching Blade login */}
+          <div className="w-full max-w-md mx-auto pt-4 pb-4 flex items-center justify-center select-none text-center">
+            <Link to="/" className="inline-block group">
+              <img
+                src="/images/logo/logo.png"
+                alt="oneSchool Satu-Sekolah"
+                className="w-full max-w-xs sm:max-w-sm h-auto max-h-16 sm:max-h-20 object-contain object-center mx-auto group-hover:scale-105 transition-transform duration-200"
+              />
             </Link>
           </div>
 
