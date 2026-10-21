@@ -9,12 +9,18 @@ import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { SchoolProfilePage } from './pages/SchoolProfilePage';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { ProfilePage } from './pages/ProfilePage';
+import { NotificationsPage } from './pages/NotificationsPage';
 import { UsersPage } from './pages/admin/UsersPage';
 import { ClassroomsPage } from './pages/admin/ClassroomsPage';
 import { CompaniesPage } from './pages/admin/CompaniesPage';
 import { PlacementsPage } from './pages/admin/PlacementsPage';
 import { AttendancesPage } from './pages/admin/AttendancesPage';
 import { ReportsPage } from './pages/admin/ReportsPage';
+import { TeacherModulePage } from './pages/modules/TeacherModulePage';
+import { HomeroomModulePage } from './pages/modules/HomeroomModulePage';
+import { MentorModulePage } from './pages/modules/MentorModulePage';
+import { StudentModulePage } from './pages/modules/StudentModulePage';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
 export const App: React.FC = () => {
@@ -25,7 +31,11 @@ export const App: React.FC = () => {
     location.pathname.startsWith('/dashboard') ||
     location.pathname.startsWith('/admin') ||
     location.pathname.startsWith('/teacher') ||
-    location.pathname.startsWith('/student');
+    location.pathname.startsWith('/homeroom') ||
+    location.pathname.startsWith('/internship-mentor') ||
+    location.pathname.startsWith('/student') ||
+    location.pathname.startsWith('/profile') ||
+    location.pathname.startsWith('/notifications');
 
   const isLoginPage = location.pathname === '/login';
 
@@ -42,7 +52,7 @@ export const App: React.FC = () => {
           <Route path="/about" element={<SchoolProfilePage />} />
           <Route path="/login" element={<LoginPage />} />
 
-          {/* Authenticated Routes wrapped in AppLayout with Sidebar & Topbar */}
+          {/* Authenticated Dashboard */}
           <Route
             path="/dashboard"
             element={
@@ -54,6 +64,29 @@ export const App: React.FC = () => {
             }
           />
 
+          {/* User Profile & Notifications */}
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <ProfilePage />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/notifications"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <NotificationsPage />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Admin Routes */}
           <Route
             path="/admin/users"
             element={
@@ -64,7 +97,6 @@ export const App: React.FC = () => {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/admin/classrooms"
             element={
@@ -75,7 +107,6 @@ export const App: React.FC = () => {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/admin/companies"
             element={
@@ -86,7 +117,6 @@ export const App: React.FC = () => {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/admin/placements"
             element={
@@ -97,7 +127,6 @@ export const App: React.FC = () => {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/admin/attendances"
             element={
@@ -108,13 +137,60 @@ export const App: React.FC = () => {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/admin/reports"
             element={
               <ProtectedRoute allowedRoles={['admin', 'wali_kelas', 'guru_pembimbing_pkl']}>
                 <AppLayout>
                   <ReportsPage />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Guru Module Routes */}
+          <Route
+            path="/teacher/*"
+            element={
+              <ProtectedRoute allowedRoles={['guru', 'admin']}>
+                <AppLayout>
+                  <TeacherModulePage />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Wali Kelas Module Routes */}
+          <Route
+            path="/homeroom/*"
+            element={
+              <ProtectedRoute allowedRoles={['wali_kelas', 'admin']}>
+                <AppLayout>
+                  <HomeroomModulePage />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Pembimbing PKL Module Routes */}
+          <Route
+            path="/internship-mentor/*"
+            element={
+              <ProtectedRoute allowedRoles={['guru_pembimbing_pkl', 'pembimbing_dudi', 'admin']}>
+                <AppLayout>
+                  <MentorModulePage />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Siswa Module Routes */}
+          <Route
+            path="/student/*"
+            element={
+              <ProtectedRoute allowedRoles={['siswa', 'admin']}>
+                <AppLayout>
+                  <StudentModulePage />
                 </AppLayout>
               </ProtectedRoute>
             }

@@ -11,7 +11,6 @@ import {
   MoreHorizontal
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { RoleSwitcher, PortalTab } from '../components/common/RoleSwitcher';
 import { AdminPortal } from './portals/AdminPortal';
 import { TeacherPortal } from './portals/TeacherPortal';
 import { HomeroomPortal } from './portals/HomeroomPortal';
@@ -24,22 +23,19 @@ export const DashboardPage: React.FC = () => {
   const { user } = useAuth();
   const [profile, setProfile] = useState<SchoolProfile | null>(null);
 
-  const getInitialTab = (): PortalTab => {
-    if (!user) return 'student';
-    if (user.roles.includes('admin')) return 'admin';
-    if (user.roles.includes('wali_kelas')) return 'homeroom';
-    if (user.roles.includes('guru_pembimbing_pkl')) return 'mentor';
-    if (user.roles.includes('guru')) return 'teacher';
-    return 'student';
-  };
-
-  const [currentTab, setCurrentTab] = useState<PortalTab>(getInitialTab);
-
   useEffect(() => {
     schoolService.getSchoolProfile().then(setProfile).catch(() => null);
   }, []);
 
   if (!user) return null;
+
+  const userRole = (() => {
+    if (user.roles.includes('admin')) return 'admin';
+    if (user.roles.includes('wali_kelas')) return 'homeroom';
+    if (user.roles.includes('guru_pembimbing_pkl') || user.roles.includes('pembimbing_dudi')) return 'mentor';
+    if (user.roles.includes('guru')) return 'teacher';
+    return 'student';
+  })();
 
   // Care team members matching Reference UI
   const careTeam = [
@@ -119,13 +115,14 @@ export const DashboardPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Role Switcher Toolbar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <RoleSwitcher
-          currentTab={currentTab}
-          onTabChange={setCurrentTab}
-          availableRoles={user.roles}
-        />
+      {/* Top Academic Year & Status Bar */}
+      <div className="flex items-center justify-between pb-1">
+        <div className="flex items-center gap-2">
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="text-xs font-bold text-slate-600">
+            Status Sistem: Operasional Normal
+          </span>
+        </div>
         <div className="text-right">
           <span className="text-xs font-bold text-slate-400">
             T.A. {profile?.academic_year?.name ?? '2026/2027'} ({profile?.academic_year?.semester ?? 'Ganjil'})
@@ -428,18 +425,13 @@ export const DashboardPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Role Switcher & Dedicated Sub-View */}
+      {/* Role Dedicated Sub-View */}
       <div className="pt-6 border-t border-slate-200">
-        <div className="mb-4 flex items-center justify-between">
-          <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#233DFF] bg-[#E5ECFF] px-3 py-1 rounded-full">
-            Tampilan Khusus Peran: {currentTab}
-          </span>
-        </div>
-        {currentTab === 'admin' && <AdminPortal profile={profile} />}
-        {currentTab === 'teacher' && <TeacherPortal user={user} />}
-        {currentTab === 'homeroom' && <HomeroomPortal user={user} />}
-        {currentTab === 'mentor' && <MentorPortal user={user} />}
-        {currentTab === 'student' && <StudentPortal user={user} />}
+        {userRole === 'admin' && <AdminPortal profile={profile} />}
+        {userRole === 'teacher' && <TeacherPortal user={user} />}
+        {userRole === 'homeroom' && <HomeroomPortal user={user} />}
+        {userRole === 'mentor' && <MentorPortal user={user} />}
+        {userRole === 'student' && <StudentPortal user={user} />}
       </div>
     </div>
   );
