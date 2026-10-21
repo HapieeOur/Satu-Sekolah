@@ -116,6 +116,9 @@ class UserManagementTest extends TestCase
         $newUser = User::where('email', 'gurubaru@oneschool.sch.id')->first();
         $this->assertTrue($newUser->hasRole('guru'));
         $this->assertTrue($newUser->hasRole('wali_kelas'));
+        $this->assertDatabaseHas('teachers', [
+            'user_id' => $newUser->id,
+        ]);
     }
 
     public function test_admin_can_update_user(): void

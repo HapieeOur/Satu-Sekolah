@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Contracts\Services\UserServiceInterface;
 use App\Models\Student;
+use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -33,6 +34,7 @@ class UserService implements UserServiceInterface
             $user->syncRoles($roles);
 
             $this->syncStudentProfile($user, $data, $roles);
+            $this->syncTeacherProfile($user, $data, $roles);
 
             return $user;
         });
@@ -70,6 +72,7 @@ class UserService implements UserServiceInterface
             $user->syncRoles($roles);
 
             $this->syncStudentProfile($user, $data, $roles);
+            $this->syncTeacherProfile($user, $data, $roles);
 
             return $user;
         });
@@ -125,6 +128,49 @@ class UserService implements UserServiceInterface
                 'status' => 'aktif',
             ]);
         }
+    }
+
+    /**
+     * Automatically ensure a teacher profile exists when user has a teaching role.
+     */
+    protected function syncTeacherProfile(User $user, array $data, array $roles): void
+    {
+        $isTeacherRole = in_array('guru', $roles, true)
+            || in_array('guru_pembimbing_pkl', $roles, true)
+            || in_array('wali_kelas', $roles, true);
+
+        if ($isTeacherRole) {
+            $teacher = Teacher::where('user_id', $user->id)->first();
+            if ($teacher) {
+                if (! empty($data['phone'])) {
+                    $teacher->update(['phone' => $data['phone']]);
+                }
+            } else {
+                Teacher::create([
+                    'user_id' => $user->id,
+                    'phone' => $user->phone ?? ($data['phone'] ?? null),
+                    'gender' => 'L',
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Self-healing: ensure all existing users with teacher roles have a teacher profile record.
+     */
+    public static function ensureTeacherProfilesExist(): void
+    {
+        User::role(['guru', 'guru_pembimbing_pkl', 'wali_kelas'])
+            ->whereDoesntHave('teacher')
+            ->each(function ($user) {
+                Teacher::firstOrCreate(
+                    ['user_id' => $user->id],
+                    [
+                        'phone' => $user->phone,
+                        'gender' => 'L',
+                    ]
+                );
+            });
     }
 
     /**

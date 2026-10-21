@@ -80,6 +80,8 @@ class InternshipService implements InternshipServiceInterface
 
     public function getPlacementFormData(?int $exceptStudentId = null): array
     {
+        \App\Services\UserService::ensureTeacherProfilesExist();
+
         $activeYear = AcademicYear::where('is_active', true)->first();
         $academicYearId = $activeYear?->id ?? 0;
 

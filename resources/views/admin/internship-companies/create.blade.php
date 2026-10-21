@@ -77,7 +77,7 @@
                         <option value="">-- Pilih Guru Pembimbing dari Sekolah --</option>
                         @foreach ($teachers as $tch)
                             <option value="{{ $tch->id }}" {{ old('teacher_id') == $tch->id ? 'selected' : '' }}>
-                                {{ $tch->user->name }} (NIP: {{ $tch->nip }})
+                                {{ $tch->user->name }} {{ $tch->nip ? '(NIP: ' . $tch->nip . ')' : '(' . $tch->user->email . ')' }}
                             </option>
                         @endforeach
                     </select>

@@ -44,7 +44,7 @@ class DataMasterSeeder extends Seeder
         $sitiUser = User::where('email', 'walikelas@oneschool.sch.id')->first();
         $fauziUser = User::where('email', 'pembimbing@oneschool.sch.id')->first();
 
-        $teacherBudi = Teacher::firstOrCreate(
+        $teacherBudi = Teacher::updateOrCreate(
             ['user_id' => $budiUser->id],
             [
                 'nip' => '198501102010011001',
@@ -55,7 +55,7 @@ class DataMasterSeeder extends Seeder
             ]
         );
 
-        $teacherSiti = Teacher::firstOrCreate(
+        $teacherSiti = Teacher::updateOrCreate(
             ['user_id' => $sitiUser->id],
             [
                 'nip' => '198705152012022002',
@@ -66,7 +66,7 @@ class DataMasterSeeder extends Seeder
             ]
         );
 
-        $teacherFauzi = Teacher::firstOrCreate(
+        $teacherFauzi = Teacher::updateOrCreate(
             ['user_id' => $fauziUser->id],
             [
                 'nip' => '199003202015031003',

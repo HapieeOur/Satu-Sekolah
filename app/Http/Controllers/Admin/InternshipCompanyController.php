@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\StoreInternshipCompanyRequest;
 use App\Http\Requests\Admin\UpdateInternshipCompanyRequest;
 use App\Models\InternshipCompany;
 use App\Models\Teacher;
+use App\Services\UserService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -28,6 +29,8 @@ class InternshipCompanyController extends Controller
 
     public function create(): View
     {
+        UserService::ensureTeacherProfilesExist();
+
         $teachers = Teacher::with('user')
             ->whereHas('user', fn($q) => $q->where('is_active', true))
             ->get();
@@ -45,6 +48,8 @@ class InternshipCompanyController extends Controller
 
     public function edit(InternshipCompany $internshipCompany): View
     {
+        UserService::ensureTeacherProfilesExist();
+
         $teachers = Teacher::with('user')
             ->whereHas('user', fn($q) => $q->where('is_active', true))
             ->get();
