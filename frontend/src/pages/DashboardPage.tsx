@@ -32,10 +32,10 @@ export const DashboardPage: React.FC = () => {
   if (!user) return null;
 
   const stats = profile?.statistics || {
-    total_students: 850,
-    total_teachers: 48,
-    total_classrooms: 18,
-    total_companies: 35,
+    total_students: 0,
+    total_teachers: 0,
+    total_classrooms: 0,
+    total_companies: 0,
   };
 
   const userRole = (() => {

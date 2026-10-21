@@ -1,338 +1,352 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   FileText,
   Plus,
   Search,
   Trash2,
   X,
-  Clock,
-  Eye,
-  CheckCircle2
+  CheckCircle2,
+  Loader2
 } from 'lucide-react';
-
-interface PostItem {
-  id: number;
-  title: string;
-  type: 'Berita' | 'Pengumuman' | 'Acara';
-  publishedAt: string;
-  author: string;
-  views: number;
-  status: 'Published' | 'Draft';
-}
+import { adminService, PostItem } from '../../api/adminService';
 
 export const PostsPage: React.FC = () => {
-  const [posts, setPosts] = useState<PostItem[]>([
-    {
-      id: 1,
-      title: 'Pelepasan Siswa Praktik Kerja Lapangan (PKL) Industri Batch 1',
-      type: 'Berita',
-      publishedAt: '20 Okt 2026',
-      author: 'Humas SMKN 1 Probolinggo',
-      views: 342,
-      status: 'Published',
-    },
-    {
-      id: 2,
-      title: 'Jadwal Penilaian Tengah Semester (PTS) Ganjil T.A. 2026/2027',
-      type: 'Pengumuman',
-      publishedAt: '18 Okt 2026',
-      author: 'Kurikulum',
-      views: 520,
-      status: 'Published',
-    },
-    {
-      id: 3,
-      title: 'Kunjungan Industri Mitra DUDI PT Telkom & Bank Jatim',
-      type: 'Acara',
-      publishedAt: '15 Okt 2026',
-      author: 'Ketua Jurusan PPLG',
-      views: 215,
-      status: 'Published',
-    },
-    {
-      id: 4,
-      title: 'Draft Panduan Penyusunan Laporan Portofolio PKL Siswa',
-      type: 'Pengumuman',
-      publishedAt: '21 Okt 2026',
-      author: 'Koordinator PKL',
-      views: 0,
-      status: 'Draft',
-    },
-  ]);
+  const [posts, setPosts] = useState<PostItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [typeFilter, setTypeFilter] = useState('ALL');
-  const [modalOpen, setModalOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    title: '',
-    type: 'Berita' as 'Berita' | 'Pengumuman' | 'Acara',
-    author: 'Admin Sekolah',
-    status: 'Published' as 'Published' | 'Draft',
-  });
+  // Form State
+  const [title, setTitle] = useState('');
+  const [category, setCategory] = useState<'berita' | 'pengumuman' | 'agenda'>('berita');
+  const [excerpt, setExcerpt] = useState('');
+  const [content, setContent] = useState('');
+  const [isPublished, setIsPublished] = useState(true);
 
-  const handleDelete = (id: number) => {
-    if (confirm('Yakin ingin menghapus publikasi ini?')) {
-      setPosts((prev) => prev.filter((p) => p.id !== id));
+  const fetchPosts = async () => {
+    setLoading(true);
+    try {
+      const data = await adminService.getPosts({
+        category: selectedCategory || undefined,
+        search: search || undefined,
+      });
+      setPosts(data);
+    } catch (err: any) {
+      console.error('Gagal mengambil data postingan:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleCreate = (e: React.FormEvent) => {
-    e.preventDefault();
-    const newPost: PostItem = {
-      id: Date.now(),
-      title: formData.title,
-      type: formData.type,
-      publishedAt: 'Hari ini',
-      author: formData.author,
-      views: 0,
-      status: formData.status,
-    };
-    setPosts((prev) => [newPost, ...prev]);
-    setModalOpen(false);
-    setFormData({
-      title: '',
-      type: 'Berita',
-      author: 'Admin Sekolah',
-      status: 'Published',
-    });
+  useEffect(() => {
+    fetchPosts();
+  }, [search, selectedCategory]);
+
+  const handleOpenModal = () => {
+    setTitle('');
+    setCategory('berita');
+    setExcerpt('');
+    setContent('');
+    setIsPublished(true);
+    setFormError(null);
+    setIsModalOpen(true);
   };
 
-  const filtered = posts.filter((p) => {
-    const matchesSearch =
-      p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.author.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesType = typeFilter === 'ALL' || p.type === typeFilter;
-    return matchesSearch && matchesType;
-  });
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title.trim() || !content.trim()) {
+      setFormError('Judul dan isi konten publikasi wajib diisi.');
+      return;
+    }
+
+    setSubmitting(true);
+    setFormError(null);
+    try {
+      await adminService.createPost({
+        title,
+        category,
+        excerpt: excerpt || undefined,
+        content,
+        is_published: isPublished,
+      });
+      setIsModalOpen(false);
+      fetchPosts();
+    } catch (err: any) {
+      const msg = err.response?.data?.message || err.message || 'Gagal menerbitkan postingan.';
+      setFormError(msg);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDelete = async (id: number, postTitle: string) => {
+    if (!window.confirm(`Yakin ingin menghapus publikasi "${postTitle}" dari portal?`)) {
+      return;
+    }
+    try {
+      await adminService.deletePost(id);
+      setPosts((prev) => prev.filter((p) => p.id !== id));
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Gagal menghapus postingan.');
+    }
+  };
+
+  const getCategoryBadge = (cat: string) => {
+    switch (cat.toLowerCase()) {
+      case 'berita':
+        return <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">Berita</span>;
+      case 'pengumuman':
+        return <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">Pengumuman</span>;
+      case 'agenda':
+        return <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-50 text-purple-700 border border-purple-200">Agenda</span>;
+      default:
+        return <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-700">{cat}</span>;
+    }
+  };
 
   return (
     <div className="space-y-6">
-      {/* Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#171B61] to-[#233DFF] p-6 sm:p-8 text-white shadow-xl shadow-indigo-950/10">
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-amber-300 text-xs font-bold mb-2">
-              <FileText className="w-3.5 h-3.5" />
-              <span>Portal Publikasi Resmi</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight">Berita, Pengumuman &amp; Acara</h1>
-            <p className="text-xs text-indigo-100 mt-1 max-w-xl">
-              Publikasikan informasi resmi institusi, kegiatan belajar mengajar, agenda industri, dan pengumuman untuk seluruh sivitas sekolah.
-            </p>
-          </div>
-
-          <button
-            onClick={() => setModalOpen(true)}
-            type="button"
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-full text-xs font-black bg-white text-[#171B61] hover:bg-amber-300 hover:text-slate-900 shadow-lg transition cursor-pointer"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Tulis Publikasi Baru</span>
-          </button>
-        </div>
-
-        {/* Stats */}
-        <div className="relative z-10 grid grid-cols-2 sm:grid-cols-3 gap-3 mt-6 pt-6 border-t border-white/10">
-          <div className="p-3.5 rounded-2xl bg-white/10 backdrop-blur-xs border border-white/10">
-            <span className="text-[11px] font-bold text-indigo-200 block">Total Publikasi Aktif</span>
-            <span className="text-xl font-black text-white mt-0.5 block">{posts.length} Konten</span>
-          </div>
-          <div className="p-3.5 rounded-2xl bg-white/10 backdrop-blur-xs border border-white/10">
-            <span className="text-[11px] font-bold text-indigo-200 block">Telah Dibaca</span>
-            <span className="text-xl font-black text-[#F4CF52] mt-0.5 block">
-              {posts.reduce((sum, p) => sum + p.views, 0)} Views
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-black text-[#171B61] tracking-tight">
+              Publikasi & Pengumuman Portal
+            </h1>
+            <span className="text-xs font-bold bg-[#E5ECFF] text-[#233DFF] px-2.5 py-0.5 rounded-full">
+              {posts.length} Konten Terbit
             </span>
           </div>
-          <div className="p-3.5 rounded-2xl bg-white/10 backdrop-blur-xs border border-white/10">
-            <span className="text-[11px] font-bold text-indigo-200 block">Status Terbit</span>
-            <span className="text-xl font-black text-emerald-300 mt-0.5 block">
-              {posts.filter((p) => p.status === 'Published').length} Terbit
-            </span>
-          </div>
+          <p className="text-xs text-slate-500 mt-1">
+            Kelola rilis berita sekolah, pengumuman kedinasan, agenda kegiatan, dan portal informasi publik.
+          </p>
         </div>
+
+        <button
+          type="button"
+          onClick={handleOpenModal}
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-[#233DFF] hover:bg-[#1B30D9] shadow-md shadow-indigo-600/20 transition cursor-pointer"
+        >
+          <Plus className="w-4 h-4" />
+          <span>Tulis Publikasi Baru</span>
+        </button>
       </div>
 
-      {/* Main Table Card */}
-      <div className="bg-white rounded-3xl border border-slate-200/90 p-6 shadow-xs space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-slate-100">
-          <div className="flex items-center gap-3">
-            <h3 className="text-sm font-extrabold text-[#171B61]">Daftar Konten Publikasi</h3>
+      {/* Filter and Table Card */}
+      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xs overflow-hidden">
+        <div className="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-3 max-w-xl w-full">
+            <div className="relative flex-1 min-w-[220px]">
+              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <Search className="w-4 h-4" />
+              </span>
+              <input
+                type="text"
+                placeholder="Cari judul berita atau pengumuman..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#233DFF]/20 focus:border-[#233DFF]"
+              />
+            </div>
+
             <select
-              value={typeFilter}
-              onChange={(e) => setTypeFilter(e.target.value)}
-              className="text-xs font-bold text-slate-700 bg-[#F8FAFD] border border-slate-200 rounded-xl px-3 py-1.5 focus:outline-none"
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 bg-white focus:outline-none focus:border-[#233DFF]"
             >
-              <option value="ALL">Semua Tipe Konten</option>
-              <option value="Berita">Berita</option>
-              <option value="Pengumuman">Pengumuman</option>
-              <option value="Acara">Acara Sekolah</option>
+              <option value="">Semua Kategori</option>
+              <option value="berita">Berita</option>
+              <option value="pengumuman">Pengumuman</option>
+              <option value="agenda">Agenda</option>
             </select>
           </div>
 
-          <div className="relative max-w-xs w-full">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5 pointer-events-none" />
-            <input
-              type="text"
-              placeholder="Cari judul artikel, penulis..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full text-xs font-semibold pl-9 pr-3 py-2 rounded-xl border border-slate-200 bg-[#F8FAFD] focus:bg-white focus:border-[#233DFF] focus:outline-none transition"
-            />
+          <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>Tersinkron Database Railway</span>
           </div>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-[#F8FAFD] text-slate-400 font-bold uppercase text-[10px] tracking-wider">
-              <tr>
-                <th className="py-3.5 px-4">Judul Artikel &amp; Konten</th>
-                <th className="py-3.5 px-4">Kategori Tipe</th>
-                <th className="py-3.5 px-4">Tanggal Terbit</th>
-                <th className="py-3.5 px-4">Penulis / Unit</th>
-                <th className="py-3.5 px-4">Pembaca</th>
-                <th className="py-3.5 px-4">Status</th>
-                <th className="py-3.5 px-4 text-right">Aksi</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
-              {filtered.map((p) => (
-                <tr key={p.id} className="hover:bg-slate-50 transition">
-                  <td className="py-4 px-4 font-extrabold text-slate-900 max-w-md">
-                    <span className="line-clamp-1">{p.title}</span>
-                  </td>
-                  <td className="py-4 px-4">
-                    <span
-                      className={`inline-flex items-center px-3 py-0.5 rounded-full text-[10px] font-black ${
-                        p.type === 'Berita'
-                          ? 'bg-blue-50 text-[#233DFF] border border-blue-200'
-                          : p.type === 'Pengumuman'
-                          ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                          : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                      }`}
-                    >
-                      {p.type}
-                    </span>
-                  </td>
-                  <td className="py-4 px-4 text-slate-500 font-medium">
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5 text-slate-400" />
-                      <span>{p.publishedAt}</span>
-                    </div>
-                  </td>
-                  <td className="py-4 px-4 font-bold text-slate-800">{p.author}</td>
-                  <td className="py-4 px-4 text-slate-600 font-bold">
-                    <div className="flex items-center gap-1">
-                      <Eye className="w-3.5 h-3.5 text-slate-400" />
-                      <span>{p.views}</span>
-                    </div>
-                  </td>
-                  <td className="py-4 px-4">
-                    <span
-                      className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black ${
-                        p.status === 'Published'
-                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                          : 'bg-slate-100 text-slate-500'
-                      }`}
-                    >
-                      <CheckCircle2 className="w-3 h-3" />
-                      {p.status}
-                    </span>
-                  </td>
-                  <td className="py-4 px-4 text-right">
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(p.id)}
-                      className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition cursor-pointer"
-                      title="Hapus"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </td>
+          {loading ? (
+            <div className="p-12 text-center text-slate-400 flex flex-col items-center justify-center gap-2">
+              <Loader2 className="w-6 h-6 animate-spin text-[#233DFF]" />
+              <p className="text-xs font-medium">Memuat data publikasi...</p>
+            </div>
+          ) : posts.length === 0 ? (
+            <div className="p-12 text-center text-slate-400">
+              <p className="text-sm font-semibold">Belum ada publikasi yang cocok dengan pencarian.</p>
+              <p className="text-xs mt-1">Gunakan tombol "Tulis Publikasi Baru" untuk memposting artikel baru.</p>
+            </div>
+          ) : (
+            <table className="w-full text-left text-xs">
+              <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider font-bold border-b border-slate-100">
+                <tr>
+                  <th className="px-6 py-4">Judul Publikasi</th>
+                  <th className="px-6 py-4">Kategori</th>
+                  <th className="px-6 py-4">Penulis</th>
+                  <th className="px-6 py-4">Tanggal Rilis</th>
+                  <th className="px-6 py-4">Status</th>
+                  <th className="px-6 py-4 text-right">Aksi</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-100 font-medium">
+                {posts.map((p) => (
+                  <tr key={p.id} className="hover:bg-slate-50/80 transition">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-xl bg-indigo-50 text-[#233DFF] flex items-center justify-center shrink-0">
+                          <FileText className="w-4 h-4" />
+                        </div>
+                        <div className="max-w-md">
+                          <span className="font-bold text-slate-900 text-sm block line-clamp-1">{p.title}</span>
+                          <span className="text-[11px] text-slate-400 line-clamp-1">{p.excerpt}</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      {getCategoryBadge(p.category)}
+                    </td>
+                    <td className="px-6 py-4 font-semibold text-slate-700">
+                      {p.author}
+                    </td>
+                    <td className="px-6 py-4 text-slate-600 font-mono text-[11px]">
+                      {p.published_at}
+                    </td>
+                    <td className="px-6 py-4">
+                      {p.is_published ? (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                          <CheckCircle2 className="w-3.5 h-3.5" /> Terbit
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">
+                          Draft
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(p.id, p.title)}
+                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
+                        title="Hapus Publikasi"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
 
       {/* Modal Tulis Publikasi */}
-      {modalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <h3 className="text-base font-black text-slate-900">Tulis Publikasi Baru</h3>
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-xl w-full shadow-2xl border border-slate-100 overflow-hidden animate-in fade-in zoom-in-95 duration-150 max-h-[90vh] flex flex-col">
+            <div className="p-5 border-b border-slate-100 flex items-center justify-between shrink-0">
+              <div>
+                <h3 className="font-bold text-slate-900 text-base">Tulis Publikasi Portal Baru</h3>
+                <p className="text-xs text-slate-500">Rilis berita atau pengumuman resmi ke seluruh pengguna.</p>
+              </div>
               <button
                 type="button"
-                onClick={() => setModalOpen(false)}
-                className="p-1 text-slate-400 hover:text-slate-700 rounded-lg cursor-pointer"
+                onClick={() => setIsModalOpen(false)}
+                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleCreate} className="space-y-4 text-xs font-semibold">
+            <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto">
+              {formError && (
+                <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold">
+                  {formError}
+                </div>
+              )}
+
               <div>
-                <label className="block text-slate-700 mb-1">Judul Artikel / Pengumuman</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Judul Publikasi *</label>
                 <input
                   type="text"
                   required
-                  placeholder="Masukkan judul publikasi..."
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-slate-200 bg-[#F8FAFD] focus:bg-white focus:outline-none focus:border-[#233DFF]"
+                  placeholder="Contoh: Pembagian Rapor Semester Ganjil T.A 2026/2027"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-[#233DFF]/20 focus:border-[#233DFF] outline-none"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-700 mb-1">Kategori Tipe</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Kategori Publikasi *</label>
                   <select
-                    value={formData.type}
-                    onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
-                    className="w-full p-2.5 rounded-xl border border-slate-200 bg-[#F8FAFD] focus:bg-white focus:outline-none focus:border-[#233DFF]"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value as any)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs bg-white outline-none focus:border-[#233DFF]"
                   >
-                    <option value="Berita">Berita Sekolah</option>
-                    <option value="Pengumuman">Pengumuman Resmi</option>
-                    <option value="Acara">Agenda Acara</option>
+                    <option value="berita">Berita Sekolah</option>
+                    <option value="pengumuman">Pengumuman Resmi</option>
+                    <option value="agenda">Agenda Kegiatan</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-slate-700 mb-1">Status Publikasi</label>
-                  <select
-                    value={formData.status}
-                    onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
-                    className="w-full p-2.5 rounded-xl border border-slate-200 bg-[#F8FAFD] focus:bg-white focus:outline-none focus:border-[#233DFF]"
-                  >
-                    <option value="Published">Langsung Terbitkan</option>
-                    <option value="Draft">Simpan Draft</option>
-                  </select>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Ringkasan Singkat (Excerpt)</label>
+                  <input
+                    type="text"
+                    placeholder="Deskripsi 1 kalimat untuk pratinjau..."
+                    value={excerpt}
+                    onChange={(e) => setExcerpt(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-[#233DFF]/20 focus:border-[#233DFF] outline-none"
+                  />
                 </div>
               </div>
 
               <div>
-                <label className="block text-slate-700 mb-1">Penulis / Sumber</label>
-                <input
-                  type="text"
+                <label className="block text-xs font-bold text-slate-700 mb-1">Isi Konten Publikasi *</label>
+                <textarea
+                  rows={6}
                   required
-                  value={formData.author}
-                  onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-slate-200 bg-[#F8FAFD] focus:bg-white focus:outline-none focus:border-[#233DFF]"
+                  placeholder="Tuliskan isi berita, pengumuman, atau detail agenda di sini..."
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-[#233DFF]/20 focus:border-[#233DFF] outline-none resize-none"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+              <div className="flex items-center gap-2 pt-2">
+                <input
+                  type="checkbox"
+                  id="post_published"
+                  checked={isPublished}
+                  onChange={(e) => setIsPublished(e.target.checked)}
+                  className="w-4 h-4 text-[#233DFF] rounded-md border-slate-300 focus:ring-[#233DFF]"
+                />
+                <label htmlFor="post_published" className="text-xs font-bold text-slate-700 cursor-pointer">
+                  Langsung terbitkan ke publik sekarang
+                </label>
+              </div>
+
+              <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-slate-100">
                 <button
                   type="button"
-                  onClick={() => setModalOpen(false)}
-                  className="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 cursor-pointer"
+                  onClick={() => setIsModalOpen(false)}
+                  className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-[#171B61] text-white hover:bg-[#233DFF] font-black cursor-pointer shadow-md"
+                  disabled={submitting}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-[#233DFF] hover:bg-[#1B30D9] shadow-md shadow-indigo-600/20 disabled:opacity-60 transition cursor-pointer"
                 >
-                  Simpan Publikasi
+                  {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                  <span>{submitting ? 'Menerbitkan...' : 'Terbitkan Publikasi'}</span>
                 </button>
               </div>
             </form>

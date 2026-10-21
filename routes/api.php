@@ -1,5 +1,15 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\AdminAcademicYearController;
+use App\Http\Controllers\Api\Admin\AdminClassroomController;
+use App\Http\Controllers\Api\Admin\AdminCompanyController;
+use App\Http\Controllers\Api\Admin\AdminDashboardController;
+use App\Http\Controllers\Api\Admin\AdminPostController;
+use App\Http\Controllers\Api\Admin\AdminRoomController;
+use App\Http\Controllers\Api\Admin\AdminStudentController;
+use App\Http\Controllers\Api\Admin\AdminSubjectController;
+use App\Http\Controllers\Api\Admin\AdminTeacherController;
+use App\Http\Controllers\Api\Admin\AdminUserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Mentor\MentorInternshipController;
 use App\Http\Controllers\Api\PublicContentController;
@@ -95,6 +105,61 @@ Route::prefix('v1')->group(function () {
             Route::get('/tasks', [TeacherMobileController::class, 'tasks']);
             Route::post('/tasks', [TeacherMobileController::class, 'storeTask']);
             Route::post('/tasks/submissions/{submission}/grade', [TeacherMobileController::class, 'gradeTaskSubmission']);
+        });
+
+        // --- 7. Admin Area (Web / React API) ---
+        Route::prefix('admin')->group(function () {
+            // Dashboard Stats
+            Route::get('/stats', [AdminDashboardController::class, 'stats']);
+
+            // User Management
+            Route::get('/roles', [AdminUserController::class, 'roles']);
+            Route::get('/users', [AdminUserController::class, 'index']);
+            Route::post('/users', [AdminUserController::class, 'store']);
+            Route::put('/users/{user}', [AdminUserController::class, 'update']);
+            Route::delete('/users/{user}', [AdminUserController::class, 'destroy']);
+
+            // Teacher Management
+            Route::get('/teachers/available-users', [AdminTeacherController::class, 'availableUsers']);
+            Route::get('/teachers', [AdminTeacherController::class, 'index']);
+            Route::post('/teachers', [AdminTeacherController::class, 'store']);
+            Route::delete('/teachers/{teacher}', [AdminTeacherController::class, 'destroy']);
+
+            // Student Management
+            Route::get('/students', [AdminStudentController::class, 'index']);
+            Route::post('/students', [AdminStudentController::class, 'store']);
+            Route::delete('/students/{student}', [AdminStudentController::class, 'destroy']);
+
+            // Classroom Management
+            Route::get('/classrooms', [AdminClassroomController::class, 'index']);
+            Route::post('/classrooms', [AdminClassroomController::class, 'store']);
+            Route::delete('/classrooms/{classroom}', [AdminClassroomController::class, 'destroy']);
+
+            // Academic Year Management
+            Route::get('/academic-years', [AdminAcademicYearController::class, 'index']);
+            Route::post('/academic-years', [AdminAcademicYearController::class, 'store']);
+            Route::post('/academic-years/{academicYear}/set-active', [AdminAcademicYearController::class, 'setActive']);
+            Route::delete('/academic-years/{academicYear}', [AdminAcademicYearController::class, 'destroy']);
+
+            // Subject Management
+            Route::get('/subjects', [AdminSubjectController::class, 'index']);
+            Route::post('/subjects', [AdminSubjectController::class, 'store']);
+            Route::delete('/subjects/{subject}', [AdminSubjectController::class, 'destroy']);
+
+            // Room Management
+            Route::get('/rooms', [AdminRoomController::class, 'index']);
+            Route::post('/rooms', [AdminRoomController::class, 'store']);
+            Route::delete('/rooms/{room}', [AdminRoomController::class, 'destroy']);
+
+            // Company (Mitra DUDI) Management
+            Route::get('/companies', [AdminCompanyController::class, 'index']);
+            Route::post('/companies', [AdminCompanyController::class, 'store']);
+            Route::delete('/companies/{company}', [AdminCompanyController::class, 'destroy']);
+
+            // Post (News & Announcements) Management
+            Route::get('/posts', [AdminPostController::class, 'index']);
+            Route::post('/posts', [AdminPostController::class, 'store']);
+            Route::delete('/posts/{post}', [AdminPostController::class, 'destroy']);
         });
     });
 });
